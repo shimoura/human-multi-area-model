@@ -25,8 +25,6 @@ This code implements the multi-scale, spiking network model of human cortex deve
   - [(TODO) Get support](#todo-get-support)
   - [Acknowledgments](#acknowledgments)
   - [How to cite](#how-to-cite)
-  - [(TODO) License](#todo-license)
-  - [Project status](#project-status)
 
 ## Prerequisites
 ### Data
@@ -69,14 +67,10 @@ The NEST installation path will have to be specified in `config.yaml` described 
 Folder structure:
 - `./data`: contains experimental data-sets used for building the network and for comparing results
 - `./docs`: **TODO** 
-- `./experimental_data_analysis`: **TODO**
 - `./experiments`: contains python scripts which set the model parameters for different simulation experiments
 - `./figures`: **TODO**
-- `./manuscript`: **temporary** directory to store the manuscript for paper submission
 - `./mplstyles`: **TODO**
-- `./notes`: **temporary** directory to store random annotations/codes/etc
 - `./out`: directory where the simulation output is stored
-- `./poster`: temporary directory storing posters presented in conferences
 - `./python`: main directory with python scripts to run the network simulation
 
 Brief description of the main files in `./python` directory:
@@ -138,6 +132,3 @@ This work was supported by the German Research Foundation (DFG) Priority Program
 ## How to cite
 If you use this code, cite the paper publication:
 - Pronold, J., Meegen, A. van, Vollenbröker, H., Shimoura, R. O., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. van. (2023). Multi-Scale Spiking Network Model of Human Cerebral Cortex. BioRxiv, 2023.03.23.533968. [https://doi.org/10.1101/2023.03.23.533968](https://doi.org/10.1101/2023.03.23.533968)
-
-## Project status
-- Ongoing
