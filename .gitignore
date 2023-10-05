@@ -1,0 +1,14 @@
+config.yaml
+.snakemake
+*.pyc
+fDATA_7T_3DMC_HP_CSF_WD*
+REST_3DMC_HP_CSF_WD*
+rsData_7T_DKparcel*
+*.lyx~
+
+docs/source/*
+docs/_build/*
+
+figures/*.pdf
+figures/*.png
+figures/tmp/*

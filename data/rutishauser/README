@@ -1,0 +1,144 @@
+=================================
+This project contains the raw data on which this paper is based:
+
+J.Minxha, R.Adolphs, S.Fusi, A.N.Mamelak, U.Rutishauser. Flexible recruitment of memory-based choice representations by human medial-frontal cortex. Science, 2020 (in press).
+
+Permanent URL for data: http://doi.org/10.17605/OSF.IO/U3KCP
+
+Please see http://www.rutishauserlab.org/ for up-to-date contact information.
+
+This work has been made possible by grants from the National Institutes of Health (NIMH R01MH110831; The NIH BRAIN initiative U01NS103792; the National Science Foundation CAREER BCS-1554105; and a Memory&Cognitive Disorders Award from the McKnight Endowment for the Neurosciences).
+=================================
+
+********* Main Files *********
+There are two main files, "main_sfc.m" which reproduces the spike-field
+coherence results in Figure 5 and "main_spikes.m", which reproduces all the raster and PSTHs. The cell indices for the rasters plotted in the main
+figures of the paper are included in the file. The purpose of these files
+is to illustrate how to load and utilize the data rather than to reproduce
+all the figures in the paper. Note that all the data needed to produce the
+findings in the paper is included.
+
+********* Spiking data structures *********
+The spiking folder, "spikes" contains three files, "ha.mat" (amygddala and
+hippocampus), "mfc.mat" (preSMA and dACC), and "mfc_cell_annotations.mat"
+which contains annotations for the MFC population (indeces for choice cells, weights for the MFC population as assinged by the choice decoder, etc.) The structures in "ha.mat" and "mfc.mat" have the following fields:
+
+sessionID: unique identifier for the sessions (can be usd to index into
+           other data structures, ex. SFC)
+behavior:  contains all the relevant behavior from the session in which the
+           cell was recorded. It is itself a structure with the following
+           fields:
+
+		   RT: response time (in seconds)
+		   iscorrect: boolean indicating if trial was correct
+		   nr_appearances: ranges from 0 to 7, indicates the number of
+                           times this image has been presented before in
+                           this session. This can be converted into a
+                           boolian variable indicating new/old by
+                           thresholding at 1. So any image with an index of
+                           1 or greater, is part of the "old" set of stimuli.
+           categories: can take 4 possible values, 1 = cars, 4 = fruits,
+                        5 = human face, 7 = monkey face
+		   target: 	this is relevant only for the categorization trials,
+                    indicates target image category. For example, if the
+                    value for a trial is "5" that means that for that trial,
+                    the subject has to respond with "yes" if the stimulus
+                    shown was a human face. the target changed by blocks.
+                    For memory blocks, the values are "NaN"
+		   response: 	the subjects response, "1" = yes, "0" = no.
+		   trial_type: what task was being performed, two columns which are
+                       the complement of each other. Column one indexes all
+                       categorization trials, column two all memory trials.
+		   block_nr:   block number of the trial, should be 1-8, with the
+                       exception of one session where there was an extra block
+                       for training purposes.
+           gt: 	ground truth for the response.
+           response_type: indicates the effector to be used, 2 = eye or
+                          1 = button press.
+
+ts: 		time stamps organized into trials, provided either aligned to
+            stimulus onset or to the response.
+binsize :   indicates the size of the bin in milliseconds, used to compute
+            firing rate for PSTHs
+stepSize:   for internal use, indicates the stepsize of the moving window
+            used to estimate firing rate for PSTHs, expressed as a fraction
+            of the bin size.
+cellinfo:   row 1 = cluster number (internal use), row 2 = channel number
+            (internal use), row 3 = area code of the brain area this cell
+            was in.
+is_control: boolean indicating if this session was a control session.
+            See Figure S6 of the paper.
+
+********* Spike-field coherence (SFC) data structures *********
+The folder "sfc" contains two subdirectories called "baseline" and "stim".
+These names refer to the time window within which the spike-field coherence
+was measured. In the case of "baseline" it's [-1 0] seconds relative to
+stimulus onset. For "stim" it's [0.2 1.2] seconds after stimulus onset.
+All SFC analysis in the paper is done during the baseline, with the
+exception of the contrast between true positive trials and false negative
+trials, which was done after the stimulus onset. The "stim" folder contains
+an additional file, called "session_raw_stats". For the SFC analysis after
+stimulus onset, we only used sessions where the referencing was done
+locally, i.e. within the same cluster of electrodes as the one the cell was
+recorded from. The reason for this, is that ERPs (event related potentials)
+are significantly diminished for locally referenced sessions. The
+referencing (local vs. distal) information is given in
+"session_raw_stats.mat".
+
+session_raw_stats.mat (in stim subdirectory) contains two structures,
+"stats_amy" and "stats_hippo" containing referencing information for
+amygdala and hippocampus respectively. The fields are:
+
+name:  this is the session identifier
+areas: the area the electrodes were in, will read 'uLA','uRA' or 'uLH',
+       'uRH' for left and right amygdala/hippocampus.
+is_local: a boolean indicating if the session was locally referenced.
+
+
+tp_vs_fn.mat (in stim subdirectory) contains two structures, "sfc_mfc_amy"
+and "sfc_mfc_hippo" the coherence and spike-triggered power for all mfc
+cells with respect to amygdala and hippmpus LFP respectively. These
+structures apply to different LFP recordings but the structure is the same,
+with the following fields:
+
+f: 			the frequencies sampled (logarithmically from 2 t0 125Hz)
+cellinfo:  	first row = cluster number (internal use only), second row =
+            channel number (internal),
+			third row = identifier for the brain area where it was recorded
+			4,8 = left and right preSMA
+			2,6 = left and right dACC
+sessionid:  unique identifier for the recording session
+coh: 		contains PPC data, a cell array that has the same length as the
+            number of MFC cells (767).
+			If one entry in the array is empty, it is because that cell did
+            not meet requirements to be included. The main exclusion
+            criteria is that there must be at least 25 spikes per condition.
+			Given that false negatives are rare, this reduces the number of
+            cells included in the analysis. If the cell did meet the
+            requirements, then there will be N subarrays, where N is the
+            number of conditions +1. So for the TN vs. FN contrast, there
+            will be 3 subarrays at each location, where the first condition
+            is the union of the spikes used in TN and FN (the "all spikes"
+            condition).
+stp :	 	same as "coh" but contains the spike triggered power instead of
+            the PPC. The spike triggered power is estimated (like the
+            coherence) from the complex values returned by the fourier
+			transform of the around the spikes.
+params:  	contains information on how the analysis was performed.
+            Contains subfields like "min_nr_spikes" which is the main
+            criteria used to determine if a cell is included in teh analysis.
+
+In the "baseline" subdirectory, "sfc_data_task" contains two structures
+that have exactly the same layout as what is described above for
+"tp_vs_fn.mat"
+
+
+********* Area codes for brain regions *********
+1 = left amygdala
+2 = left dACC
+3 = left hippocampus
+4 = left preSMA
+5 = right amygdala
+6 = right dACC
+7 = right hippocampus
+8 = right preSMA

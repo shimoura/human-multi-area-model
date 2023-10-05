@@ -1,0 +1,6 @@
+NEST_PATH: /path/to/installation
+INFOMAP_PATH: /path/to/infomapinstallation
+OUTPATH: /where/to/write/simulationdata/to
+
+MPIRUN: srun
+MPI_MODULES: module load GCC ParaStationMPI

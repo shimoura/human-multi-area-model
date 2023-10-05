@@ -1,0 +1,15 @@
+*.pkl
+*.yaml
+*.dat
+*.gdf
+*.png
+*.pdf
+*.clu
+*.map
+*.net
+*.tree
+*.eps
+*.txt
+*.spiketrains
+*.spiketrains.sorted
+*.spiketrains.sorted.cut
