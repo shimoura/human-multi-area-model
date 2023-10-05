@@ -139,14 +139,5 @@ This work was supported by the German Research Foundation (DFG) Priority Program
 If you use this code, cite the paper publication:
 - Pronold, J., Meegen, A. van, Vollenbröker, H., Shimoura, R. O., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. van. (2023). Multi-Scale Spiking Network Model of Human Cerebral Cortex. BioRxiv, 2023.03.23.533968. [https://doi.org/10.1101/2023.03.23.533968](https://doi.org/10.1101/2023.03.23.533968)
 
-## (TODO) License
-
-Choose a license:
-- https://choosealicense.com/
-
-To add a license to your repository:
-
-- See Github docs [How to add a license](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/licensing-a-repository)
-
 ## Project status
 - Ongoing
