@@ -7,44 +7,9 @@ from scipy.io import loadmat
 from scipy.stats import gaussian_kde
 
 
-state_scaling = {
-        'groundstate': '8757444d0e17c59775b273562693e60b',
-        'metastable': '6c0ff4c3e733cf0fd1dc9485545cf027',
-        }
-
 state_lower_e_to_i = {
         'groundstate': '8fe1c1f7da65657072959fc060e3fce4',
         'metastable': 'ece6d9902639ed3b4537a0ae9cbbc4da',
-        }
-
-state_scaling_longer_time = {
-        'groundstate': '8757444d0e17c59775b273562693e60b',
-        'metastable': '6c0ff4c3e733cf0fd1dc9485545cf027',
-        }
-
-state_scaling_distributed_params = {
-        'groundstate': '22d0bb12e1feeb6006e0954623fe1c3e',
-        'metastable': '76a2fe05a24c63d7fa7782cf2915bc03',
-        }
-
-state_scaling_different_synaptic_time_constants = {
-        'groundstate': 'c285a602cd9d3e00237062908021e791',
-        'metastable': '33898d285e242f4d6ee29949dc51b6d0',
-        }
-
-state_scaling_smaller_g = {
-        'groundstate': '80939344cb2100978d382e13a33b1afc',
-        'metastable': '71b25eec7c5dfc3a05806f2c99b25e51',
-        }
-
-state_scaling_lichtman = {
-        'groundstate': '40ba75ef3a160ba6a6d782204d61a914',
-        'metastable': '3ed7438024a2e8d0b875f350284c167b',
-        }
-
-state_scaling_lichtman_chii2 = {
-        'groundstate': '517f98422516bbe6cb324c5436e7f66f',
-        'metastable': '10acdb2ae9247b49d4eeea4d78f308b7',
         }
 
 state_scaling_lichtman_chii2_smaller_g = {

@@ -25,71 +25,15 @@ roman_to_arabic_numerals = {
 random.seed(1234)
 
 
-simulation = 'lichtman_chii2_different_seed'
 for state in ['groundstate', 'metastable']:
-    if simulation == 'normal':
-        name_extension = ''
-        outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_initial_values'
-        if state == 'groundstate':
-            net_folder = p_join(outpath, '8757444d0e17c59775b273562693e60b')  # groundstate
-        elif state == 'metastable':
-            net_folder = p_join(outpath, '6c0ff4c3e733cf0fd1dc9485545cf027')  # metastable
-        sim_folder = p_join(net_folder, '1245642e017773b56bc6ea5d9abfd004')
-        ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
-    elif simulation == 'distributed_params':
-        name_extension = '_distributed_params'
-        outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_distributed_parameters'
-        if state == 'groundstate':
-            net_folder = p_join(outpath, '22d0bb12e1feeb6006e0954623fe1c3e')  # groundstate
-        elif state == 'metastable':
-            net_folder = p_join(outpath, '76a2fe05a24c63d7fa7782cf2915bc03')  # metastable
-        sim_folder = p_join(net_folder, '1245642e017773b56bc6ea5d9abfd004')
-        ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
-    elif simulation == 'different_synaptic_time_constants':
-        name_extension = '_different_syn_tim_consts'
-        outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_different_synaptic_time_constants/'
-        if state == 'groundstate':
-            net_folder = p_join(outpath, 'c285a602cd9d3e00237062908021e791')  # groundstate
-        elif state == 'metastable':
-            net_folder = p_join(outpath, '33898d285e242f4d6ee29949dc51b6d0')  # metastable
-        sim_folder = p_join(net_folder, '1245642e017773b56bc6ea5d9abfd004')
-        ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
-    elif simulation == 'smaller_g':
-        name_extension = '_smaller_g'
-        outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_smaller_g/'
-        if state == 'groundstate':
-            net_folder = p_join(outpath, '80939344cb2100978d382e13a33b1afc')  # groundstate
-        elif state == 'metastable':
-            net_folder = p_join(outpath, '71b25eec7c5dfc3a05806f2c99b25e51')  # metastable
-        sim_folder = p_join(net_folder, '1245642e017773b56bc6ea5d9abfd004')
-        ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
-    elif simulation == 'lichtman':
-        name_extension = '_lichtman'
-        outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_lichtman/'
-        if state == 'groundstate':
-            net_folder = p_join(outpath, '40ba75ef3a160ba6a6d782204d61a914')  # groundstate
-        elif state == 'metastable':
-            net_folder = p_join(outpath, '3ed7438024a2e8d0b875f350284c167b')  # metastable
-        sim_folder = p_join(net_folder, '1245642e017773b56bc6ea5d9abfd004')
-        ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
-    elif simulation == 'lichtman_chii2':
-        name_extension = '_lichtman_chiI2'
-        outpath = '/p/scratch/cjinb33/shimoura1/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2/'
-        if state == 'groundstate':
-            net_folder = p_join(outpath, '517f98422516bbe6cb324c5436e7f66f')  # groundstate
-        elif state == 'metastable':
-            net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # metastable
-        sim_folder = p_join(net_folder, '1245642e017773b56bc6ea5d9abfd004')
-        ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
-    elif simulation == 'lichtman_chii2_different_seed':
-        name_extension = '_lichtman_chiI2_different_seed'
-        outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2/'
-        if state == 'groundstate':
-            net_folder = p_join(outpath, '517f98422516bbe6cb324c5436e7f66f')  # groundstate
-        elif state == 'metastable':
-            net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # metastable
-        sim_folder = p_join(net_folder, 'de4934b8c7777751f7c516e2ad35f50a')
-        ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
+    name_extension = '_lichtman_chiI2_different_seed'
+    outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2/'
+    if state == 'groundstate':
+        net_folder = p_join(outpath, '517f98422516bbe6cb324c5436e7f66f')  # groundstate
+    elif state == 'metastable':
+        net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # metastable
+    sim_folder = p_join(net_folder, 'de4934b8c7777751f7c516e2ad35f50a')
+    ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
 
     # ========== Load ==========
     popGids = pd.read_pickle(p_join(sim_folder, 'population_GIDs.pkl'))

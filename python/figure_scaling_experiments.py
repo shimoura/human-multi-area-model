@@ -10,14 +10,7 @@ from compute_scaling_experiments_helpers import json_load, calc_mean_std
 from compute_scaling_experiments_helpers import right_ordering as fMRI_ordering
 
 experiments = [
-        'normal',
-        'normal_longer_time',
         'lower_etoi',
-        'distributed_params',
-        'different_synaptic_time_constants',
-        'smaller_g',
-        'lichtman',
-        'lichtman_chii2',
         'lichtman_chii2_smaller_g',
         'lichtman_chii2_different_time_consts',
         'lichtman_chii2_distributed_params',
@@ -27,56 +20,28 @@ experiments = [
 if len(sys.argv) > 1 and sys.argv[1] in experiments:
     simulation = sys.argv[1]
 else:
-    simulation = 'normal'
+    simulation = 'lichtman_chii2_different_seed'
 
-if simulation == 'normal':
-    from compute_scaling_experiments_helpers import state_scaling as state
-    save_data_dir = 'data/scaling_experiment'
-    name_extension = ''
+if simulation == 'lichtman_chii2_different_seed':
+    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed as state
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_seed'
+    name_extension = '_lichtman_chiI2_different_seed'
 elif simulation == 'lower_etoi':
     from compute_scaling_experiments_helpers import state_lower_e_to_i as state
-    save_data_dir = 'data/scaling_experiment_lower_e_to_i'
+    save_data_dir = 'simulated_data/scaling_experiment_lower_e_to_i'
     name_extension = '_lower_e_to_i'
-elif simulation == 'normal_longer_time':
-    from compute_scaling_experiments_helpers import state_scaling as state
-    save_data_dir = 'data/scaling_experiment_longer_time'
-    name_extension = '_longer_time'
-elif simulation == 'distributed_params':
-    from compute_scaling_experiments_helpers import state_scaling_distributed_params as state
-    save_data_dir = 'data/scaling_experiment_distributed_parameters/'
-    name_extension = '_distributed_params'
-elif simulation == 'different_synaptic_time_constants':
-    from compute_scaling_experiments_helpers import state_scaling_different_synaptic_time_constants as state
-    save_data_dir = 'data/scaling_experiment_different_syn_time_consts/'
-    name_extension = '_different_syn_tim_consts'
-elif simulation == 'smaller_g':
-    from compute_scaling_experiments_helpers import state_scaling_smaller_g as state
-    save_data_dir = 'data/scaling_experiment_smaller_g'
-    name_extension = '_smaller_g'
-elif simulation == 'lichtman':
-    from compute_scaling_experiments_helpers import state_scaling_lichtman as state
-    save_data_dir = 'data/scaling_experiment_lichtman'
-    name_extension = '_lichtman'
-elif simulation == 'lichtman_chii2':
-    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2 as state
-    save_data_dir = 'data/scaling_experiment_lichtman_chii2'
-    name_extension = '_lichtman_chiI2'
 elif simulation == 'lichtman_chii2_smaller_g':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_smaller_g as state
-    save_data_dir = 'data/scaling_experiment_lichtman_chii2_smaller_g'
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_smaller_g'
     name_extension = '_lichtman_chiI2_smaller_g'
 elif simulation == 'lichtman_chii2_different_time_consts':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_time_consts as state
-    save_data_dir = 'data/scaling_experiment_lichtman_chii2_different_time_consts'
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_time_consts'
     name_extension = '_lichtman_chiI2_different_time_consts'
 elif simulation == 'lichtman_chii2_distributed_params':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_distributed_params as state
-    save_data_dir = 'data/scaling_experiment_lichtman_chii2_distributed_params'
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_distributed_params'
     name_extension = '_lichtman_chiI2_distributed_params'
-elif simulation == 'lichtman_chii2_different_seed':
-    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed as state
-    save_data_dir = 'data/scaling_experiment_lichtman_chii2_different_seed'
-    name_extension = '_lichtman_chiI2_different_seed'
 
 linewidth=2.
 
