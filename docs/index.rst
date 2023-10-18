@@ -9,7 +9,6 @@ Huvi documentation
 .. toctree::
    :maxdepth: 2
 
-   overview
    source/modules
 
 Indices and tables
