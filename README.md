@@ -6,7 +6,7 @@ This code implements the multi-scale, spiking network model of human cortex deve
 
 ![model_overview](./figures/model_overview.png)
 
-**Model overview**: The model comprises all 34 areas of the Desikan-Killiany parcellation in one hemisphere of human cerebral cortex. Each area is modeled by a column with $\mathrm{1\:\mathrm{mm^{2}}}$ cortical surface. Within each column, the full number of neurons and synapses based on anatomical data is included. In total, this leads to 3.47 million neurons and 42.8 billion synapses. Both the intrinsic and the cortico-cortical connectivity are layer- and population-specific.
+**Model overview**: The model comprises all 34 areas of the Desikan-Killiany parcellation in one hemisphere of human cerebral cortex. Each area is modeled by a column with $\mathrm{1\,\mathrm{mm^{2}}}$ cortical surface. Within each column, the full number of neurons and synapses based on anatomical data is included. In total, this leads to 3.47 million neurons and 42.8 billion synapses. Both the intrinsic and the cortico-cortical connectivity are layer- and population-specific.
 
 ## Table of contents
 - [Multi-Scale Spiking Network Model of Human Cerebral Cortex](#multi-scale-spiking-network-model-of-human-cerebral-cortex)
@@ -66,10 +66,10 @@ The NEST installation path will have to be specified in `config.yaml` described 
 
 Folder structure:
 - `./data`: contains experimental data-sets used for building the network and for comparing results
-- `./docs`: **TODO** 
+- `./docs`: documentation of the code
 - `./experiments`: contains python scripts which set the model parameters for different simulation experiments
-- `./figures`: **TODO**
-- `./mplstyles`: **TODO**
+- `./figures`: contains published figures
+- `./mplstyles`: contains matplotlib style files used to create figures
 - `./out`: directory where the simulation output is stored
 - `./python`: main directory with python scripts to run the network simulation
 
@@ -85,8 +85,8 @@ Brief description of the main files in `./python` directory:
 Additionally, in `./python/` directory you can also find the following subfolders:
 - `./python/data_loader`: contains auxiliary scripts for loading the data used for building the network
 - `./python/data_preprocessing`: contains auxiliary scripts for preprocessing the data used for building the network
-- `./python/helpers`: **TODO**
-- `./python/theory`: **TODO**
+	- `./python/helpers`: contains auxiliary helper scripts
+- `./python/theory`: contains the scripts used for the mean-field analysis
 
 ## How to run
 
@@ -108,7 +108,7 @@ to add `conda` to the `PATH`. Lastly start `snakemake` with the cluster specific
 bash snakemake_slurm.sh
 ```
 This script will run the workflow defined in `Snakefile`, which follows the sequence:
-1. read all `*.py` experiment files contained in the `./experiments/` directory.
+1. read all `*.py` experiment files contained in the `./experiments/` directory
 2. load necessary modules for MPI and NEST before executing
 3. create the network
 4. simulate the network
