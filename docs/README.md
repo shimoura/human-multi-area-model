@@ -1,6 +1,6 @@
 # Sphinx documentation
 
-Builds a sphoinx-based documentation of the code.
+Builds a sphinx-based documentation of the code.
 
 ## Generate documentation
 
