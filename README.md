@@ -69,9 +69,11 @@ Folder structure:
 - `./docs`: documentation of the code
 - `./experiments`: contains python scripts which set the model parameters for different simulation experiments
 - `./figures`: contains published figures
+- `./misc/experiments`: contains few other experiments used to generate the supplementary figures
 - `./mplstyles`: contains matplotlib style files used to create figures
 - `./out`: directory where the simulation output is stored
 - `./python`: main directory with python scripts to run the network simulation
+- `./simulated_data`: simulated data generated from scaling experiments
 
 Brief description of the main files in `./python` directory:
 - `network.py`: python class that gathers and prepares all data for setting up the NEST simulation
@@ -97,7 +99,7 @@ If running in a cluster, you also have to define the cluster configurations on `
 
 ### Run on a cluster
 
-To run the model on a cluster, make sure you have a working `conda` and `snakemake` installation on the cluster. 
+To run the model on a cluster, make sure you have a working `conda` and `snakemake` installation. 
 
 Start with
 ```
@@ -108,7 +110,7 @@ to add `conda` to the `PATH`. Lastly start `snakemake` with the cluster specific
 bash snakemake_slurm.sh
 ```
 This script will run the workflow defined in `Snakefile`, which follows the sequence:
-1. read all `*.py` experiment files contained in the `./experiments/` directory
+1. read all `*.py` experiment files contained in the `./experiments/` directory. **NOTE**: in case you want to run less/more experiments, remove/add these files from the `./experiments/` directory.
 2. load necessary modules for MPI and NEST before executing
 3. create the network
 4. simulate the network
