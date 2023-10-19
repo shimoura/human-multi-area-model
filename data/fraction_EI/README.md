@@ -1,7 +1,9 @@
 # Ratio of excitatory to inhibitory cells
 
 There are two datasets on the ratio of excitatory to inhibitory cells that can
-currently be chosen.
+currently be chosen. In both datasets, the ratio of excitatory neurons given in
+`fraction_E_neurons` corresponds to the ratio of excitatory cells to the sum of
+excitatory and inhibitory cells.
 
 ## lichtman.csv
 
