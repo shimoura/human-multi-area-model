@@ -60,10 +60,10 @@ The NEST installation path will have to be specified in `config.yaml` described 
 ## Code repository
 
 Folder structure:
-- `./data`: contains experimental data-sets used for building the network and for comparing results
+- `./data`: contains experimental datasets used for building the network and for comparing results
 - `./docs`: documentation of the code
 - `./experiments`: contains python scripts which set the model parameters for different simulation experiments
-- `./figures`: contains published figures
+- `./figures`: output directory for figures
 - `./misc/experiments`: contains few other experiments used to generate the supplementary figures
 - `./mplstyles`: contains matplotlib style files used to create figures
 - `./out`: directory where the simulation output is stored
