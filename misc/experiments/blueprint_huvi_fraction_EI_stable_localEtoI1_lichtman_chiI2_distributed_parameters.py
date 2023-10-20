@@ -96,6 +96,16 @@ net_params = {
         'tau_syn_in': {tau_syn_in},
         # Refractory period of the neurons after a spike (in ms).
         't_ref': 2.0
+    },
+    'neuron_param_dist_E': {
+        'V_th': {'distribution': 'lognormal', 'rel_sd': 0.21},
+        'C_m': {'distribution': 'lognormal', 'rel_sd': 0.22},
+        'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.55},
+    },
+    'neuron_param_dist_I': {
+        'V_th': {'distribution': 'lognormal', 'rel_sd': 0.22},
+        'C_m': {'distribution': 'lognormal', 'rel_sd': 0.34},
+        'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.43},
     }
 }
 

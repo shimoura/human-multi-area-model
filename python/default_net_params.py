@@ -26,7 +26,7 @@ params['cytoarchitecture_params'] = {
         os.getcwd(),
         'data',
         'fraction_EI',
-        'binzegger.csv'
+        'lichtman.csv'
     ),
     # Source parcellation
     'source': 'VonEconomoKoskinas',
@@ -35,7 +35,7 @@ params['cytoarchitecture_params'] = {
     # Remove layers with fewer neurons than in layer I
     'remove_smaller_layerI': False,
     # Minimal number of neurons per layer
-    'min_neurons_per_layer': 0
+    'min_neurons_per_layer': 5000
 }
 
 """
@@ -104,8 +104,8 @@ params['neuron_params_E'] = {
     # Value for AMPA receptors from (Fourcaud & Brunel, 2002)
     'tau_syn_ex': 2.0,
     # Time constant of postsynaptic inhibitory currents (in ms).
-    # Value for GABA_A receptors from (Fourcaud & Brunel, 2002)
-    'tau_syn_in': 5.0,
+    # Set as the same value as tau_syn_ex
+    'tau_syn_in': 2.0,
     # Refractory period of the neurons after a spike (in ms).
     't_ref': 2.0
 }
@@ -130,23 +130,23 @@ params['neuron_params_I'] = {
     # Value for AMPA receptors from (Fourcaud & Brunel, 2002)
     'tau_syn_ex': 2.0,
     # Time constant of postsynaptic inhibitory currents (in ms).
-    # Value for GABA_A receptors from (Fourcaud & Brunel, 2002)
-    'tau_syn_in': 5.0,
+    # Set as the same value as tau_syn_ex
+    'tau_syn_in': 2.0,
     # Refractory period of the neurons after a spike (in ms).
     't_ref': 2.0
 }
 # Distribution of neuron parameters.
-# See Allen Cells GLIF Parameters.ipynb
-# Relative sd set to match the fitted sigma
+# Default relative sd set as 0, meaning no distribution.
+# Relative sd set to match the fitted sigma showed in comments below. See Allen Cells GLIF Parameters.ipynb
 params['neuron_param_dist_E'] = {
-    'V_th': {'distribution': 'lognormal', 'rel_sd': 0.21},
-    'C_m': {'distribution': 'lognormal', 'rel_sd': 0.22},
-    'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.55},
+    'V_th': {'distribution': 'lognormal', 'rel_sd': 0.0},  # 0.21
+    'C_m': {'distribution': 'lognormal', 'rel_sd': 0.0},   # 0.22
+    'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.0}, # 0.55
 }
 params['neuron_param_dist_I'] = {
-    'V_th': {'distribution': 'lognormal', 'rel_sd': 0.22},
-    'C_m': {'distribution': 'lognormal', 'rel_sd': 0.34},
-    'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.43},
+    'V_th': {'distribution': 'lognormal', 'rel_sd': 0.0},  # 0.22
+    'C_m': {'distribution': 'lognormal', 'rel_sd': 0.0},   # 0.34
+    'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.0}, # 0.43
 }
 
 """
@@ -181,7 +181,7 @@ params['scaling_factors_recurrent'] = {
     # Scale cortico cortical excitatory on excitatory weights
     'cc_scalingEtoE': 1.0,
     # Scale cortico cortical excitatory on inhibitory weights
-    'cc_scalingEtoI': 1.0
+    'cc_scalingEtoI': 2.0
 }
 
 
@@ -211,9 +211,9 @@ params['input_params'] = {
 # Scaling factors for the external weights
 params['scaling_factors_external'] = {
     # Scale input to 5E, seems good to increase the activity in 5E
-    'scaling5E': 1.0,
+    'scaling5E': 1.05,
     # Scale input to 6E, seems good to increase the activity in 6E
-    'scaling6E': 1.0
+    'scaling6E': 1.15
 }
 # Single spike input
 params['single_spike'] = {}

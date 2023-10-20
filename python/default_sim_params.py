@@ -19,9 +19,9 @@ params = {
     # is run on a local machine.
     'print_time': False,
     # Set initial value of the membrane potential.
-    'V0_mean': -58.,
+    'V0_mean': -150.,
     # Set initial standard deviation of the membrane potential.
-    'V0_sd': 10.,
+    'V0_sd': 50.,
     # Connectivity initialization rule. Options:
     # * fixed_total_number: fixes the total numer of synapses
     # * fixed_indegree: fixes indegree of single neurons

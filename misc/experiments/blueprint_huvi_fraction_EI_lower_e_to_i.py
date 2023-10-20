@@ -13,6 +13,13 @@ net_params = {
         'rho_syn': {rho_syn}
     },
     'cytoarchitecture_params': {
+        # Path to ei ratio data
+        'ei_ratio_path': os.path.join(
+            os.getcwd(),
+            'data',
+            'fraction_EI',
+            'binzegger.csv'
+        ),
         # Remove layers with fewer neurons than in layer I
         'remove_smaller_layerI': False,
         # Minimal number of neurons per layer
