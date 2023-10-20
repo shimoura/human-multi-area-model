@@ -22,7 +22,6 @@ This code implements the multi-scale, spiking network model of human cortex deve
     - [Configuration](#configuration)
     - [Run on a cluster](#run-on-a-cluster)
   - [Collaborators](#collaborators)
-  - [(TODO) Get support](#todo-get-support)
   - [Acknowledgments](#acknowledgments)
   - [How to cite](#how-to-cite)
 
@@ -119,12 +118,6 @@ This script will run the workflow defined in `Snakefile`, which follows the sequ
 ## Collaborators
 
 The scientific content contributions were made by the authors of the publication [1]: Jari Pronold, Alexander van Meegen, Hannah Vollenbröker, Renan O. Shimoura, Mario Senden, Claus C. Hilgetag, Rembrandt Bakker, and Sacha J. van Albada.
-
-## (TODO) Get support
-Describe how to get in touch in case of questions or issues.
-
-Contact
-example-mailing-list@support.org
 
 ## Acknowledgments
 We thank Sebastian Bludau and Timo Dickscheid for helpful discussions about cytoarchitecture and parcellations. Furthermore, we gratefully acknowledge all the shared experimental data that underlies our work, and the effort spent to collect it.
