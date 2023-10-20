@@ -1,8 +1,9 @@
-# Collection of Macaque data
+# Collection of macaque data
 
-## Combine neuron densities and SLN
+## Fractions of labeled neurons (FLN), fractions of supragranular labeled neurons (SLN), and neuron densities.
 
-* Obtain the necessary files and run `preprocessing.py`
+* Used by `preprocessing.py`
+* These files are not included in this repository but can be obtained from the sources below.
 
 ## Files to download
 
