@@ -36,10 +36,6 @@ The entire workflow of the model, from data preprocessing through the simulation
 
 All network simulations were performed using the `NEST simulator` version `2.20.2` (https://www.nest-simulator.org/).
 
-**(TODO)** Hardware requirements:
-- ?? MB memory
-- ...
-
 ## Installation
 
 ### Python modules using Anaconda
