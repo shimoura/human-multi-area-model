@@ -29,6 +29,7 @@ This code implements the multi-scale, spiking network model of human cortex deve
 ### Data
 
 Data extracted from experimental references and necessary to run the codes can be found in `data/` folder. These files will be automatically loaded when running the simulation (check section [How to run](#how-to-run) for details).
+Please note that some data has to be manually downloaded. Specifically, the data stored in `./data/macaque/` and `./data/rutishauser/`.
 
 ### Requirements
 
