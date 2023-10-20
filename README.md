@@ -121,5 +121,5 @@ We thank Sebastian Bludau and Timo Dickscheid for helpful discussions about cyto
 This work was supported by the German Research Foundation (DFG) Priority Program “Computational Connectomics” (SPP 2041; Project 347572269), the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreement No. 945539 (Human Brain Project SGA3), the Joint Lab “Supercomputing and Modeling for the Human Brain”, and HiRSE_PS, the Helmholtz Platform for Research Software Engineering - Preparatory Study, an innovation pool project of the Helmholtz Association. The use of the JURECA-DC supercomputer in Jülich was made possible through VSR computation time grant JINB33 (“Brain-Scale Simulations”)
 
 ## How to cite
-If you use this code, cite the paper publication:
+If you use this code, please cite:
 - Pronold, J., Meegen, A. van, Vollenbröker, H., Shimoura, R. O., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. van. (2023). Multi-Scale Spiking Network Model of Human Cerebral Cortex. BioRxiv, 2023.03.23.533968. [https://doi.org/10.1101/2023.03.23.533968](https://doi.org/10.1101/2023.03.23.533968)
