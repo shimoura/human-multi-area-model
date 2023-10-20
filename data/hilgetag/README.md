@@ -7,4 +7,4 @@ Data extracted from the book by von Economo & Koskinas on neuron densities and l
  
 ## Imaging data
 
-Structural connectivity based on DTI data from the Human Connectivity Project in Desikan Killiany parcellation and the corresponding volumes of the areas.
+Structural connectivity based on DTI data from the Human Connectome Project in Desikan-Killiany parcellation and the corresponding volumes of the areas.
