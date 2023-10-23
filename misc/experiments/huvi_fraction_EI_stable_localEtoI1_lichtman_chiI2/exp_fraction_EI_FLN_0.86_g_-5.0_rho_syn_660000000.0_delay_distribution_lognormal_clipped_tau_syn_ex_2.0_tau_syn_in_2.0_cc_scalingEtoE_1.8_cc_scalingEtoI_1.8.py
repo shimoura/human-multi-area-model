@@ -2,7 +2,6 @@
 import os
 
 net_params = {
-    'outpath': '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2',
     'predictive_connectomic_params': {
         'FLN': 0.86,
         'rho_syn': 660000000.0

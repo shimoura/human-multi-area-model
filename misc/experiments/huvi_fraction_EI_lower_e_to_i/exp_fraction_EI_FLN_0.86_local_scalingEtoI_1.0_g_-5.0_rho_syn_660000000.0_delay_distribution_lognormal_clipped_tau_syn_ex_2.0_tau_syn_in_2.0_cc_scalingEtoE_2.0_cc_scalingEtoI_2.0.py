@@ -2,12 +2,18 @@
 import os
 
 net_params = {
-    'outpath': '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_lower_e_to_i',
     'predictive_connectomic_params': {
         'FLN': 0.86,
         'rho_syn': 660000000.0
     },
     'cytoarchitecture_params': {
+        # Path to ei ratio data
+        'ei_ratio_path': os.path.join(
+            os.getcwd(),
+            'data',
+            'fraction_EI',
+            'binzegger.csv'
+        ),
         # Remove layers with fewer neurons than in layer I
         'remove_smaller_layerI': False,
         # Minimal number of neurons per layer

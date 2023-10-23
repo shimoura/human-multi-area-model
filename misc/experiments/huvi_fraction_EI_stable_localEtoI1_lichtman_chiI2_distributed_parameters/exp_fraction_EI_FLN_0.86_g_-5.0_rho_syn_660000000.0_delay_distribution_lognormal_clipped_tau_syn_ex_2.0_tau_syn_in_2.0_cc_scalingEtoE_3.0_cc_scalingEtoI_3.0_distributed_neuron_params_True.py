@@ -2,7 +2,6 @@
 import os
 
 net_params = {
-    'outpath': '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2_distributed_parameters',
     'predictive_connectomic_params': {
         'FLN': 0.86,
         'rho_syn': 660000000.0
@@ -91,6 +90,16 @@ net_params = {
         'tau_syn_in': 2.0,
         # Refractory period of the neurons after a spike (in ms).
         't_ref': 2.0
+    },
+    'neuron_param_dist_E': {
+        'V_th': {'distribution': 'lognormal', 'rel_sd': 0.21},
+        'C_m': {'distribution': 'lognormal', 'rel_sd': 0.22},
+        'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.55},
+    },
+    'neuron_param_dist_I': {
+        'V_th': {'distribution': 'lognormal', 'rel_sd': 0.22},
+        'C_m': {'distribution': 'lognormal', 'rel_sd': 0.34},
+        'tau_m': {'distribution': 'lognormal', 'rel_sd': 0.43},
     }
 }
 

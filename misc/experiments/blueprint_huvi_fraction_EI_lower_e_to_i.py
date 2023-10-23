@@ -7,7 +7,6 @@ blueprint = '''# Overwrite values of python/default_net_params.py
 import os
 
 net_params = {
-    'outpath': '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_lower_e_to_i',
     'predictive_connectomic_params': {
         'FLN': {FLN},
         'rho_syn': {rho_syn}
