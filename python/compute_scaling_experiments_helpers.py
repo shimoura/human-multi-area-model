@@ -363,7 +363,7 @@ def LVr(sts, t_ref, t_start=None, t_stop=None, LvR_min_spikes=10):
     return 0.
 
 def calculateFuncionalConnectivityCorrelations(ana_path, tmin=2000, tmax=8000,
-        base_path='/p/project/cjinb33/shimoura1/huvi-master',
+        base_path=os.path.join(os.getcwd(), 'out'),
         exclude_diagonal=True, use_corrcoeff=True):
     """
     Calculates the correlation between experimental and simulated functional

@@ -475,7 +475,7 @@ axes['lvr'].text(
 # Plot experimental fMRI
 # ==============================================================================
 
-data_dir = '/p/project/cjinb33/jinb3330/gitordner/huvi/data/senden/rsData_7T_DKparcel/'
+data_dir = os.path.join(os.getcwd(), 'data/senden/rsData_7T_DKparcel/')
 roi = pd.read_csv(os.path.join(data_dir, 'ROIs.txt'), header=None, names=['roi'], dtype=str, squeeze=True)
 roi = roi.apply(lambda x: x.split('-')[-1])
 roi = roi.drop(range(0, 14)).drop(range(82, 85))

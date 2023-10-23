@@ -1,3 +1,4 @@
+import os
 import random
 import numpy as np
 import pandas as pd
@@ -27,7 +28,7 @@ random.seed(1234)
 
 for state in ['groundstate', 'metastable']:
     name_extension = '_lichtman_chiI2_different_seed'
-    outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2/'
+    outpath = os.path.join(os.getcwd(), 'out/')
     if state == 'groundstate':
         net_folder = p_join(outpath, '517f98422516bbe6cb324c5436e7f66f')  # groundstate
     elif state == 'metastable':

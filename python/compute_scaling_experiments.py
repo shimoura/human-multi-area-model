@@ -24,9 +24,10 @@ if len(sys.argv) > 1 and sys.argv[1] in experiments:
 else:
     simulation = 'lichtman_chii2_different_seed'
 
+base_path = os.path.join(os.getcwd(), 'out/')
+
 if simulation == 'lichtman_chii2_different_seed':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed as state
-    base_path = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2/'
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_seed'
     interesting_paths = [
             '07338a82a7f3331ed0309d0aefe2512b/',
@@ -52,7 +53,6 @@ if simulation == 'lichtman_chii2_different_seed':
     ana_path = 'd8057e7a966caf3eefdc9d234a0785d3/'
 elif simulation == 'lower_etoi':
     from compute_scaling_experiments_helpers import state_lower_e_to_i as state
-    base_path = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_lower_e_to_i/'
     save_data_dir = 'simulated_data/scaling_experiment_lower_e_to_i'
     interesting_paths = [
             '12742e24273ad73c879fc396b575e2e9/',
@@ -72,7 +72,6 @@ elif simulation == 'lower_etoi':
     ana_path = '099ed2eb40bf4285921a916d32bf5343/'
 elif simulation == 'lichtman_chii2_smaller_g':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_smaller_g as state
-    base_path = '/p/scratch/cjinb33/shimoura1/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2_smaller_g/'
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_smaller_g'
     interesting_paths = [
             '08e8618517e6e057db688d6257680da6/',
@@ -85,7 +84,6 @@ elif simulation == 'lichtman_chii2_smaller_g':
     ana_path = 'd8057e7a966caf3eefdc9d234a0785d3/'
 elif simulation == 'lichtman_chii2_different_time_consts':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_time_consts as state
-    base_path = '/p/scratch/cjinb33/shimoura1/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2_different_synaptic_time_constants/'
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_time_consts'
     interesting_paths = [
             '013292ec8fa6c9230d1c9518b71d19ad/',
@@ -103,7 +101,6 @@ elif simulation == 'lichtman_chii2_different_time_consts':
     ana_path = 'd8057e7a966caf3eefdc9d234a0785d3/'
 elif simulation == 'lichtman_chii2_distributed_params':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_distributed_params as state
-    base_path = '/p/scratch/cjinb33/shimoura1/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2_distributed_parameters/'
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_distributed_params'
     interesting_paths = [
             '2c60ac72127fa0089cf8c65a9f4aaf8e/',
@@ -142,7 +139,7 @@ area = 'caudalanteriorcingulate'
 # ==============================================================================
 # ==============================================================================
 
-filename = '/p/project/cjinb33/jinb3330/gitordner/huvi/data/rutishauser/spikes/'
+filename = base_path + 'data/rutishauser/spikes/'
 data = load_data(filename)
 print(f'loaded {len(data)} neurons')
 all_ids = range(len(data))

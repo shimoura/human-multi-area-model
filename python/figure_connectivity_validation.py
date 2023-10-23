@@ -17,7 +17,7 @@ pval_min = 0.05
 target_min_outdeg = 100
 work_dir = "figures/tmp"
 figname = "figure_connectivity_validation"
-net_dict = networkDictFromDump('/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2/517f98422516bbe6cb324c5436e7f66f/')
+net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/517f98422516bbe6cb324c5436e7f66f/'))
 
 # ========== Preprocess ==========
 area_list = net_dict['area_list']

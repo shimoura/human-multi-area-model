@@ -1,6 +1,7 @@
 import random
 import numpy as np
 import pandas as pd
+import os
 from os.path import join as p_join
 
 import matplotlib.pyplot as plt
@@ -23,7 +24,7 @@ roman_to_arabic_numerals = {
 random.seed(1234)
 
 
-outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2/'
+outpath = os.path.join(os.getcwd(), 'out/')
 net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # metastable
 sim_folder = p_join(net_folder, 'de4934b8c7777751f7c516e2ad35f50a')
 ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')

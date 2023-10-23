@@ -1,5 +1,6 @@
 from os.path import join as path_join
 from itertools import product, combinations
+import os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -25,8 +26,7 @@ sim_hash = 'c77c637ef7884a002d4cb2f10254353c'
 ana_hash = '9869eeeab580621db9572c8aa8c5f789'
 
 # outpath = 'out'
-outpath = '/p/scratch/cjinb33/jinb3330/huvi_fraction_EI_stable_localEtoI1_lichtman_chiI2_perturbation'
-
+outpath = os.path.join(os.getcwd(), 'out')
 
 def load_diffs(net_hash_orig, net_hash_pert):
     """Calculate rate differences for the two hashes"""
