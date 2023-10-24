@@ -1,6 +1,4 @@
 # Overwrite values of python/default_net_params.py
-import os
-
 net_params = {
     'single_spike': {('pericalcarine', 'IV', 'E'): 2000.}
 }

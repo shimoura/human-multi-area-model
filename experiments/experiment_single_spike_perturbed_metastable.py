@@ -1,6 +1,4 @@
 # Overwrite values of python/default_net_params.py
-import os
-
 net_params = {
     'scaling_factors_recurrent': {
         # Scale cortico cortical excitatory on excitatory weights
