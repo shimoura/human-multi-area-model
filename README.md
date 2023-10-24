@@ -56,7 +56,7 @@ The ```NEST simulator``` is not include in this file, although it can be install
 All different methods to install NEST can be found in their extensive documentation: https://nest-simulator.readthedocs.io/en/stable/installation/index.html. 
 In our published results, we used the "Install NEST from source" option with NEST ```2.20.2``` version. Note: after the step to clone nest-simulator from Github, change the branch with: ```git checkout v2.20.2```.
 
-The NEST installation path will have to be specified in `config.yaml` described in the ["How to run"](#how-to-run) session.
+The NEST installation path will have to be specified in `config.yaml` described in the ["How to run"](#how-to-run) section.
 
 ## Code repository
 
@@ -106,11 +106,23 @@ to add `conda` to the `PATH`. Lastly start `snakemake` with the cluster specific
 bash snakemake_slurm.sh
 ```
 This script will run the workflow defined in `Snakefile`, which follows the sequence:
-1. read all `*.py` experiment files contained in the `./experiments/` directory. **NOTE**: in case you want to run less/more experiments, remove/add these files from the `./experiments/` directory.
+1. read all `*.py` experiment files contained in the `./experiments/` directory. **NOTE**: If you want to run fewer/more experiments, remove/add these files from the `./experiments/` directory.
 2. load necessary modules for MPI and NEST before executing
 3. create the network
 4. simulate the network
 5. analyse the results from simulation
+
+The resulting simulation data will be stored, by default, in the `./out` directory. For each experiment, different information regarding network, simulation, and analysis details will be stored following this structure:
+
+`./out/<network_hash>/<simulation_hash>/<analysis_hash>`
+
+The hash identifiers are automatically generated based on the set of parameters defined on the network, simulation, and analysis dictionaries.
+
+### Ploting figures
+
+After running the complete workflow described in ["Run on a cluster"](###run-on-a-cluster) section, you can find the raster plots and other figures automatically generated from the simulation results in
+
+`./out/<network_hash>/<simulation_hash>/<analysis_hash>/plots/` 
 
 ## Collaborators
 
