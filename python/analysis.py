@@ -1030,7 +1030,7 @@ class Analysis():
         ]
         sim_fc_bold = sim_fc_bold[~np.isnan(sim_fc_bold)]
         sim_fc_syn = df_sim_fc_syn.values[
-            np.tril_indices(sim_fc_syn.shape[0])
+            np.tril_indices(df_sim_fc_syn.shape[0])
         ]
         sim_fc_syn = sim_fc_syn[~np.isnan(sim_fc_syn)]
 
