@@ -124,6 +124,12 @@ After running the complete workflow described in ["Run on a cluster"](###run-on-
 
 `./out/<network_hash>/<simulation_hash>/<analysis_hash>/plots/` 
 
+Other figures shown in [1] can be manually plotted using the scripts in `./python/` named as "figure_*". These figures are stored at `./figures/`. For instance, after running the ground and best-fit state experiments, from the main directory you can plot figures 4 and 6 presented [1] by running the script:
+
+```
+python python/figure_spike_statistics.py
+```
+
 ## Collaborators
 
 The scientific content contributions were made by the authors of the publication [1]: Jari Pronold, Alexander van Meegen, Hannah Vollenbröker, Renan O. Shimoura, Mario Senden, Claus C. Hilgetag, Rembrandt Bakker, and Sacha J. van Albada.
