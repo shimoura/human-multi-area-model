@@ -83,7 +83,7 @@ Brief description of the main files in `./python` directory:
 Additionally, in `./python/` directory you can also find the following subfolders:
 - `./python/data_loader`: contains auxiliary scripts for loading the data used for building the network
 - `./python/data_preprocessing`: contains auxiliary scripts for preprocessing the data used for building the network
-	- `./python/helpers`: contains auxiliary helper scripts
+- `./python/helpers`: contains auxiliary helper scripts
 - `./python/theory`: contains the scripts used for the mean-field analysis
 
 ## How to run
