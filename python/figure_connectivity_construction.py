@@ -14,7 +14,7 @@ from data_loader.dk_fullnames_to_shortnames import dk_full_to_short
 try:
     macaque_data = pd.read_pickle('data/macaque/macaque_data_merged.pkl')
 except FileNotFoundError:
-    print('Please run data/macaque/preprocessing.py first')
+    print('Please check if you have the proper files in data/macaque/, then run the script data/macaque/preprocessing.py')
     exit(1)
 net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/517f98422516bbe6cb324c5436e7f66f/'))
 
