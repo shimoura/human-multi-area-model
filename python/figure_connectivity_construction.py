@@ -11,10 +11,15 @@ from data_loader.synapse_cellbody_probability import mohan
 from data_loader.dk_fullnames_to_shortnames import dk_full_to_short
 
 
+has_macaque_data = True
 try:
     macaque_data = pd.read_pickle('data/macaque/macaque_data_merged.pkl')
 except FileNotFoundError:
-    print('Please check if you have the proper files in data/macaque/, then run the script data/macaque/preprocessing.py')
+    print('WARNING: Did not find data/macaque/macaque_data_merged.pkl so the
+           data in the background of panel D will be missing in the figure. To
+           include the data please check if you have the necessary files in
+           data/macaque/, then run the script data/macaque/preprocessing.py')
+    has_macaque_data = False
     exit(1)
 net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/517f98422516bbe6cb324c5436e7f66f/'))
 
@@ -54,8 +59,9 @@ for x in sln_vek.index:
     sln_vek.loc[x][x] = np.nan
 
 # SLN fit
-macaque_logratio = macaque_data['DENS_LOGRATIO']
-macaque_sln = macaque_data['SLN']
+if has_macaque_data:
+    macaque_logratio = macaque_data['DENS_LOGRATIO']
+    macaque_sln = macaque_data['SLN']
 a0 = net_dict['synapsenumbers_params']['a0']
 a1 = net_dict['synapsenumbers_params']['a1']
 x_arr = np.linspace(-2, 2, 1001)
@@ -135,8 +141,9 @@ ax_S2S.set_title('Synapse-to-soma probability')
 ax_S2S.text(s='C', transform=ax_S2S.transAxes, x=-0.2, y=1.4, **label_prms)
 
 # Fit
-ax_FIT.plot(macaque_logratio, macaque_sln, '.',
-            markersize=4, color='silver', label='data')
+if has_macaque_data:
+    ax_FIT.plot(macaque_logratio, macaque_sln, '.',
+                markersize=4, color='silver', label='data')
 ax_FIT.plot(x_arr, fit_arr, '-', color='black', label='fit')
 ax_FIT.set_xlim(x_arr[0], x_arr[-1])
 ax_FIT.set_ylim(0, 1)
