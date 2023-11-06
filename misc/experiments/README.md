@@ -1,4 +1,7 @@
 # Experiment files used in manuscript
 
-This folder contains all experiment files that were used for running the simulations presented in the manuscript.
-The python files generate the experiment files. The resulting experiment files are stored in the folders.
+This folder contains all the experiment files utilized for the simulations presented in our manuscript.
+
+The Python files named as blueprint_* generate the experiment files related to scaling experiments. The resulting files are stored in their respective folders.
+
+The Python files named as experiment_* can be executed directly by placing them into [../../experiments](../../experiments/) folder and following the instructions in [root README](../../README.md).
