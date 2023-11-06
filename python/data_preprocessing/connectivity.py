@@ -5,7 +5,7 @@ import pandas as pd
 from itertools import product
 from data_loader.microcircuit import p as p_PD
 from data_loader.microcircuit import K_ext as K_ext_PD
-from data_loader.hilgetag import HcpDesikanKilliany, VolumesDK
+from data_loader.hcp_dti import HcpDesikanKilliany, VolumesDK
 from data_loader.synapse_cellbody_probability import mohan, binzegger
 
 

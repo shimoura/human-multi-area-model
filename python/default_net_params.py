@@ -18,7 +18,7 @@ params['cytoarchitecture_params'] = {
     'src_path': os.path.join(
         os.getcwd(),
         'data',
-        'hilgetag',
+        'voneconomokoskinas',
         'StructuralData_VonEconomoKoskinas_addedvalues.xls'
     ),
     # Path to ei ratio data
@@ -46,13 +46,13 @@ params['predictive_connectomic_params'] = {
     'con_path': os.path.join(
         os.getcwd(),
         'data',
-        'hilgetag',
+        'hcp_dti',
         'Connectivity_Distances_HCP_DesikanKilliany.mat'
     ),
     'vol_path': os.path.join(
         os.getcwd(),
         'data',
-        'hilgetag',
+        'hcp_dti',
         'DKAtlas_VolumeAndNames.mat'
     ),
     # Fraction of recurrent (intra-area) connections.
