@@ -48,16 +48,16 @@ linewidth=2.
 colors_state = {
         'exp': '#BB5566',  # Experimental
         'groundstate': '#DDAA33',  # Groundstate
-        'metastable': '#004488'  # Metastable state
+        'bestfit': '#004488'  # bestfit state
         }
 
 path_to_chi = json_load(os.path.join(save_data_dir, 'path_to_chi.json'))
 for chi, hash_  in path_to_chi.items():
-    if hash_ == state['metastable']:
-        metastable_chi  = float(chi)
+    if hash_ == state['bestfit']:
+        bestfit_chi  = float(chi)
         break
     else:
-        metastable_chi = 1.
+        bestfit_chi = 1.
 
 # ==============================================================================
 # Load data for plotting similarity plot
@@ -99,7 +99,7 @@ sim_rates = {}
 sim_lvr = {}
 sim_cv = {}
 
-for keys in ['groundstate', 'metastable']:
+for keys in ['groundstate', 'bestfit']:
     sim_rates[keys] = np.load(
             os.path.join(save_data_dir, f'sim_rates_{keys}.npy'),
             allow_pickle=True
@@ -118,7 +118,7 @@ for keys in ['groundstate', 'metastable']:
 # ==============================================================================
 
 simulated_fc = {}
-for key in ['groundstate', 'metastable']:
+for key in ['groundstate', 'bestfit']:
     simulated_fc[key] = pd.read_csv(
             os.path.join(save_data_dir, f'simulated_fc_{key}.csv'),
             index_col=0,
@@ -189,7 +189,7 @@ axes['lvr'] = plt.subplot(gs1[2])
 
 axes['exp_bold'] = plt.subplot(gs2[0])
 axes['groundstate'] = plt.subplot(gs2[1])
-axes['metastable'] = plt.subplot(gs2[2])
+axes['bestfit'] = plt.subplot(gs2[2])
 
 axes['ks'].spines['top'].set_visible(False)
 axes['ks'].spines['right'].set_visible(False)
@@ -269,7 +269,7 @@ axes['ks'].plot(
         )
 
 
-axes['ks'].vlines(metastable_chi, 0., 1., linestyles='dashed', color='k')
+axes['ks'].vlines(bestfit_chi, 0., 1., linestyles='dashed', color='k')
 axes['ks'].set_ylim(0, 1)
 
 axes['ks'].set_xlabel('Cortico-cortical scaling $\chi$')
@@ -302,17 +302,17 @@ last_data_point_cv = 4
 last_data_point_lvr = 4
 number_of_neurons_rates = min(
         len(exp_rates),
-        len(sim_rates['metastable']),
+        len(sim_rates['bestfit']),
         len(sim_rates['groundstate'])
         )
 number_of_neurons_cv = min(
         len(exp_cv),
-        len(sim_cv['metastable']),
+        len(sim_cv['bestfit']),
         len(sim_cv['groundstate'])
         )
 number_of_neurons_lvr = min(
         len(exp_lvr),
-        len(sim_lvr['metastable']),
+        len(sim_lvr['bestfit']),
         len(sim_lvr['groundstate'])
         )
 
@@ -320,7 +320,7 @@ number_of_neurons_lvr = min(
 # Simulated data
 # ==============================================================================
 
-for type_ in ['groundstate', 'metastable']:
+for type_ in ['groundstate', 'bestfit']:
     if type_ == 'groundstate':
         label = 'Ground state'
     else:
@@ -581,7 +581,7 @@ axes['exp_bold'].text(
 # Plot simulated fc
 # =========================================================================
 
-for fmri_state in ['groundstate', 'metastable']:
+for fmri_state in ['groundstate', 'bestfit']:
 
     """
     Plots structural and functional connectivities
@@ -642,9 +642,9 @@ axes['groundstate'].text(
         **label_prms
         )
 
-axes['metastable'].text(
+axes['bestfit'].text(
         s='G',
-        transform=axes['metastable'].transAxes,
+        transform=axes['bestfit'].transAxes,
         x=-0.17,
         y=1.2,
         **label_prms

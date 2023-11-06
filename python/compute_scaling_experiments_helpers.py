@@ -9,27 +9,27 @@ from scipy.stats import gaussian_kde
 
 state_lower_e_to_i = {
         'groundstate': '8fe1c1f7da65657072959fc060e3fce4',
-        'metastable': 'ece6d9902639ed3b4537a0ae9cbbc4da',
+        'bestfit': 'ece6d9902639ed3b4537a0ae9cbbc4da',
         }
 
 state_scaling_lichtman_chii2_smaller_g = {
         'groundstate': '59cc1c6418e57a0cac22d007f9e0467b',
-        'metastable': 'dbbc477edceb3323b0883c89f8d7d955',  #chi=1.75, overall best agreement
+        'bestfit': 'dbbc477edceb3323b0883c89f8d7d955',  #chi=1.75, overall best agreement
         }
 
 state_scaling_lichtman_chii2_different_time_consts = {
         'groundstate': 'ad2f36126638bf99c0418469d0bfebba',
-        'metastable': '984f627232b71236276f8d5178c3baab',
+        'bestfit': '984f627232b71236276f8d5178c3baab',
         }
 
 state_scaling_lichtman_chii2_distributed_params = {
         'groundstate': '38c92ec7b713e1af25169b09ea8b4155',
-        'metastable': '5ea08803e2c6e3d97b8bf88b65d5885d',
+        'bestfit': '5ea08803e2c6e3d97b8bf88b65d5885d',
         }
 
 state_scaling_lichtman_chii2_different_seed = {
         'groundstate': '517f98422516bbe6cb324c5436e7f66f',
-        'metastable': '10acdb2ae9247b49d4eeea4d78f308b7',
+        'bestfit': '10acdb2ae9247b49d4eeea4d78f308b7',
         }
 
 left_ordering = {'isthmuscingulate': 'DMN',

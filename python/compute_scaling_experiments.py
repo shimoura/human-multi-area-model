@@ -350,7 +350,7 @@ exp_cv.dump(os.path.join(save_data_dir, 'exp_cv.npy'))
 exp_lvr.dump(os.path.join(save_data_dir, 'exp_lvr.npy'))
 
 # Simulation
-for key in ['groundstate', 'metastable']:
+for key in ['groundstate', 'bestfit']:
     sim_rates[key].dump(os.path.join(save_data_dir, f'sim_rates_{key}.npy'))
     sim_cv[key].dump(os.path.join(save_data_dir, f'sim_cv_{key}.npy'))
     sim_lvr[key].dump(os.path.join(save_data_dir, f'sim_lvr_{key}.npy'))
@@ -359,5 +359,5 @@ for key in ['groundstate', 'metastable']:
 # Dump data for fMRI plot
 # ==============================================================================
 
-for key in ['groundstate', 'metastable']:
+for key in ['groundstate', 'bestfit']:
     simulated_fc[key].to_csv(os.path.join(save_data_dir, f'simulated_fc_{key}.csv'))

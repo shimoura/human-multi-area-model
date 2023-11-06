@@ -26,13 +26,13 @@ roman_to_arabic_numerals = {
 random.seed(1234)
 
 
-for state in ['groundstate', 'metastable']:
+for state in ['groundstate', 'bestfit']:
     name_extension = '_lichtman_chiI2_different_seed'
     outpath = os.path.join(os.getcwd(), 'out/')
     if state == 'groundstate':
         net_folder = p_join(outpath, '517f98422516bbe6cb324c5436e7f66f')  # groundstate
-    elif state == 'metastable':
-        net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # metastable
+    elif state == 'bestfit':
+        net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # bestfit
     sim_folder = p_join(net_folder, 'de4934b8c7777751f7c516e2ad35f50a')
     ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
 

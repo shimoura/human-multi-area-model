@@ -25,7 +25,7 @@ random.seed(1234)
 
 
 outpath = os.path.join(os.getcwd(), 'out/')
-net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # metastable
+net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # bestfit
 sim_folder = p_join(net_folder, 'de4934b8c7777751f7c516e2ad35f50a')
 ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
 

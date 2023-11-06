@@ -156,7 +156,7 @@ for ax in [ax_delay, ax_steps, ax_time]:
     ax.spines['top'].set_visible(False)
     ax.spines['right'].set_visible(False)
 label_prms = dict(fontsize=12, fontweight='bold', va='top', ha='right')
-colors_state = {'groundstate': '#DDAA33', 'metastable': '#004488'}
+colors_state = {'groundstate': '#DDAA33', 'bestfit': '#004488'}
 
 # calculate ticks & labels
 order = first_diff_area_gs.index
@@ -223,7 +223,7 @@ ax_pert_gs.set_ylabel('population')
 ax_time.plot(first_diff_min_gs.reindex(order, level=0), np.arange(len(pops)),
              's', label='ground state', color=colors_state['groundstate'])
 ax_time.plot(first_diff_min_bf.reindex(order, level=0), np.arange(len(pops)),
-             's', label='best-fit state', color=colors_state['metastable'])
+             's', label='best-fit state', color=colors_state['bestfit'])
 
 print('gs mean:', first_diff_min_gs.mean(), 'gs std:', first_diff_min_gs.std())
 print('bf mean:', first_diff_min_bf.mean(), 'bf std:', first_diff_min_bf.std())
