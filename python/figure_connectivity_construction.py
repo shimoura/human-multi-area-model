@@ -75,7 +75,7 @@ log_synapses[log_synapses == -np.inf] = np.nan
 
 # ========== Plot ==========
 
-plt.style.use('mplstyles/report_plots_master.mplstyle')
+plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
 fig = plt.figure(constrained_layout=True, figsize=(5.63, 6.5))
 label_prms = dict(fontsize=12, fontweight='bold', va='top', ha='right')
 gs = gridspec.GridSpec(8, 2, figure=fig)

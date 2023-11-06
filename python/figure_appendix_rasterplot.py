@@ -36,7 +36,7 @@ spikes = pd.read_pickle(p_join(sim_folder, 'spikes.pkl'))
 areas = list(popGids.index.get_level_values(0).unique())
 
 # ========== Plot ==========
-plt.style.use('mplstyles/report_plots_master.mplstyle')
+plt.style.use('/misc/mplstyles/report_plots_master.mplstyle')
 
 for num_fig in range(3):
     fig = plt.figure(constrained_layout=True, figsize=(5.63, 9))

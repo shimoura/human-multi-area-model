@@ -4,7 +4,7 @@ Provides default parameters used in the analysis.
 
 params = {}
 
-params['mplstyles'] = 'mplstyles/report_plots_master.mplstyle'
+params['mplstyles'] = 'misc/mplstyles/report_plots_master.mplstyle'
 params['extension'] = 'png'
 params['seed'] = 2106
 params['python_sort'] = True

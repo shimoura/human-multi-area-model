@@ -142,7 +142,7 @@ panel_wh_ratio = 1.5
 
 height = width / panel_wh_ratio * float(nrows) / ncols
 
-plt.style.use('mplstyles/report_plots_master.mplstyle')
+plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
 fig = plt.figure(
         constrained_layout=True,
         figsize=(width, height)
