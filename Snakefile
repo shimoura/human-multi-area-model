@@ -51,7 +51,7 @@ rule createNetwork:
     log:
         'out/log/{experiment}_createNetwork.log'
     shell:
-        '{RUN_CREATE} python/snakemake_network.py {input} {output}'
+        '{RUN_CREATE} src/snakemake_network.py {input} {output}'
 
 rule simulateNetwork:
     input:
@@ -66,7 +66,7 @@ rule simulateNetwork:
     log:
         'out/log/{experiment}_simulateNetwork.log'
     shell:
-        '{RUN_SIMULATE} python/snakemake_simulation.py {input} {output} {THREADS_SIMULATE}'
+        '{RUN_SIMULATE} src/snakemake_simulation.py {input} {output} {THREADS_SIMULATE}'
 
 rule analyzeNetwork:
     input:
@@ -80,4 +80,4 @@ rule analyzeNetwork:
     log:
         'out/log/{experiment}_analyzeNetwork.log'
     shell:
-        '{RUN_ANALYSIS} python/snakemake_analysis.py {input} {output} {INFOMAP_PATH} {BASE_PATH}'
+        '{RUN_ANALYSIS} src/snakemake_analysis.py {input} {output} {INFOMAP_PATH} {BASE_PATH}'

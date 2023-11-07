@@ -69,10 +69,10 @@ Folder structure:
 | [./figures/](./figures/) | output directory for figures |
 | [./misc/](./misc/) | includes supplementary files such as documentation, matplotlib style files, and other experiment files
 | [./out/](./out/) | directory where the simulation output is stored |
-| [./python/](./python/) | main directory with python scripts to run the network simulation |
+| [./src/](./src/) | main directory with python scripts to run the network simulation |
 | [./simulated_data/](./simulated_data/) | simulated data generated from scaling experiments |
 
-Brief description of the main files in [./python/](./python/) directory:
+Brief description of the main files in [./src/](./src/) directory:
 
 | script | description |
 | --- | --- |
@@ -85,13 +85,13 @@ Brief description of the main files in [./python/](./python/) directory:
 | `./compute_` | scripts to compute the scalling experiment |
 
   
-Additionally, in [./python/](./python/) directory you can also find the following subfolders:
+Additionally, in [./src/](./src/) directory you can also find the following subfolders:
 | directory | description |
 | --- | --- |
-| [./python/data_loader/](./python/data_loader/) | contains auxiliary scripts for loading the data used for building the network |
-| [./python/data_preprocessing/](./python/data_preprocessing/) | contains auxiliary scripts for preprocessing the data used for building the network |
-| [./python/helpers](./python/helpers/) | contains auxiliary helper scripts |
-| [./python/theory/](./python/theory/) | contains the scripts used for the mean-field analysis |
+| [./src/data_loader/](./src/data_loader/) | contains auxiliary scripts for loading the data used for building the network |
+| [./src/data_preprocessing/](./src/data_preprocessing/) | contains auxiliary scripts for preprocessing the data used for building the network |
+| [./src/helpers](./src/helpers/) | contains auxiliary helper scripts |
+| [./src/theory/](./src/theory/) | contains the scripts used for the mean-field analysis |
 
 
 ## How to run
@@ -132,10 +132,10 @@ After running the complete workflow described in ["Run on a cluster"](###run-on-
 
 `./out/<network_hash>/<simulation_hash>/<analysis_hash>/plots/` 
 
-Other figures shown in [1] can be manually plotted using the scripts in `./python/` named as "figure_*". These figures are stored at `./figures/`. For instance, after running the ground and best-fit state experiments, from the main directory you can plot figures 4 and 6 presented [1] by running the script:
+Other figures shown in [1] can be manually plotted using the scripts in `./src/` named as "figure_*". These figures are stored at `./figures/`. For instance, after running the ground and best-fit state experiments, from the main directory you can plot figures 4 and 6 presented [1] by running the script:
 
 ```
-python python/figure_spike_statistics.py
+python src/figure_spike_statistics.py
 ```
 
 ## Collaborators

@@ -3,7 +3,7 @@ import numpy as np
 from copy import deepcopy
 
 
-blueprint = '''# Overwrite values of python/default_net_params.py
+blueprint = '''# Overwrite values of src/default_net_params.py
 import os
 
 net_params = {
@@ -108,7 +108,7 @@ net_params = {
     }
 }
 
-# Overwrite values of python/default_sim_params.py
+# Overwrite values of src/default_sim_params.py
 sim_params = {
     't_sim': 12500.0,
     'V0_mean': -150.,

@@ -1,4 +1,4 @@
-# Overwrite values of python/default_net_params.py
+# Overwrite values of src/default_net_params.py
 import os
 
 net_params = {
@@ -103,7 +103,7 @@ net_params = {
     }
 }
 
-# Overwrite values of python/default_sim_params.py
+# Overwrite values of src/default_sim_params.py
 sim_params = {
     't_sim': 12500.0,
     'master_seed': 2106,

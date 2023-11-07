@@ -1,4 +1,4 @@
-# Overwrite values of python/default_net_params.py
+# Overwrite values of src/default_net_params.py
 net_params = {
     'scaling_factors_recurrent': {
         # Scale cortico cortical excitatory on excitatory weights
@@ -8,7 +8,7 @@ net_params = {
     }
 }
 
-# Overwrite values of python/default_sim_params.py
+# Overwrite values of src/default_sim_params.py
 sim_params = {
     't_sim': 2500.0,
     'master_seed': 2106,

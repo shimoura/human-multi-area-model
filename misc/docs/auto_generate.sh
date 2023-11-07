@@ -1,2 +1,2 @@
-sphinx-apidoc -o source/ ../../python/ ../../python/figure_* ../../python/compute_* ../../python/theory_* ../../python/snakemake_* ../../python/default_*
+sphinx-apidoc -o source/ ../../src/ ../../src/figure_* ../../src/compute_* ../../src/theory_* ../../src/snakemake_* ../../src/default_*
 make html
