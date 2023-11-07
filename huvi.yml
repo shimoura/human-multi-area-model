@@ -75,6 +75,7 @@ dependencies:
   - pysocks=1.7.0=py36_0
   - python=3.6.5=hc3d631a_0
   - python-dateutil=2.8.0=py36_0
+  - python-igraph=0.7.1.post7=py36h516909a_0
   - pytz=2019.1=py_0
   - pyyaml=3.12=py36hafb9ca4_1
   - qt=5.6.2=hd25b39d_14
@@ -111,14 +112,12 @@ dependencies:
     - configargparse==0.14.0
     - datrie==0.7.1
     - dicthash==0.0.2
-    - elephant==0.5.0
     - future==0.16.0
     - gitdb2==2.0.5
     - gitpython==2.1.11
     - jsonschema==3.0.1
     - neo==0.6.1
     - pyrsistent==0.15.2
-    - python-igraph==0.7.1.post6
     - python-louvain==0.14
     - quantities==0.12.2
     - ratelimiter==1.2.0.post0
