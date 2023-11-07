@@ -29,7 +29,7 @@ This code implements the multi-scale, spiking network model of human cortex deve
 ## Prerequisites
 ### Data
 
-Data extracted from experimental references and necessary to run the codes can be found in `data/` folder. These files will be automatically loaded when running the simulation (check section [How to run](#how-to-run) for details).
+Data extracted from experimental references and necessary to run the codes can be found in [data/](./data/) folder. These files will be automatically loaded when running the simulation (check section [How to run](#how-to-run) for details).
 Please note that some data has to be manually downloaded. Specifically, the data stored in `./data/macaque/` and `./data/rutishauser/`.
 
 ### Requirements
@@ -62,30 +62,37 @@ The NEST installation path will have to be specified in `config.yaml` described 
 ## Code repository
 
 Folder structure:
-- `./data`: contains experimental datasets used for building the network and for comparing results
-- `./misc/docs`: documentation of the code
-- `./experiments`: contains python scripts which set the model parameters for different simulation experiments
-- `./figures`: output directory for figures
-- `./misc/experiments`: contains few other experiments used to generate the supplementary figures
-- `./misc/mplstyles`: contains matplotlib style files used to create figures
-- `./out`: directory where the simulation output is stored
-- `./python`: main directory with python scripts to run the network simulation
-- `./simulated_data`: simulated data generated from scaling experiments
+| directory | description |
+| --- | --- |
+| [./data/](./data/) | contains experimental datasets used for building the network and for comparing results |
+| [./experiments/](./experiments/) | contains python scripts which set the model parameters for different simulation experiments |
+| [./figures/](./figures/) | output directory for figures |
+| [./misc/](./misc/) | includes supplementary files such as documentation, matplotlib style files, and other experiment files
+| [./out/](./out/) | directory where the simulation output is stored |
+| [./python/](./python/) | main directory with python scripts to run the network simulation |
+| [./simulated_data/](./simulated_data/) | simulated data generated from scaling experiments |
 
-Brief description of the main files in `./python` directory:
-- `network.py`: python class that gathers and prepares all data for setting up the NEST simulation
-- `simulation.py`: python class that setups and builds the network for running the simulations
-- `analysis.py`: python class that provides functions to analyse simulation results
-- `default_`: scripts that define the default network, simulation and analysis parameter dictionaries
-- `snakemake_`: helper scripts which use an `experiment.py` file to create, simulate, and analyse the network
-- `figure_`: scripts that plot specific figures showed in our publication [1]
-- `compute_`: scripts to compute the scalling experiment
+Brief description of the main files in [./python/](./python/) directory:
+
+| script | description |
+| --- | --- |
+| `./network.py` | python class that gathers and prepares all data for setting up the NEST simulation |
+| `./simulation.py` | python class that setups and builds the network for running the simulations |
+| `./analysis.py` | python class that provides functions to analyse simulation results |
+| `./default_` | scripts that define the default network, simulation and analysis parameter dictionaries |
+| `./snakemake_` | helper scripts which use an `experiment.py` file to create, simulate, and analyse the network |
+| `./figure_` | scripts that plot specific figures showed in our publication [1] |
+| `./compute_` | scripts to compute the scalling experiment |
+
   
-Additionally, in `./python/` directory you can also find the following subfolders:
-- `./python/data_loader`: contains auxiliary scripts for loading the data used for building the network
-- `./python/data_preprocessing`: contains auxiliary scripts for preprocessing the data used for building the network
-- `./python/helpers`: contains auxiliary helper scripts
-- `./python/theory`: contains the scripts used for the mean-field analysis
+Additionally, in [./python/](./python/) directory you can also find the following subfolders:
+| directory | description |
+| --- | --- |
+| [./python/data_loader/](./python/data_loader/) | contains auxiliary scripts for loading the data used for building the network |
+| [./python/data_preprocessing/](./python/data_preprocessing/) | contains auxiliary scripts for preprocessing the data used for building the network |
+| [./python/helpers](./python/helpers/) | contains auxiliary helper scripts |
+| [./python/theory/](./python/theory/) | contains the scripts used for the mean-field analysis |
+
 
 ## How to run
 
