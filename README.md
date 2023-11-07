@@ -21,6 +21,7 @@ This code implements the multi-scale, spiking network model of human cortex deve
   - [How to run](#how-to-run)
     - [Configuration](#configuration)
     - [Run on a cluster](#run-on-a-cluster)
+    - [Ploting figures](#ploting-figures)
   - [Collaborators](#collaborators)
   - [Acknowledgments](#acknowledgments)
   - [How to cite](#how-to-cite)
@@ -62,7 +63,7 @@ The NEST installation path will have to be specified in `config.yaml` described 
 
 Folder structure:
 - `./data`: contains experimental datasets used for building the network and for comparing results
-- `./docs`: documentation of the code
+- `./misc/docs`: documentation of the code
 - `./experiments`: contains python scripts which set the model parameters for different simulation experiments
 - `./figures`: output directory for figures
 - `./misc/experiments`: contains few other experiments used to generate the supplementary figures
