@@ -779,7 +779,7 @@ class Analysis():
 
     def plotConnectivities(self):
         """
-        Plots structural and functional connectivities
+        Plots structural and functional connectivities.
         """
         # Read values
         if not hasattr(self, 'self.rate'):
@@ -855,7 +855,7 @@ class Analysis():
 
     def plot_functional_connectivity(self):
         """
-        Plots structural and functional connectivities
+        Plots structural and functional connectivities.
         """
         clustering = pd.Series(left_ordering)
         ordering = clustering.keys()
@@ -992,6 +992,9 @@ class Analysis():
 
     @timeit
     def calculateFuncionalConnectivityCorrelations(self):
+        """
+        Calculates functional connectivity correlations.
+        """
         if not hasattr(self, 'self.BOLD_correlation'):
             self.BOLD_correlation = self.calculateBOLDConnectivity()
         if not hasattr(self, 'self.rate'):
@@ -1261,6 +1264,11 @@ class Analysis():
 
     @timeit
     def calculateRateDistributionSimilarity(self):
+        """
+        Calculates the rate distribution similarity between simulated and
+        experimental data.
+
+        """
         if not hasattr(self, 'individual_rates'):
             self.individual_rates = self.individualFiringRate()
         rates_sim = self.individual_rates
@@ -1316,6 +1324,11 @@ class Analysis():
             'Either the the datapath is wrong or the data is not available.'))
 
     def plotBOLDConnectivity(self):
+        """
+        Plots the BOLD connectivity matrix using a heatmap.If the BOLD 
+        connectivity matrix has not been calculated yet, it will first 
+        calculate it using the `calculateBOLDConnectivity` method.
+        """
         if not hasattr(self, 'self.BOLD_correlation'):
             self.BOLD_correlation = self.calculateBOLDConnectivity()
         # Plot
@@ -1341,7 +1354,7 @@ class Analysis():
     def plotRasterArea(self, area):
         """
         Generates a rasterplot of the spiking activity in a specified area.
-        Parameters. low and high are in ms.
+        Parameters low and high are in ms.
         ----------
         area : string
         """
@@ -1940,7 +1953,7 @@ class Analysis():
                 print(f'Splitting iteration {iteration} took {passed_time} s')
 
             # ==============================================================================
-            #  Rename files such that the filename contains exact information on population
+            # Rename files such that the filename contains exact information on population
             #
             # We rename all files such that the filename gives away which population we are
             # looking at.
@@ -2306,6 +2319,14 @@ def strip_binned_spiketrains(sp):
     return sp_stripped
 
 def shell_presort_all_dat(fn):
+    """
+    Sort all .dat files in the folder.
+
+    Parameters
+    ----------
+    fn : str
+        The filename to be processed.
+    """
     # -n +4 is important for dat files as they contain a header
     # subprocess.check_output(
     #         f'export LC_ALL=C; f={fn}; tail -n +4 ${{f}} | sort -k1,1n -k2,2n --parallel=8 > ${{f%.dat}}_sorted.txt',
@@ -2317,6 +2338,15 @@ def shell_presort_all_dat(fn):
             )
 
 def shell_spiketrainify(fn):
+    """
+    This function is used to sort and organize the spiking data into
+    spiketrains per neuron.
+
+    Parameters
+    ----------
+    fn : str
+        The filename to be processed.
+    """
     lol2 = '''
     awk '
     {
@@ -2346,6 +2376,35 @@ def shell_spiketrainify(fn):
             )
 
 def split_files(df, fn, iteration, rec_folder):
+    """
+    The function uses awk and csplit commands to split the file based 
+    on the maximum group ID of the left half of the dataframe. It also 
+    deletes the original file if it is not the initial one.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        The dataframe to be split.
+    fn : str
+        The name of the file that contains the dataframe.
+    iteration : int
+        The number of times the function has been called recursively.
+    rec_folder : str
+        The path of the folder where the files are stored.
+
+    Returns
+    -------
+    df_left : pandas.DataFrame
+        The left half of the dataframe.
+    fn_left : str
+        The name of the file that contains the left half of the dataframe.
+    df_right : pandas.DataFrame
+        The right half of the dataframe.
+    fn_right : str
+        The name of the file that contains the right half of the dataframe.
+    iteration : int
+        The updated iteration number.
+    """
     if len(df) > 1:
         where_to_split = math.floor(len(df)/2)
         df_left = df.iloc[:where_to_split]
