@@ -1,9 +1,9 @@
-.. huvi documentation master file, created by
+.. humam documentation master file, created by
    sphinx-quickstart on Wed May 16 11:57:45 2018.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Huvi documentation
+HuMAM documentation
 ==================
 
 .. toctree::

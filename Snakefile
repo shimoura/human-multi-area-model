@@ -47,7 +47,7 @@ rule createNetwork:
     output:
         'experiments/{experiment}.network_hash'
     conda:
-        'huvi.yml'
+        'humam.yml'
     log:
         'out/log/{experiment}_createNetwork.log'
     shell:
@@ -60,7 +60,7 @@ rule simulateNetwork:
     output:
         'experiments/{experiment}.simulation_hash'
     conda:
-        'huvi.yml'
+        'humam.yml'
     threads:
         THREADS_SIMULATE
     log:
@@ -76,7 +76,7 @@ rule analyzeNetwork:
     output:
         'experiments/{experiment}.analysis_hash'
     conda:
-        'huvi.yml'
+        'humam.yml'
     log:
         'out/log/{experiment}_analyzeNetwork.log'
     shell:

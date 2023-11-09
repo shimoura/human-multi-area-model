@@ -1,7 +1,7 @@
 {
     "__default__" :
     {
-        "job-name" : "huvi_{rule}",
+        "job-name" : "humam_{rule}",
         "output" : "out/log/{wildcards.experiment}_{rule}.o",
         "error" : "out/log/{wildcards.experiment}_{rule}.e",
         "cpus-per-task" : 1,

@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.abspath('../../src/'))
 
 # -- Project information -----------------------------------------------------
 
-project = 'huvi'
+project = 'humam'
 copyright = '2018, Alexander van Meegen, Jari Pronold, Sacha van Albada'
 author = 'Alexander van Meegen, Jari Pronold, Sacha van Albada'
 
@@ -106,7 +106,7 @@ html_theme = 'alabaster'
 # -- Options for HTMLHelp output ---------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'huvidoc'
+htmlhelp_basename = 'humamdoc'
 
 
 # -- Options for LaTeX output ------------------------------------------------
@@ -133,7 +133,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'huvi.tex', 'huvi Documentation',
+    (master_doc, 'humam.tex', 'HuMAM Documentation',
      'Alexander van Meegen, Jari Pronold, Sacha van Albada', 'manual'),
 ]
 
@@ -143,7 +143,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'huvi', 'huvi Documentation',
+    (master_doc, 'humam', 'HuMAM Documentation',
      [author], 1)
 ]
 
@@ -154,8 +154,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'huvi', 'huvi Documentation',
-     author, 'huvi', 'One line description of project.',
+    (master_doc, 'humam', 'HuMAM Documentation',
+     author, 'humam', 'One line description of project.',
      'Miscellaneous'),
 ]
 

@@ -61,7 +61,7 @@ hash_fn = os.path.join(os.getcwd(), hash_file)
 with open(hash_fn, 'w') as f:
     f.write(ana.getHash())
 
-# Save the huvi repository hash
+# Save the humam repository hash
 ana_folder = os.path.join(sim_folder, ana.getHash())
 git_fn = os.path.join(ana_folder, "git_hash.txt")
 with open(git_fn, 'w') as f:

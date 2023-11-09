@@ -48,7 +48,7 @@ hash_fn = os.path.join(os.getcwd(), hash_file)
 with open(hash_fn, 'w') as f:
     f.write(net.getHash())
 
-# Save the huvi repository hash
+# Save the humam repository hash
 net_folder = os.path.join(outpath, net.getHash())
 git_fn = os.path.join(net_folder, "git_hash.txt")
 with open(git_fn, 'w') as f:

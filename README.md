@@ -34,7 +34,7 @@ Please note that some data has to be manually downloaded. Specifically, the data
 
 ### Requirements
 
-The entire workflow of the model, from data preprocessing through the simulation to the final analysis, relies on the `Python` programming language version `3.9` or above. The complete list of Python packages we used to run our simulations can be found in ```huvi.yml``` file. 
+The entire workflow of the model, from data preprocessing through the simulation to the final analysis, relies on the `Python` programming language version `3.9` or above. The complete list of Python packages we used to run our simulations can be found in ```humam.yml``` file. 
 
 All network simulations were performed using the `NEST simulator` version `2.20.2` (https://www.nest-simulator.org/).
 
@@ -45,9 +45,9 @@ The Python modules can be installed with the [Anaconda](https://www.anaconda.com
 
 Most dependencies are handled using ```conda```. On a cluster, ```snakemake``` automatically creates the conda environment for you. On a local computer, simply run:
 ```
-conda env create -f huvi.yml
+conda env create -f humam.yml
 ```  
-This command will create a ```conda``` environment and automatically install all Python packages defined in the ```huvi.yml``` file. 
+This command will create a ```conda``` environment and automatically install all Python packages defined in the ```humam.yml``` file. 
 **Note**: currently the model is not adapted to run on a local computer because of the memory requirements. A downscaling factor option will be implemented in the future. 
 
 The ```NEST simulator``` is not include in this file, although it can be installed via ```conda``` too. We opt to keep an independent installation of NEST so we can better control the version being used.
