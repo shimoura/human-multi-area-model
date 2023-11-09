@@ -29,8 +29,8 @@ This code implements the multi-scale, spiking network model of human cortex deve
 ## Prerequisites
 ### Data
 
-Data extracted from experimental references and necessary to run the codes can be found in [data/](./data/) folder. These files will be automatically loaded when running the simulation (check section [How to run](#how-to-run) for details).
-Please note that some data has to be manually downloaded. Specifically, the data stored in `./data/macaque/` and `./data/rutishauser/`.
+Data extracted from experimental references and necessary to run the codes can be found in [experimental_data/](./experimental_data/) folder. These files will be automatically loaded when running the simulation (check section [How to run](#how-to-run) for details).
+Please note that some data has to be manually downloaded. Specifically, the data stored in `./experimental_data/macaque/` and `./experimental_data/rutishauser/`.
 
 ### Requirements
 
@@ -64,7 +64,7 @@ The NEST installation path will have to be specified in `config.yaml` described 
 Folder structure:
 | directory | description |
 | --- | --- |
-| [./data/](./data/) | contains experimental datasets used for building the network and for comparing results |
+| [./experimental_data/](./experimental_data/) | contains experimental datasets used for building the network and for comparing results |
 | [./experiments/](./experiments/) | contains python scripts which set the model parameters for different simulation experiments |
 | [./figures/](./figures/) | output directory for figures |
 | [./misc/](./misc/) | includes supplementary files such as documentation, matplotlib style files, and other experiment files

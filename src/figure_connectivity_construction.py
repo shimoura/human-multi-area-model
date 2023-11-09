@@ -13,12 +13,12 @@ from data_loader.dk_fullnames_to_shortnames import dk_full_to_short
 
 has_macaque_data = True
 try:
-    macaque_data = pd.read_pickle('data/macaque/macaque_data_merged.pkl')
+    macaque_data = pd.read_pickle('experimental_data/macaque/macaque_data_merged.pkl')
 except FileNotFoundError:
-    print('WARNING: Did not find data/macaque/macaque_data_merged.pkl so the
+    print('WARNING: Did not find experimental_data/macaque/macaque_data_merged.pkl so the
            data in the background of panel D will be missing in the figure. To
            include the data please check if you have the necessary files in
-           data/macaque/, then run the script data/macaque/preprocessing.py')
+           experimental_data/macaque/, then run the script experimental_data/macaque/preprocessing.py')
     has_macaque_data = False
     exit(1)
 net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/517f98422516bbe6cb324c5436e7f66f/'))

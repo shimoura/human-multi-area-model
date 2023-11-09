@@ -33,7 +33,7 @@ binzegger = pd.DataFrame(
 )
 
 # Mohan data: only pyramidal cells -> dummy probability of 0 for inhibitory neurons
-# Numbers extracted from data/mohan/dendriteLength.py (see the README therein)
+# Numbers extracted from experimental_data/mohan/dendriteLength.py (see the README therein)
 # The array corresponds to `s2cb` which is plotted at the end of the script.
 mohan = pd.DataFrame(
     data=[

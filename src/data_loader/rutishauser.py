@@ -34,7 +34,7 @@ if __name__ == '__main__':
     import numpy as np
     import matplotlib.pyplot as plt
 
-    filename = 'data/rutishauser/spikes/'
+    filename = 'experimental_data/rutishauser/spikes/'
     data = load_data(filename)
     print(f'loaded {len(data)} neurons')
     all_ids = range(len(data))

@@ -104,7 +104,7 @@ class VonEconomoKoskinas():
 
 if __name__ == "__main__":
 
-    vek_path = '../data/voneconomokoskinas/StructuralData_VonEconomoKoskinas.xls'
+    vek_path = '../experimental_data/voneconomokoskinas/StructuralData_VonEconomoKoskinas.xls'
     vek = VonEconomoKoskinas(vek_path)
     print(vek)
     print(vek.getNeuronDensity())

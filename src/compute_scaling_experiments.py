@@ -139,7 +139,7 @@ area = 'caudalanteriorcingulate'
 # ==============================================================================
 # ==============================================================================
 
-filename = base_path + 'data/rutishauser/spikes/'
+filename = base_path + 'experimental_data/rutishauser/spikes/'
 data = load_data(filename)
 print(f'loaded {len(data)} neurons')
 all_ids = range(len(data))

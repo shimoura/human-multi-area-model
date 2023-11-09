@@ -187,7 +187,7 @@ class VolumesDK():
 
 if __name__ == "__main__":
 
-    dk_path = 'data/hcp_dti/Connectivity_Distances_HCP_DesikanKilliany.mat'
+    dk_path = 'experimental_data/hcp_dti/Connectivity_Distances_HCP_DesikanKilliany.mat'
     dk = HcpDesikanKilliany(dk_path)
     print(dk)
     # dk.dump('dk_tmp.hdf')
