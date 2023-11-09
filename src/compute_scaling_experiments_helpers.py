@@ -396,7 +396,7 @@ def calculateFuncionalConnectivityCorrelations(ana_path, tmin=2000, tmax=8000,
     # =================================================================
     # Set Path to experimental data
     data_dir = os.path.join(
-            base_path, 'data', 'senden', 'rsData_7T_DKparcel'
+            base_path, 'experimental_data', 'senden', 'rsData_7T_DKparcel'
             )
 
     # Read in regions of interest.

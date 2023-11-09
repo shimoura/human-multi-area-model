@@ -10,7 +10,7 @@ net_params = {
         # Path to ei ratio data
         'ei_ratio_path': os.path.join(
             os.getcwd(),
-            'data',
+            'experimental_data',
             'fraction_EI',
             'binzegger.csv'
         ),

@@ -1052,7 +1052,7 @@ class Analysis():
             # =================================================================
             # Set Path to experimental data
             data_dir = os.path.join(
-                    self.base_path, 'data', 'senden', 'rsData_7T_DKparcel'
+                    self.base_path, 'experimental_data', 'senden', 'rsData_7T_DKparcel'
                     )
 
             # Read in regions of interest.
@@ -1274,7 +1274,7 @@ class Analysis():
             # =================================================================
             # Set Path to experimental data
             data_dir = os.path.join(
-                    self.base_path, 'data', 'rutishauser', 'spikes'
+                    self.base_path, 'experimental_data', 'rutishauser', 'spikes'
                     )
             # Load experimental spiking data
             filename = os.path.join(data_dir, 'mfc.mat')
