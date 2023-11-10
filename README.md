@@ -30,7 +30,8 @@ This code implements the multi-scale, spiking network model of human cortex deve
 ### Data
 
 Data extracted from experimental references and necessary to run the codes can be found in [experimental_data/](./experimental_data/) folder. These files will be automatically loaded when running the simulation (check section [How to run](#how-to-run) for details).
-Please note that some data has to be manually downloaded. Specifically, the data stored in `./experimental_data/macaque/` and `./experimental_data/rutishauser/`.
+
+Please note that some data has to be manually downloaded. Specifically, the data stored in `./experimental_data/macaque/` and `./experimental_data/rutishauser/`. Both data are only required for specific plots, not being necessary to run the examples presented here.
 
 ### Requirements
 
@@ -50,7 +51,7 @@ conda env create -f humam.yml
 This command will create a ```conda``` environment and automatically install all Python packages defined in the ```humam.yml``` file. 
 **Note**: currently the model is not adapted to run on a local computer because of the memory requirements. A downscaling factor option will be implemented in the future. 
 
-The ```NEST simulator``` is not include in this file, although it can be installed via ```conda``` too. We opt to keep an independent installation of NEST so we can better control the version being used.
+The ```NEST simulator``` is not included in this file, although it can be installed via ```conda``` too. We opt to keep an independent installation of NEST so we can better control the version being used.
 
 ### NEST installation
 
@@ -67,7 +68,7 @@ Folder structure:
 | [./experimental_data/](./experimental_data/) | contains experimental datasets used for building the network and for comparing results |
 | [./experiments/](./experiments/) | contains python scripts which set the model parameters for different simulation experiments |
 | [./figures/](./figures/) | output directory for figures |
-| [./misc/](./misc/) | includes supplementary files such as documentation, matplotlib style files, and other experiment files
+| [./misc/](./misc/) | includes supplementary files such as code documentation ([/docs](./misc/docs/)), matplotlib style files ([/mplstyles](./misc/mplstyles/)), and other experiment files ([/experiments](./misc/experiments/))
 | [./out/](./out/) | directory where the simulation output is stored |
 | [./src/](./src/) | main directory with python scripts to run the network simulation |
 | [./simulated_data/](./simulated_data/) | simulated data generated from scaling experiments |
@@ -83,7 +84,6 @@ Brief description of the main files in [./src/](./src/) directory:
 | `./snakemake_` | helper scripts which use an `experiment.py` file to create, simulate, and analyse the network |
 | `./figure_` | scripts that plot specific figures showed in our publication [1] |
 | `./compute_` | scripts to compute the scalling experiment |
-
   
 Additionally, in [./src/](./src/) directory you can also find the following subfolders:
 | directory | description |
@@ -93,17 +93,22 @@ Additionally, in [./src/](./src/) directory you can also find the following subf
 | [./src/helpers](./src/helpers/) | contains auxiliary helper scripts |
 | [./src/theory/](./src/theory/) | contains the scripts used for the mean-field analysis |
 
-
 ## How to run
+
+The example below shows how to prepare the configuration files and how to run the code. 
+All the workflow is managed using the [Snakemake](https://snakemake.readthedocs.io/en/stable/#) tool. To run different network setups or experiments, the user has only to set the parameters in a Python script (two examples are shown in [./experiments/](./experiments/)) and simulate following the instructions below.
 
 ### Configuration
 
-Create a `config.yaml` file inside the repository's main directory. A minimal example is `config_pc.yaml`, a more involved on `config_blaustein.yaml`.
+Create a `config.yaml` file inside the repository's main directory. An example is shown in `config_blaustein.yaml`.
 If running in a cluster, you also have to define the cluster configurations on `cluster.json` file.
+
+**NOTE**: the current version of the code has no downscaling factor to run a smaller version of the network, which limits its usage on a local computer. 
+This will be implemented in a future version.
 
 ### Run on a cluster
 
-To run the model on a cluster, make sure you have a working `conda` and `snakemake` installation. 
+To run the model on a cluster, ensure you have a working `conda` and `snakemake` installation. 
 
 Start with
 ```
@@ -120,7 +125,7 @@ This script will run the workflow defined in `Snakefile`, which follows the sequ
 4. simulate the network
 5. analyse the results from simulation
 
-The resulting simulation data will be stored, by default, in the `./out` directory. For each experiment, different information regarding network, simulation, and analysis details will be stored following this structure:
+By default, the resulting simulation data will be stored in the `./out` directory. For each experiment, different information regarding network, simulation, and analysis details will be stored following this structure:
 
 `./out/<network_hash>/<simulation_hash>/<analysis_hash>`
 
@@ -132,7 +137,7 @@ After running the complete workflow described in ["Run on a cluster"](###run-on-
 
 `./out/<network_hash>/<simulation_hash>/<analysis_hash>/plots/` 
 
-Other figures shown in [1] can be manually plotted using the scripts in `./src/` named as "figure_*". These figures are stored at `./figures/`. For instance, after running the ground and best-fit state experiments, from the main directory you can plot figures 4 and 6 presented [1] by running the script:
+Other figures shown in [1] can be manually plotted using the scripts in `./src/` named as "figure_*". These figures are stored at `./figures/`. For instance, after running the ground and best-fit state experiments, from the main directory you can plot figures 4 and 6 presented in [1] by running the script:
 
 ```
 python src/figure_spike_statistics.py
