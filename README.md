@@ -35,7 +35,7 @@ Please note that some data has to be manually downloaded. Specifically, the data
 
 ### Requirements
 
-The entire workflow of the model, from data preprocessing through the simulation to the final analysis, relies on the `Python` programming language version `3.9` or above. The complete list of Python packages we used to run our simulations can be found in ```humam.yml``` file. 
+The entire workflow of the model, from data preprocessing through the simulation to the final analysis, relies on the `Python` programming language. The complete list of Python packages with the specific version we used to run our simulations can be found in ```humam.yml``` file. Other package versions may not work properly, specifically, using `Pandas >= 1.0` will raise an error when creating the network.
 
 All network simulations were performed using the `NEST simulator` version `2.20.2` (https://www.nest-simulator.org/).
 
@@ -100,8 +100,8 @@ All the workflow is managed using the [Snakemake](https://snakemake.readthedocs.
 
 ### Configuration
 
-Create a `config.yaml` file inside the repository's main directory. An example is shown in `config_blaustein.yaml`.
-If running in a cluster, you also have to define the cluster configurations on `cluster.json` file.
+Create a `config.yaml` file inside the repository's main directory. An example is shown in `config_jureca.yaml`. Please note that the NEST path should be given as: `<path_to_NEST_installation>/install/`. 
+If running in a cluster, you also have to define the cluster configurations on `cluster.json` file. An example is given as well, but you should modify it accordingly with your cluster configuration.
 
 **NOTE**: the current version of the code has no downscaling factor to run a smaller version of the network, which limits its usage on a local computer. 
 This will be implemented in a future version.
