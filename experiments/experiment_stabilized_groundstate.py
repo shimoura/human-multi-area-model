@@ -11,7 +11,7 @@ sim_params = {
 ana_params = {
     'plotRasterArea': {
         'fraction': 0.05,
-        'low': 2500,
+        'low': 12000,
         'high': 12500
     },
     'functconn_corr': {
