@@ -47,9 +47,8 @@ sim_folder = os.path.join(outpath, net_hash, sim_hash)
 sim_dict = simulationDictFromDump(sim_folder)
 
 # Create Analysis class and export it
-infomap_path = sys.argv[5]
-base_path = sys.argv[6]
-ana = Analysis(ana_params, net_dict, sim_dict, sim_folder, infomap_path, base_path)
+base_path = sys.argv[5]
+ana = Analysis(ana_params, net_dict, sim_dict, sim_folder, base_path)
 ana.dump(sim_folder)
 
 # Do the analysis

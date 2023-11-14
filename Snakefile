@@ -15,7 +15,6 @@ if 'BASE_PATH' in config:
 else:
     BASE_PATH = os.getcwd()
 
-INFOMAP_PATH = config['INFOMAP_PATH']
 NEST_VARS_PATH = os.path.join(config['NEST_PATH'], 'bin', 'nest_vars.sh')
 
 with open('cluster.json', 'r') as f:
@@ -80,4 +79,4 @@ rule analyzeNetwork:
     log:
         'out/log/{experiment}_analyzeNetwork.log'
     shell:
-        '{RUN_ANALYSIS} src/snakemake_analysis.py {input} {output} {INFOMAP_PATH} {BASE_PATH}'
+        '{RUN_ANALYSIS} src/snakemake_analysis.py {input} {output} {BASE_PATH}'

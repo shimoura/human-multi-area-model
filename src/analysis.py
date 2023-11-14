@@ -23,9 +23,7 @@ import seaborn as sns
 
 from dicthash import dicthash
 
-from helpers.mapequation import getCommunityStructure
 from helpers.resting_state_networks import left_ordering
-from data_loader.dk_fullnames_to_shortnames import dk_full_to_short
 
 from joblib import Parallel, delayed
 import multiprocessing
@@ -49,11 +47,10 @@ class Analysis():
     """
 
     def __init__(self, ana_params, net_dict, sim_dict, sim_folder,
-                 infomap_path, base_path):
+                base_path):
         self.ana_dict = ana_params
         self.net_dict = net_dict
         self.sim_dict = sim_dict
-        self.infomap_path = infomap_path
 
         self.base_path = base_path
         self.sim_folder = sim_folder
@@ -124,12 +121,12 @@ class Analysis():
             datetime.now().time(), 'Correlation coefficients')
             )
         self.plotCorrCoff()
-        print('{} plotting binned spike rates per neuron'.format(
+        print('{} Plotting binned spike rates per neuron'.format(
             datetime.now().time())
         )
         self.plot_all_binned_spike_rates_area()
 
-        print('{} plotting functional connectivity based on synaptic input currents'.format(
+        print('{} Plotting functional connectivity based on synaptic input currents'.format(
             datetime.now().time())
         )
         self.plot_functional_connectivity()
@@ -148,12 +145,6 @@ class Analysis():
         for area in self.popGids.index.levels[0]:
             print('{} Plotting {}'.format(datetime.now().time(), area))
             self.plotRasterArea(area)
-        try:
-            print('{} Plotting connectivities'.format(datetime.now().time()))
-            self.plotConnectivities()
-        except OSError:
-            print("Something went wrong when plotting community structures."
-                  " Probably infomap is not installed.")
         print('{} Plotting BOLD connectivities'.format(datetime.now().time()))
         self.plotBOLDConnectivity()
 
@@ -773,82 +764,6 @@ class Analysis():
         fig.savefig(os.path.join(
             self.plot_folder,
             'cv_isi.{0}'.format(extension)
-        ))
-        plt.clf()
-        plt.close(fig)
-
-    def plotConnectivities(self):
-        """
-        Plots structural and functional connectivities.
-        """
-        # Read values
-        if not hasattr(self, 'self.rate'):
-            self.curr_in = self.synapticInputCurrent()
-        curr_in = self.curr_in
-
-        extension = self.ana_dict['extension']
-        tmin = self.ana_dict['plotConnectivities']['tmin']
-        bold = curr_in.T
-        synapses = self.net_dict['synapses_internal']
-        # Aggregate synapses to area-level
-        synapses = synapses.groupby(level=0).sum().T.groupby(level=0).sum().T
-
-        cluster_membership_Synapses = getCommunityStructure(
-            synapses, work_dir=os.path.join(self.ana_folder, 'infomap'),
-            infomap_path=self.infomap_path
-        )
-
-        # Normalize struct_conn, calculate func_conn
-        struct_conn = synapses
-        struct_conn[struct_conn < 1] = np.NaN
-        struct_conn = np.log10(struct_conn)
-        funct_conn = bold[bold.index >= tmin].corr()
-        np.fill_diagonal(funct_conn.values, np.NaN)
-
-        # Map area names to short area names & add cluster membership to index
-        funct_conn.index = [
-            cluster_membership_Synapses,
-            funct_conn.index.map(dk_full_to_short)
-        ]
-        funct_conn.index.names = ['', '']
-        funct_conn.columns = [
-            cluster_membership_Synapses,
-            funct_conn.columns.map(dk_full_to_short)
-        ]
-        funct_conn.columns.names = ['', '']
-        struct_conn.index = [
-            cluster_membership_Synapses,
-            struct_conn.index.map(dk_full_to_short)
-        ]
-        struct_conn.index.names = ['', '']
-        struct_conn.columns = [
-            cluster_membership_Synapses,
-            struct_conn.columns.map(dk_full_to_short)
-        ]
-        struct_conn.columns.names = ['', '']
-
-        # Sort according to cluster membership
-        funct_conn = funct_conn.sort_index(axis=0).sort_index(axis=1)
-        struct_conn = struct_conn.sort_index(axis=0).sort_index(axis=1)
-
-        # Plot using seaborn heatmap
-        fig, axarr = plt.subplots(1, 2, figsize=(12, 6))
-        axarr[0].set_title('Structural connectivity (log synapse number)')
-        sns.heatmap(
-            struct_conn, square=True, ax=axarr[0], cmap="YlGnBu",
-            cbar=True, cbar_kws={"shrink": .66}
-        )
-        axarr[1].set_title('Functional connectivity (abs. input currents)')
-        mask = np.zeros_like(funct_conn)
-        mask[np.triu_indices_from(mask)] = True
-        sns.heatmap(
-            funct_conn, square=True, ax=axarr[1], mask=mask, cmap="YlGnBu",
-            cbar=True, cbar_kws={"shrink": .66}
-        )
-        plt.tight_layout()
-        fig.savefig(os.path.join(
-            self.plot_folder,
-            'connectivity.{0}'.format(extension)
         ))
         plt.clf()
         plt.close(fig)
