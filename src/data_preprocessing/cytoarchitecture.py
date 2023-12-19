@@ -283,7 +283,7 @@ class NeuronNumbers():
         # Thickness is only layer resolved and includes layer 1
         thickness_repeat = pd.Series(
             data=np.repeat(
-                self.thickness.loc[:, self.layer_list].values,
+                self.thickness.loc[self.area_list, self.layer_list].values,
                 len(self.population_list)
             ),
             index=pd.MultiIndex.from_product(
