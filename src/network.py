@@ -126,7 +126,7 @@ class Network():
         spike_time = pd.Series(
                 data=None,
                 index=self.net['neuron_numbers'].index,
-                dtype=np.float
+                dtype=np.float64
                 )
         for target_pop, timepoint in self.params['single_spike'].items():
             assert type(timepoint) == float
@@ -195,7 +195,7 @@ class Network():
         )
         weights = pd.DataFrame(
             data=0,
-            dtype=np.float,
+            dtype=np.float64,
             index=multiindex,
             columns=multiindex
         ).sort_index()
@@ -341,7 +341,7 @@ class Network():
 
         weights_ext = pd.Series(
             data=0,
-            dtype=np.float,
+            dtype=np.float64,
             index=multiindex
         )
         weights_ext.loc[
@@ -438,7 +438,7 @@ class Network():
         # calculate rates (1e-3 to make [tau_m] = s)
         rates = pd.Series(
             data=0,
-            dtype=np.float,
+            dtype=np.float64,
             index=K_ext.index
         )
         rates.loc[
