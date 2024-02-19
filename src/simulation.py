@@ -339,6 +339,16 @@ class Simulation():
                     syn_dict['delay'] = {'distribution': delay_distr,
                                          'mu': mu_delay, 'sigma': sigma_delay,
                                          'low': min_delay}
+
+                    # Skipping connection with weight == 0.0
+                    if weight == 0.0:
+                        print('Found weight == 0.0 between {} and {}. Skipping connection.'.format(
+                            (area_i, layer_i, pop_i),
+                            (area_j, layer_j, pop_j)
+                            )
+                        )
+                        continue
+                    
                     if weight < 0:
                         syn_dict['weight']['high'] = 0.0
                     else:
