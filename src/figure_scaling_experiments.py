@@ -439,6 +439,7 @@ axes['lvr'].hist(
 axes['rates'].set_xlim(0.5, 10)
 axes['rates'].set_xlabel('Firing rate (spikes/s)')
 axes['rates'].set_ylabel('Density')
+axes['rates'].set_xscale('log')
 axes['rates'].set_yscale('log')
 axes['rates'].set_ylim(1.e-2, 1)
 axes['rates'].text(
