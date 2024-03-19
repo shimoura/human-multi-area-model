@@ -112,7 +112,7 @@ To run the model on a cluster, ensure you have a working `conda` and `snakemake`
 
 Start with
 ```
-conda activate base
+conda activate humam
 ```
 to add `conda` to the `PATH`. Lastly start `snakemake` with the cluster specification:
 ```
