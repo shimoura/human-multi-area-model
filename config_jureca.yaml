@@ -1,5 +1,4 @@
 NEST_PATH: /path/to/installation
-OUTPATH: /where/to/write/simulationdata/to
 
 MPIRUN: srun
 MPI_MODULES: module load GCC ParaStationMPI
