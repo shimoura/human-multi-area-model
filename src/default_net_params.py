@@ -183,7 +183,9 @@ params['scaling_factors_recurrent'] = {
     # Scale cortico cortical excitatory on inhibitory weights
     'cc_scalingEtoI': 2.0
 }
-
+# Scaling factors for the network numbers
+params['N_scaling'] = 1.0 # Scaling of population sizes
+params['K_scaling'] = 1.0 # Scaling of indegrees
 
 """
 Delays

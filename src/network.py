@@ -90,6 +90,11 @@ class Network():
         )
         self.net['weights_ext_sd'] = np.abs(self.net['weights_ext']*rel_sd_psp)
 
+        # ===== Scale Network =====
+        # down-scale the network for testing on low compute resources
+        if params['N_scaling'] != 1.0 or params['K_scaling'] != 1.0:
+            self.scaleNetwork()
+
         # ===== Convenience attributes =====
         self.net['NOS'] = SN.NOS
         self.net['SLN'] = SN.SLN
@@ -449,6 +454,20 @@ class Network():
         ] = 1e3 * (V_th_I - E_L_I) * eta_ext / conversion_I
         rates[self.net['neuron_numbers'] < 1] = 0.
         return rates
+
+    def scaleNetwork(self):
+        """
+        Scales the network
+        """
+
+        # TODO: implement scaling for DC drive
+        # TODO: improve and test it
+        self.net['neuron_numbers'] *= self.params['N_scaling']
+        self.net['synapses_internal'] *= self.params['N_scaling'] * self.params['K_scaling']
+        self.net['weights'] /= np.sqrt(self.params['K_scaling'])
+
+        self.net['synapses_external'] *= self.params['N_scaling'] * self.params['K_scaling']
+        self.net['weights_ext'] /= np.sqrt(self.params['K_scaling'])
 
     def sortIndices(self):
         """
