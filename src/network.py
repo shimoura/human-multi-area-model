@@ -462,11 +462,11 @@ class Network():
 
         # TODO: implement scaling for DC drive
         # TODO: improve and test it
-        self.net['neuron_numbers'] *= self.params['N_scaling']
-        self.net['synapses_internal'] *= self.params['N_scaling'] * self.params['K_scaling']
+        self.net['neuron_numbers'] = round(self.net['neuron_numbers'] * self.params['N_scaling'])
+        self.net['synapses_internal'] = round(self.net['synapses_internal'] * self.params['N_scaling'] * self.params['K_scaling'])
         self.net['weights'] /= np.sqrt(self.params['K_scaling'])
 
-        self.net['synapses_external'] *= self.params['N_scaling'] * self.params['K_scaling']
+        self.net['synapses_external'] = round(self.net['synapses_external'] * self.params['N_scaling'] * self.params['K_scaling'])
         self.net['weights_ext'] /= np.sqrt(self.params['K_scaling'])
 
     def sortIndices(self):
