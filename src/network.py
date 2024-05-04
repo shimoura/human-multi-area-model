@@ -78,7 +78,8 @@ class Network():
         self.net['eta_ext'] = params['input_params']['eta_ext']
         self.net['rate_ext'] = self.externalRates(self.net['eta_ext'])
         self.net['spike_time'] = self.distribute_singe_spike_times()
-
+        self.net['dc_drive'] = self.add_DC_drive()
+        
         # ===== Scale Weights =====
         # has to be done after determining the external rates
         self.net['weights'] = self.scaleWeightsInt(
@@ -455,19 +456,118 @@ class Network():
         rates[self.net['neuron_numbers'] < 1] = 0.
         return rates
 
+    def add_DC_drive(self):
+        """
+        Add DC drive to the network
+        """
+        self.net['dc_drive'] = pd.Series(
+            data=0,
+            index=self.net['neuron_numbers'].index,
+            dtype=np.float64
+        )
+
     def scaleNetwork(self):
         """
-        Scales the network
+        Scales the network.
         """
+        # Check if scaling parameters are positive
+        if self.params['N_scaling'] <= 0 or self.params['K_scaling'] <= 0:
+            raise ValueError("Scaling parameters must be positive")
 
-        # TODO: implement scaling for DC drive
-        # TODO: improve and test it
-        self.net['neuron_numbers'] = round(self.net['neuron_numbers'] * self.params['N_scaling'])
-        self.net['synapses_internal'] = round(self.net['synapses_internal'] * self.params['N_scaling'] * self.params['K_scaling'])
-        self.net['weights'] /= np.sqrt(self.params['K_scaling'])
+        # Scale neuron numbers
+        self.net['neuron_numbers'] = np.round(
+            self.net['neuron_numbers'] * self.params['N_scaling']
+        ).astype(int)
 
-        self.net['synapses_external'] = round(self.net['synapses_external'] * self.params['N_scaling'] * self.params['K_scaling'])
-        self.net['weights_ext'] /= np.sqrt(self.params['K_scaling'])
+        # Add extra DC drive based on scaled network
+        self.extraDCforScaledNetwork()
+
+        # Scale synaptic weights and indegrees
+        scaling_factor = self.params['N_scaling'] * self.params['K_scaling']
+        self.net['synapses_internal'] = np.round(
+            self.net['synapses_internal'] * scaling_factor
+        ).astype(int)
+        self.net['weights'] /= self.params['K_scaling']
+
+        self.net['synapses_external'] = np.round(
+            self.net['synapses_external'] * scaling_factor
+        ).astype(int)
+        self.net['weights_ext'] /= self.params['K_scaling']
+
+    def extraDCforScaledNetwork(self):
+        """
+        Add extra DC drive to the network. Extra DC input is added to 
+        compensate the scaling and preserve the mean and variance of 
+        the input.
+        """
+        # Conversion factor PSP -> PSC
+        tau_m_E = self.net['neuron_params_E']['tau_m']
+        C_m_E = self.net['neuron_params_E']['C_m']
+        tau_syn_ex_E = self.net['neuron_params_E']['tau_syn_ex']
+        neuron_model_E = self.net['neuron_model_E']
+        PSP_ee_over_PSC_ee = self._getPspOverPsc(
+            C_m_E, tau_m_E, tau_syn_ex_E, neuron_model_E
+        )
+        tau_m_I = self.net['neuron_params_I']['tau_m']
+        C_m_I = self.net['neuron_params_I']['C_m']
+        tau_syn_ex_I = self.net['neuron_params_I']['tau_syn_ex']
+        neuron_model_I = self.net['neuron_model_I']
+        PSP_ie_over_PSC_ie = self._getPspOverPsc(
+            C_m_I, tau_m_I, tau_syn_ex_I, neuron_model_I
+        )
+        # Calculate external PSP
+        J_ext = self.net['weights_ext']
+        J_ext.loc[
+            (slice(None), slice(None), 'E')
+        ] *= PSP_ee_over_PSC_ee
+        J_ext.loc[
+            (slice(None), slice(None), 'I')
+        ] *= PSP_ie_over_PSC_ie
+
+        # Create MultiIndex for neuron parameters
+        multiindex = pd.MultiIndex.from_product(
+            [self.net['area_list'],
+             self.net['layer_list'],
+             self.net['population_list']],
+            names=['area', 'layer', 'population']
+        )
+
+        # Initialize tau_m and C_m Series with zeros
+        tau_m = pd.Series(
+            data=0,
+            dtype=np.float64,
+            index=multiindex
+        )
+        C_m = pd.Series(
+            data=0,
+            dtype=np.float64,
+            index=multiindex
+        )
+
+        # Assign tau_m and C_m values for excitatory and inhibitory neurons
+        tau_m.loc[
+            (slice(None), slice(None), 'E')
+        ] = tau_m_E
+        tau_m.loc[
+            (slice(None), slice(None), 'I')
+        ] = tau_m_I
+
+        C_m.loc[
+            (slice(None), slice(None), 'E')
+        ] = C_m_E
+        C_m.loc[
+            (slice(None), slice(None), 'I')
+        ] = C_m_I
+
+        # Calculate x1 term
+        K_ext = self.net['synapses_external']/self.net['neuron_numbers']
+        rate_ext = self.net['rate_ext']
+        x1_ext = 1e-3 * tau_m * J_ext * K_ext * rate_ext
+        # x1 = 1e-3 * tau_m * np.dot(self.J_matrix[:, :-1] * self.K_matrix[:, :-1], full_mean_rates)
+
+        # Calculate dc_drive
+        K_scaling = self.params['K_scaling']
+        self.net['dc_drive'] = C_m / tau_m * ((1. - np.sqrt(K_scaling)) * (x1_ext))
 
     def sortIndices(self):
         """
@@ -648,6 +748,33 @@ class Network():
             )
         return PSC_over_PSP
 
+    @staticmethod
+    def _getPspOverPsc(C_m, tau_m, tau_syn, neuron_model):
+        """
+        Calculates conversion factor from PSC's to PSP's for neurons
+        with exponential postsynaptic currents.
+
+        Parameters
+        ----------
+        C_m : float
+            Membrane potential in pF
+        tau_m : float
+            Membrane time constant in ms.
+        tau_syn : float
+            Synaptic time constant in ms.
+
+        Returns
+        -------
+        PSP_over_PSC : float
+        """
+        if neuron_model in ['iaf_psc_exp', 'mat2_psc_exp']:
+            eps = tau_syn / tau_m
+            PSP_over_PSC = tau_m / (C_m * eps**(-1/(1-eps))) 
+        else:
+            raise NotImplementedError(
+                "Conversion PSC -> PSP for {} unknown.".format(neuron_model)
+            )
+        return PSP_over_PSC 
 
 def networkDictFromDump(dump_folder):
     """
