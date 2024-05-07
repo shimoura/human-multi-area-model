@@ -222,7 +222,7 @@ def get_cc_scalingEtoE(d, key='cc_scalingEtoE'):
     """
     fn = os.path.join(d, 'network_params.yaml')
     with open(fn, 'r') as net:
-        net_params = yaml.load(net, Loader=yaml.Loader)
+        net_params = yaml.load(net)
     scale = net_params['scaling_factors_recurrent'][key]
     return scale
 

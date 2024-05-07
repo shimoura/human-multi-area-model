@@ -550,5 +550,5 @@ def simulationDictFromDump(dump_folder):
     # Read sim.yaml
     fn = os.path.join(dump_folder, 'sim.yaml')
     with open(fn, 'r') as sim_file:
-        sim_dict = yaml.load(sim_file, Loader=yaml.Loader)
+        sim_dict = yaml.load(sim_file)
     return sim_dict
