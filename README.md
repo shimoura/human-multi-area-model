@@ -110,6 +110,7 @@ This will be implemented in a future version.
 
 To run the model on a cluster, ensure you have a working `conda` and `snakemake` installation. 
 
+
 Start with
 ```
 conda activate humam
@@ -118,6 +119,9 @@ to add `conda` to the `PATH`. Lastly start `snakemake` with the cluster specific
 ```
 bash snakemake_slurm.sh
 ```
+
+**NOTE**: to run the current version on JURECA cluster (Jülich Supercomputing Centre at Forschungszentrum Jülich), it is recommended to use the modules defined in `config_jureca.yaml` file instead of the conda environment. If so, remove the `--use-conda` flag in the `snakemake_slurm.sh` script before running the code line above.
+
 This script will run the workflow defined in `Snakefile`, which follows the sequence:
 1. read all `*.py` experiment files contained in the `./experiments/` directory. **NOTE**: If you want to run fewer/more experiments, remove/add these files from the `./experiments/` directory.
 2. load necessary modules for MPI and NEST before executing
