@@ -138,6 +138,14 @@ class Simulation():
                         )
                     population = nest.Create(neuron_model_pop, nn)
                     nest.SetStatus(population, neuron_params_pop)
+
+                    # Assign DC input
+                    nest.SetStatus(
+                        population, {
+                            'I_e': self.net_dict['dc_drive'].loc[pop]
+                        }
+                    )
+
                     # Distribute parameters and initial voltage
                     for thread in np.arange(local_num_threads):
                         # Using GetNodes is a work-around until NEST 3.0 is
@@ -542,5 +550,5 @@ def simulationDictFromDump(dump_folder):
     # Read sim.yaml
     fn = os.path.join(dump_folder, 'sim.yaml')
     with open(fn, 'r') as sim_file:
-        sim_dict = yaml.load(sim_file)
+        sim_dict = yaml.load(sim_file, Loader=yaml.Loader)
     return sim_dict

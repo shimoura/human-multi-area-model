@@ -2375,5 +2375,5 @@ def analysisDictFromDump(dump_folder):
     """
     fn = os.path.join(dump_folder, 'ana.yaml')
     with open(fn, 'r') as ana_file:
-        ana_dict = yaml.load(ana_file)
+        ana_dict = yaml.load(ana_file, Loader=yaml.Loader)
     return ana_dict
