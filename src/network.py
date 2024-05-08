@@ -460,12 +460,14 @@ class Network():
         """
         Add DC drive to the network
         """
-        self.net['dc_drive'] = pd.Series(
+        dc_drive = pd.Series(
             data=0,
             index=self.net['neuron_numbers'].index,
             dtype=np.float64
         )
 
+        return dc_drive
+   
     def scaleNetwork(self):
         """
         Scales the network.
