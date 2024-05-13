@@ -1,4 +1,4 @@
 NEST_PATH: /path/to/installation
 
 MPIRUN: srun
-MPI_MODULES: module load GCC ParaStationMPI
+MPI_MODULES: module load Stages/2022 GCC/11.2.0 ParaStationMPI/5.5.0-1 CMake/3.21.1 Boost/1.78.0 GSL/2.7 Python/3.9.6 SciPy-Stack/2021b GCCcore/.11.2.0 Autotools/20210726 git PyYAML/5.4.1
