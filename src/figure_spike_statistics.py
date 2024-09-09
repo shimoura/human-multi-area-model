@@ -30,11 +30,11 @@ for state in ['groundstate', 'bestfit']:
     name_extension = '_lichtman_chiI2_different_seed'
     outpath = os.path.join(os.getcwd(), 'out/')
     if state == 'groundstate':
-        net_folder = p_join(outpath, '517f98422516bbe6cb324c5436e7f66f')  # groundstate
+        net_folder = p_join(outpath, '90523c45dfad8e5bacb2eaf4d2196f76')  # groundstate
     elif state == 'bestfit':
-        net_folder = p_join(outpath, '10acdb2ae9247b49d4eeea4d78f308b7')  # bestfit
-    sim_folder = p_join(net_folder, 'de4934b8c7777751f7c516e2ad35f50a')
-    ana_folder = p_join(sim_folder, 'd8057e7a966caf3eefdc9d234a0785d3')
+        net_folder = p_join(outpath, '8c49a09f51f44fbb036531ce0719b5ba')  # bestfit
+    sim_folder = p_join(net_folder, '4772f0b020c9f3310f4096a6db758343')
+    ana_folder = p_join(sim_folder, '7ebd64b6b9a95c3d8da8cf3af85e9985')
 
     # ========== Load ==========
     popGids = pd.read_pickle(p_join(sim_folder, 'population_GIDs.pkl'))
@@ -46,7 +46,7 @@ for state in ['groundstate', 'bestfit']:
 
 
     # ========== Plot ==========
-    plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
+    plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
     fig = plt.figure(constrained_layout=True, figsize=(5.63, 3.5))
     label_prms = dict(fontsize=12, fontweight='bold', va='top', ha='right')
     gs = gridspec.GridSpec(3, 4, figure=fig)

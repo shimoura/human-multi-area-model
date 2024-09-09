@@ -11,7 +11,7 @@ net_params = {
 # Overwrite values of src/default_sim_params.py
 sim_params = {
     't_sim': 12500.0,
-    'master_seed': 2106
+    'master_seed': 2903
 }
 
 # Parameters for the analysis

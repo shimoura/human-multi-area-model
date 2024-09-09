@@ -144,7 +144,7 @@ first_diff_min_bf = first_diff_bf.groupby(level=0).transform('min')
 first_diff_min_bf = first_diff_min_bf.sort_index()
 
 # initialize plot
-plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
+plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
 fig = plt.figure(constrained_layout=True, figsize=(5.63, 5.5))
 gs = gridspec.GridSpec(20, 20, figure=fig)
 ax_delay = fig.add_subplot(gs[-3:, 10:])
