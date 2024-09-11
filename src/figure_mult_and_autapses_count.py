@@ -32,12 +32,12 @@ for target_area in area_list:
     for target_layer in layer_list:
         for target_pop in pop_list:
             count = 0.
-            Nt = NN[target_area][target_layer][target_pop] # number of target neurons
+            Nt = NN[(target_area, target_layer, target_pop)] # number of target neurons
             for source_area in area_list:
                 for source_layer in layer_list:
                     for source_pop in pop_list:
-                        Ns = NN[source_area][source_layer][source_pop] # number of source neurons
-                        nsyn = synapses.loc[target_area, source_area][target_layer][target_pop][source_layer][source_pop] # number of synapses
+                        Ns = NN[(source_area, source_layer, source_pop)] # number of source neurons
+                        nsyn = synapses.loc[(target_area, target_layer, target_pop), (source_area, source_layer, source_pop)] # number of synapses
                         if nsyn > 0:
                             # remove autapses when source and target are the same
                             if target_area == source_area and target_layer == source_layer and target_pop == source_pop:
@@ -57,7 +57,7 @@ autapses.plot(kind='bar', y='mean autapses', color='MediumSeagreen', edgecolor='
 ax1.set_ylabel('Autapses per neuron')
 
 multapses[multapses>0].mean(axis=1).plot(kind='bar', color='MediumSeagreen', edgecolor='black', ax=ax2, legend=False)
-ax2.set_ylabel('Multapses per target neuron')
+ax2.set_ylabel('Average multapse degree')
 
 # Add text labels
 ax1.text(-0.15, 1.0, '(A)', ha='left', va='top', transform=ax1.transAxes, fontsize=12, fontweight='bold')
