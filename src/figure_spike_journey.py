@@ -16,14 +16,14 @@ from data_loader.dk_fullnames_to_shortnames import dk_full_to_short
 dt = 0.1
 step_min, step_max = 20000, 21000
 
-net_hash_orig_gs = '517f98422516bbe6cb324c5436e7f66f'  # groundstate
-net_hash_pert_gs = '094e6f4cf364a5d0aace0ae16d9ccf05'  # groundstate
+net_hash_orig_gs = '90523c45dfad8e5bacb2eaf4d2196f76'  # groundstate
+net_hash_pert_gs = 'a80f3ffb485f0d19610312bf2195b89b'  # groundstate
 
-net_hash_orig_bf = '10acdb2ae9247b49d4eeea4d78f308b7'  # best fMRI
-net_hash_pert_bf = '2c3a4b05f35cd6df8414fd95dcfe2e27'  # best fMRI
+net_hash_orig_bf = '8c49a09f51f44fbb036531ce0719b5ba'  # best fMRI
+net_hash_pert_bf = '251f101af71db37db323cd889a89103a'  # best fMRI
 
-sim_hash = 'c77c637ef7884a002d4cb2f10254353c'
-ana_hash = '9869eeeab580621db9572c8aa8c5f789'
+sim_hash = 'a9a78923cdc29bfa5cb4cad82f30e5bb'
+ana_hash = '386fd340a9cb17c9d7b1ced530448025'
 
 # outpath = 'out'
 outpath = os.path.join(os.getcwd(), 'out')
@@ -144,7 +144,7 @@ first_diff_min_bf = first_diff_bf.groupby(level=0).transform('min')
 first_diff_min_bf = first_diff_min_bf.sort_index()
 
 # initialize plot
-plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
+plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
 fig = plt.figure(constrained_layout=True, figsize=(5.63, 5.5))
 gs = gridspec.GridSpec(20, 20, figure=fig)
 ax_delay = fig.add_subplot(gs[-3:, 10:])
@@ -194,7 +194,7 @@ ax_steps.text(s='D', transform=ax_steps.transAxes, x=-0.05, y=1.4,
 axs = [ax_pert_gs, ax_pert_bf]
 diffs = [rates_diff_gs, rates_diff_bf]
 labels = ['A', 'B']
-titles = ['Spike Propagation (Ground state)', 'Spike Propagation (Best-fit state)']
+titles = ['Spike Propagation (Base version)', 'Spike Propagation (Best-fit version)']
 for ax_pert, rates_diff, label, title in zip(axs, diffs, labels, titles):
     rates_diff[rates_diff == 0] = np.nan
     dist_pert_reindex = dist_pert.loc[rates_diff.index]
@@ -221,9 +221,9 @@ ax_pert_bf.set_yticklabels([])
 ax_pert_gs.set_ylabel('population')
 
 ax_time.plot(first_diff_min_gs.reindex(order, level=0), np.arange(len(pops)),
-             's', label='ground state', color=colors_state['groundstate'])
+             's', label='base version', color=colors_state['groundstate'])
 ax_time.plot(first_diff_min_bf.reindex(order, level=0), np.arange(len(pops)),
-             's', label='best-fit state', color=colors_state['bestfit'])
+             's', label='best-fit version', color=colors_state['bestfit'])
 
 print('gs mean:', first_diff_min_gs.mean(), 'gs std:', first_diff_min_gs.std())
 print('bf mean:', first_diff_min_bf.mean(), 'bf std:', first_diff_min_bf.std())
