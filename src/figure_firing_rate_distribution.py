@@ -38,20 +38,27 @@ def plot_firing_rate_distribution(filepath, figname):
                     print('Skipping ' + area + ' ' + layer + ' ' + pop)
                     continue
                 else:
+                    # Use logarithmic bins, but compute the histogram on log10 of the rates
                     vals, bins = np.histogram(np.log10(rates_individual[area, layer, pop]), bins=np.arange(-3, 5, binsize))
                     if np.sum(vals) > 0:
-                        vals = vals / (np.sum(vals)*binsize)
+                        vals = vals / (binsize * np.sum(vals))
                     rates_dist.append(vals)
 
             # Calculate mean and standard deviation of firing rate distributions
             mean_rates_count = np.mean(rates_dist, axis=0)
             std_rates_count = np.std(rates_dist, axis=0)
 
-            # Plot firing rate distribution
-            ax[row, col].plot(bins[:-1], mean_rates_count, linewidth=2, color='black')
-            ax[row, col].fill_between(bins[:-1], mean_rates_count-std_rates_count, mean_rates_count+std_rates_count, alpha=0.5, color='black')
+            # Convert log10 bins to actual firing rates (10^bins)
+            actual_bins = 10**bins[:-1]
+
+            ax[row, col].plot(actual_bins, mean_rates_count, linewidth=2, color='black')
+            ax[row, col].fill_between(actual_bins, mean_rates_count - std_rates_count, mean_rates_count + std_rates_count, alpha=0.5, color='black')
             ax[row, col].set_title(layer_labels[row] + ' ' + pop)
-            ax[row, col].set_xlim(-3, 4)
+
+            # Set x-axis to logarithmic scale to represent firing rates correctly
+            ax[row, col].set_xscale('log')
+            ax[row, col].set_xlim(1e-3, 1e4)  # Adjust limits as necessary for your data
+            # ax[row, col].set_ylim(-0.5, 1.6)
 
             col += 1
             if col >= 2:
@@ -60,7 +67,7 @@ def plot_firing_rate_distribution(filepath, figname):
 
     # Add overall figure title
     fig.supylabel('Density')
-    fig.supxlabel('log(Firing rate (spikes/s))')
+    fig.supxlabel('Firing rate (spikes/s)')
 
     fig.tight_layout()
     fig.savefig(f'figures/{figname}.pdf')
