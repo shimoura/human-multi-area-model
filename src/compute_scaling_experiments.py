@@ -16,7 +16,8 @@ experiments = [
         'lichtman_chii2_smaller_g',
         'lichtman_chii2_different_time_consts',
         'lichtman_chii2_distributed_params',
-        'lichtman_chii2_different_seed'
+        'lichtman_chii2_different_seed',
+        'lichtman_chii2_random_seeds'
         ]
 
 if len(sys.argv) > 1 and sys.argv[1] in experiments:
@@ -24,98 +25,128 @@ if len(sys.argv) > 1 and sys.argv[1] in experiments:
 else:
     simulation = 'lichtman_chii2_different_seed'
 
-base_path = os.path.join(os.getcwd(), 'out/')
+# base_path = os.path.join(os.getcwd(), 'out/')
 
 if simulation == 'lichtman_chii2_different_seed':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed as state
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_seed'
     interesting_paths = [
-            '07338a82a7f3331ed0309d0aefe2512b/',
-            '0a5ef37413def0858a248422006c8d04/',
-            '10acdb2ae9247b49d4eeea4d78f308b7/',
-            '1d56199392523b0395e9e67a69fca968/',
-            '33babd5e822097cd11e421d3df6065f5/',
-            '3bd6c7565b57a129240be673cc9b1b5d/',
-            '441263567203638a8250ec2593dec3ac/',
-            '517f98422516bbe6cb324c5436e7f66f/',
-            '6084159743c50b9a23e97a38d0b89daa/',
-            '6e6de3f72cb1a380e4739e774ff732ca/',
-            '8669f086a45d7fa5a253d6598f0f6663/',
-            '912bda6cf185869da1db97f8afb5a2eb/',
-            '9f692a9d98028fb6ef1fec9f56c42acb/',
-            'a413e5bbaa628c51b03261c4e8c7ef1b/',
-            'a8586e55554e8bb52a6b2bfd2cdb5423/',
-            'b5816c8150c88676484652da56d5d603/',
-            'b6ecf4c0943f997a0f270b90d863cced/',
-            'f0a248e8f586b22fc3c00fa7ec02720b/',
+            # These hashes were run using the latest dependencies (Python 3.9).
+            '71325878646a5703fc31876955355747/',
+            '498a3266bec748385be4603da399d5c1/',
+            '0ea37829bdd5902a5f88c932e50d7c94/',
+            '8c49a09f51f44fbb036531ce0719b5ba/',
+            'ba0017abba66a9a9402001c9df050d2e/',
+            '5b14562d75f35e25c4109488d3865533/',
+            '90523c45dfad8e5bacb2eaf4d2196f76/',
+            'c2319580b4a38f6d3f42cf3a9acff0b5/',
+            '5b3ffad279a0575a2795a4e048eaeef5/',
+            'd67da5eb34ad040d6addff7d86a4724e/',
+            '990a6f7693bebb2d120f4013fcdd43d8/',
+            'ecc1d19ed4afae93d03b66b332ba9b3b/',
+            '2d05723eb9b2db44beda01b8785bdbf7/',
+            '654ff1cc9642ce91e5c5e2c91ce13f61/',
+            '33021ab482b709bd4697a5d9dce9e5f8/',
+            '6785c5f5661fadb0e5218c05d36e9a9d/',
+            'fbfe498ae2bcc4fa2ce72ab7416d9ddc/',
+            '6cc8213fba1b6ff7935d0505491045ea/',
+            'aa3e9b1f3ef704504bee98665a215178/',
             ]
-    sim_path = 'de4934b8c7777751f7c516e2ad35f50a/'
-    ana_path = 'd8057e7a966caf3eefdc9d234a0785d3/'
+    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_random_seeds/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/'
+    ana_path = 'fff793e841649603c59db1822e566c93/'
+elif simulation == 'lichtman_chii2_random_seeds':
+    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_random_seeds as state
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_rseed2903'
+    interesting_paths = [
+            '498a3266bec748385be4603da399d5c1/',
+            '8c49a09f51f44fbb036531ce0719b5ba/',
+            '5b3ffad279a0575a2795a4e048eaeef5/',
+            'ecc1d19ed4afae93d03b66b332ba9b3b/',
+            '2d05723eb9b2db44beda01b8785bdbf7/',
+            '654ff1cc9642ce91e5c5e2c91ce13f61/',
+            '33021ab482b709bd4697a5d9dce9e5f8/',
+            '6785c5f5661fadb0e5218c05d36e9a9d/',
+            'fbfe498ae2bcc4fa2ce72ab7416d9ddc/',
+            '6cc8213fba1b6ff7935d0505491045ea/',
+            'aa3e9b1f3ef704504bee98665a215178/',
+            ]
+    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_random_seeds/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/' # 2903
+    ana_path = 'fff793e841649603c59db1822e566c93/'
 elif simulation == 'lower_etoi':
     from compute_scaling_experiments_helpers import state_lower_e_to_i as state
     save_data_dir = 'simulated_data/scaling_experiment_lower_e_to_i'
     interesting_paths = [
-            '12742e24273ad73c879fc396b575e2e9/',
-            '2073b9923d7eb9b128c780a5d8ea9ba8/',
-            '55b4bb7ec82018e02b0fd69517260c39/',
-            '630a587e46e7a18beb16defe7ab53508/',
-            '67120aba9cd1806fc6a47145baaf18d4/',
-            '7284c68339a7743e55e6fb3da2d8955d/',
-            '8fe1c1f7da65657072959fc060e3fce4/',
-            '95be71aeac41f476e5baf643ec97aa52/',
-            '96e2cc6124445ea07f925c1c1d3c3063/',
-            'ac8d90fe0a8ab37e188f38066fd9bfd1/',
-            'ece6d9902639ed3b4537a0ae9cbbc4da/',
-            'f0d51a54183ce194c043f69f476f80aa/',
+            '04d270ef4972dcc9e4e6938202b000d7/',
+            '3c93418f24dbcf6c2d8a33132bc75ca3/',
+            '8fd50bf352d999bd5711b74dce77d21c/',
+            'da271ef1ca89153e9ef04ad4789dea87/',
+            '2440bbd8642a74be8a32b7ca1fa6975e/',
+            '4030a96f4369bd3ea2844d0427d1e4d7/',
+            '9a8aa3cb8a2cd12632c2bccfa2d30cf2/',
+            '31458bed72cb1ba710239cea45ec1cab/',
+            '43f736054d798770511d11d6cea634c7/',
+            '9d57f3c059228348251735393f046abf/',
+            '3ace71d426d1e6fbd34a5dbec1891b7b/',
+            '51753977f483813e58131899e2c2c472/',
+            'be5b9b57a154b97777664d015cc16cfc/'
             ]
-    sim_path = '1245642e017773b56bc6ea5d9abfd004/'
-    ana_path = '099ed2eb40bf4285921a916d32bf5343/'
+    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lower_etoi/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/'
+    ana_path = '875fb14936529840c819d2bdc86ff14f/'
 elif simulation == 'lichtman_chii2_smaller_g':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_smaller_g as state
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_smaller_g'
     interesting_paths = [
-            '08e8618517e6e057db688d6257680da6/',
-            '35022b8c38368b83fb671cfc1087d83f/',
-            '59cc1c6418e57a0cac22d007f9e0467b/',
-            '7d86a0be95d45469743dffa2b2809b8a/',
-            'dbbc477edceb3323b0883c89f8d7d955/',
+            '34ab2aecbed4632dd49e311e523976d5/',
+            'd7e63a0b8d4f4743a691a3096a225026/',
+            'f358fd7d2844f0a6e3e806352af2fe2f/',
+            '4dae448eb9c69ad3f2a71972667f3ee4/',
+            'e1f0481943c7dd4937436abc3b0ba8ec/',
+            'f6de3f7c02703fa1dde65ef14e61171b/'    
             ]
-    sim_path = '1245642e017773b56bc6ea5d9abfd004/'
-    ana_path = 'd8057e7a966caf3eefdc9d234a0785d3/'
+    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_smaller_g/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/'
+    ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 elif simulation == 'lichtman_chii2_different_time_consts':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_time_consts as state
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_time_consts'
     interesting_paths = [
-            '013292ec8fa6c9230d1c9518b71d19ad/',
-            '01dde3bb7de102415c2c560fa65f9ee9/',
-            '51d3f722fcea42fe722804af260521ad/',
-            '615aa8683a7ed776eafc718065dcbd3d/',
-            '6f68a4df981d21210c693cf61bc11bfe/',
-            '938abb40e337c93bbb95087117e324a6/',
-            '984f627232b71236276f8d5178c3baab/',
-            'abab9e23cec17ce523088b36d5a4e6d8/',
-            'ad2f36126638bf99c0418469d0bfebba/',
-            'd9673c094027e9046fa6413950f32647/',
+            '00d934bd2694ad6970f9c524616cdf30/',
+            '5ba365e8ec002d2786d214345aca891f/',
+            '7f378a020da9f7aba1d783b820e6acce/',
+            'd1826785ec16aaad0f0c83144c86fb70/',
+            '3d611f90e1fff6060ddbf9a058d1459b/',
+            '5e69f9756903bc364c83ffe5e3ad480a/',
+            '8cd1d42a86c90996650fa98a9982d221/',
+            'ebcc993ae9d4a5c2a11124f94128e1a4/',
+            '56452204319c31bd9e0debcbc03f8f2c/',
+            '75ec59f25c4826f9e2de3447a63fa61d/',
+            'c23ff0bd24504b81b276fc3bcb964431/'
             ]
-    sim_path = '1245642e017773b56bc6ea5d9abfd004/'
-    ana_path = 'd8057e7a966caf3eefdc9d234a0785d3/'
+    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_different_time_consts/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/'
+    ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 elif simulation == 'lichtman_chii2_distributed_params':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_distributed_params as state
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_distributed_params'
     interesting_paths = [
-            '2c60ac72127fa0089cf8c65a9f4aaf8e/',
-            '349e4572253d7264d71a61b10dd4b7f3/',
-            '38c92ec7b713e1af25169b09ea8b4155/',
-            '3e2840d0e00cdbc0bdd11b22cb89c399/',
-            '5cc5c45cfc49cd75d22c7a039732722e/',
-            '5ea08803e2c6e3d97b8bf88b65d5885d/',
-            '780e7ad49d1a1334217e385dd6d119d2/',
-            '973f392e39de8e400a1ee0676371d35c/',
-            '9a884e30b168fef077bacef05058921d/',
-            'b2ccc6891543dbd89798aa0a0d9c10eb/',
+            '105ccb56b38cd990b839889f12953a38/',
+            '500b3eac17170085d09407a592ea4075/',
+            '7b6fa03426dfaa9855113a32fc1a6535/',
+            'c207557ee4ca705ba40627631f44d6f7/',
+            '3802e13552bc9cb630c340f638ffeb0a/',
+            '64bad60cc7e9702f0d81fa1c9f443398/',
+            '919efd18ffa0d7046cdce454f8ef6bca/',
+            'ea65cf72fd5a1629c4e55f1c0ab33280/',
+            '42cb16647d3907d315bad852408cea33/',
+            '70029618054442dffacb000422702166/',
+            'b2a35418096820454aed549ab4d7a215/'
             ]
-    sim_path = '1245642e017773b56bc6ea5d9abfd004/'
-    ana_path = 'd8057e7a966caf3eefdc9d234a0785d3/'
+    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_distributed_params/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/'
+    ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 
 initial_transient = 2500.
 exp_st_duration = 2000.
@@ -139,7 +170,8 @@ area = 'caudalanteriorcingulate'
 # ==============================================================================
 # ==============================================================================
 
-filename = base_path + 'experimental_data/rutishauser/spikes/'
+filename = os.path.join(os.getcwd(), 'experimental_data/rutishauser/spikes/')
+
 data = load_data(filename)
 print(f'loaded {len(data)} neurons')
 all_ids = range(len(data))
@@ -296,7 +328,7 @@ for use_corrcoeff in [True, False]:
         if os.path.isdir(p_net):
             chi = get_cc_scalingEtoE(p_net)
             scale.append(chi)
-            exp__sim_syn__corr_lh, exp__sim_syn__corr_rh, exp_fc_mean_lh, exp_fc_array_rh = calculateFuncionalConnectivityCorrelations(p_ana, tmin=initial_transient, tmax=tmax, use_corrcoeff=use_corrcoeff)
+            exp__sim_syn__corr_lh, exp__sim_syn__corr_rh, exp_fc_mean_lh, exp_fc_array_rh = calculateFuncionalConnectivityCorrelations(p_ana, tmin=initial_transient, tmax=tmax, use_corrcoeff=use_corrcoeff, base_path=os.path.join(os.getcwd(), ''))
             corr_left.append(exp__sim_syn__corr_lh)
             corr_right.append(exp__sim_syn__corr_rh)
 

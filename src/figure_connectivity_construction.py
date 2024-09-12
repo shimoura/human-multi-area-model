@@ -21,7 +21,7 @@ except FileNotFoundError:
            experimental_data/macaque/, then run the script experimental_data/macaque/preprocessing.py')
     has_macaque_data = False
     exit(1)
-net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/517f98422516bbe6cb324c5436e7f66f/'))
+net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/8c49a09f51f44fbb036531ce0719b5ba/'))
 
 roman_to_arabic_numerals = {
         'I': '1',
@@ -75,7 +75,7 @@ log_synapses[log_synapses == -np.inf] = np.nan
 
 # ========== Plot ==========
 
-plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
+plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
 fig = plt.figure(constrained_layout=True, figsize=(5.63, 6.5))
 label_prms = dict(fontsize=12, fontweight='bold', va='top', ha='right')
 gs = gridspec.GridSpec(8, 2, figure=fig)

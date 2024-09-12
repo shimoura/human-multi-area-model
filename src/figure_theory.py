@@ -33,7 +33,7 @@ rate_min = min(rates_sim.min(), rates_theo.min())
 rate_max = max(rates_sim.max(), rates_theo.max())
 rate_corr = np.corrcoef(rates_sim, rates_theo)[0, 1]
 
-plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
+plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
 fig = plt.figure(constrained_layout=True, figsize=(5.63, 1.5))
 label_prms = dict(fontsize=12, fontweight='bold', va='top', ha='right')
 gs = gridspec.GridSpec(1, 2, figure=fig)

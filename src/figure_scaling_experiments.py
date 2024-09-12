@@ -322,9 +322,9 @@ number_of_neurons_lvr = min(
 
 for type_ in ['groundstate', 'bestfit']:
     if type_ == 'groundstate':
-        label = 'Ground state'
+        label = 'Base version'
     else:
-        label = 'Best-fit state'
+        label = 'Best-fit version'
 
     # Rates
     vals, bins = np.histogram(sim_rates[type_], bins=np.arange(0.5,20.5,.5))

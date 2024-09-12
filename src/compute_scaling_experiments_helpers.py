@@ -8,28 +8,33 @@ from scipy.stats import gaussian_kde
 
 
 state_lower_e_to_i = {
-        'groundstate': '8fe1c1f7da65657072959fc060e3fce4',
-        'bestfit': 'ece6d9902639ed3b4537a0ae9cbbc4da',
+        'groundstate': '04d270ef4972dcc9e4e6938202b000d7',
+        'bestfit': '4030a96f4369bd3ea2844d0427d1e4d7',
         }
 
 state_scaling_lichtman_chii2_smaller_g = {
-        'groundstate': '59cc1c6418e57a0cac22d007f9e0467b',
-        'bestfit': 'dbbc477edceb3323b0883c89f8d7d955',  #chi=1.75, overall best agreement
+        'groundstate': '4dae448eb9c69ad3f2a71972667f3ee4',
+        'bestfit': 'f358fd7d2844f0a6e3e806352af2fe2f',  #chi=1.75, overall best agreement
         }
 
 state_scaling_lichtman_chii2_different_time_consts = {
-        'groundstate': 'ad2f36126638bf99c0418469d0bfebba',
-        'bestfit': '984f627232b71236276f8d5178c3baab',
+        'groundstate': 'd1826785ec16aaad0f0c83144c86fb70',
+        'bestfit': '75ec59f25c4826f9e2de3447a63fa61d',
         }
 
 state_scaling_lichtman_chii2_distributed_params = {
-        'groundstate': '38c92ec7b713e1af25169b09ea8b4155',
-        'bestfit': '5ea08803e2c6e3d97b8bf88b65d5885d',
+        'groundstate': 'c207557ee4ca705ba40627631f44d6f7',
+        'bestfit': '105ccb56b38cd990b839889f12953a38',
         }
 
 state_scaling_lichtman_chii2_different_seed = {
-        'groundstate': '517f98422516bbe6cb324c5436e7f66f',
-        'bestfit': '10acdb2ae9247b49d4eeea4d78f308b7',
+        'groundstate': '90523c45dfad8e5bacb2eaf4d2196f76',
+        'bestfit': '8c49a09f51f44fbb036531ce0719b5ba',
+        }
+
+state_scaling_lichtman_chii2_random_seeds = {
+        'groundstate': '6785c5f5661fadb0e5218c05d36e9a9d',
+        'bestfit': '8c49a09f51f44fbb036531ce0719b5ba',
         }
 
 left_ordering = {'isthmuscingulate': 'DMN',
@@ -222,7 +227,7 @@ def get_cc_scalingEtoE(d, key='cc_scalingEtoE'):
     """
     fn = os.path.join(d, 'network_params.yaml')
     with open(fn, 'r') as net:
-        net_params = yaml.load(net)
+        net_params = yaml.load(net, Loader=yaml.Loader)
     scale = net_params['scaling_factors_recurrent'][key]
     return scale
 
