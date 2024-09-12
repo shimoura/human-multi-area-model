@@ -11,8 +11,6 @@ import matplotlib.gridspec as gridspec
 import svgutils.transform as sg
 
 from network import networkDictFromDump
-from data_loader.hcp_dti import VolumesDK
-from data_preprocessing.cytoarchitecture import NeuronNumbers
 
 
 pval_min = 0.05
@@ -34,9 +32,6 @@ directionality = directionality.sort_index(axis=0).sort_index(axis=1)
 interarea_speed = net_dict['network_params']['delay_params']['interarea_speed']
 distance = net_dict['delay_cc'] * interarea_speed
 distance = distance.sort_index(axis=0).sort_index(axis=1)
-area_volumes = VolumesDK(net_dict["synapsenumbers_params"]["vol_path"]).getVolume()
-area_thickness = NeuronNumbers(**net_dict["neuronnumbers_params"]).getTotalThickness()
-area_surface = area_volumes / area_thickness
 
 # Community structure
 synapses_area = synapses.groupby(
@@ -72,10 +67,6 @@ outdeg = synapses.div(NN, axis='columns')
 directionality_inflated = pd.DataFrame(dtype=str, index=outdeg.index,
                                        columns=outdeg.columns)
 for source, target in product(area_list, area_list):
-    # scale outdegree by f_target / f_source = A_source / A_target
-    outdeg.loc[
-        (target, slice(None), slice(None)), (source, slice(None), slice(None))
-    ] *= area_surface.loc[source] / area_surface.loc[target]
     directionality_inflated.loc[
         (target, slice(None), slice(None)), (source, slice(None), slice(None))
     ] = directionality.loc[target, source]
@@ -163,7 +154,7 @@ ax_edr.set_title('Exponential decay of connection density')
 ax_edr.text(s='B', transform=ax_edr.transAxes, x=-0.1, y=1.2, **label_prms)
 
 # Outdegree
-bins = np.linspace(0, 15000, 6)
+bins = np.linspace(0, 7000, 8)
 ax_outdeg.hist([outdeg_FF_flat, outdeg_FB_flat], bins=bins, log=True,
                density=True, label=['FF', 'FB'], color=['#8dd3c7', '#bebada'])
 ax_outdeg.set_xlim(0, bins[-1])
