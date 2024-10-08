@@ -17,7 +17,7 @@ pval_min = 0.05
 target_min_outdeg = 100
 work_dir = "figures/tmp"
 figname = "figure_connectivity_validation"
-net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/517f98422516bbe6cb324c5436e7f66f/'))
+net_dict = networkDictFromDump(os.path.join(os.getcwd(), 'out/8c49a09f51f44fbb036531ce0719b5ba/'))
 
 # ========== Preprocess ==========
 area_list = net_dict['area_list']
@@ -104,7 +104,7 @@ print(f'mean targets FB: {mean_targets_FB}')
 
 
 # ========== Plot ==========
-plt.style.use('misc/mplstyles/report_plots_master.mplstyle')
+plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
 fig = plt.figure(constrained_layout=True, figsize=(5.63, 3.))
 label_prms = dict(fontsize=12, fontweight='bold', va='top', ha='right')
 gs = gridspec.GridSpec(

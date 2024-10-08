@@ -1,8 +1,8 @@
 # Multi-Scale Spiking Network Model of Human Cerebral Cortex
 
-This code implements the multi-scale, spiking network model of human cortex developed at the Institute of Neuroscience and Medicine (INM-6), Research Center Jülich. The model has been documented in the following publication (to be updated once it is published in a peer-reviewed journal):
+This code implements the multi-scale, spiking network model of human cortex developed at the Institute of Advanced Simulation (IAS-6), Research Center Jülich. The model has been documented in the following publication:
 
-- [1] Pronold, J., Meegen, A. van, Vollenbröker, H., Shimoura, R. O., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. van. (2023). Multi-Scale Spiking Network Model of Human Cerebral Cortex. BioRxiv, 2023.03.23.533968. [https://doi.org/10.1101/2023.03.23.533968](https://doi.org/10.1101/2023.03.23.533968)
+- [1] Pronold, J., Meegen, A. van, Shimoura, R. O., Vollenbröker, H., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. (2024). Multi-scale spiking network model of human cerebral cortex. Cerebral Cortex. [https://doi.org/10.1093/cercor/bhae409](https://doi.org/10.1093/cercor/bhae409).
 
 ![model_overview](./figures/model_overview.png)
 
@@ -149,13 +149,13 @@ python src/figure_spike_statistics.py
 
 ## Collaborators
 
-The scientific content contributions were made by the authors of the publication [1]: Jari Pronold, Alexander van Meegen, Hannah Vollenbröker, Renan O. Shimoura, Mario Senden, Claus C. Hilgetag, Rembrandt Bakker, and Sacha J. van Albada.
+The scientific content contributions were made by the authors of the publication [1]: Jari Pronold, Alexander van Meegen, Renan O. Shimoura, Hannah Vollenbröker, Mario Senden, Claus C. Hilgetag, Rembrandt Bakker, and Sacha J. van Albada.
 
 ## Acknowledgments
 We thank Sebastian Bludau and Timo Dickscheid for helpful discussions about cytoarchitecture and parcellations. Furthermore, we gratefully acknowledge all the shared experimental data that underlies our work, and the effort spent to collect it.
 
-This work was supported by the German Research Foundation (DFG) Priority Program “Computational Connectomics” (SPP 2041; Project 347572269), the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreement No. 945539 (Human Brain Project SGA3), the Joint Lab “Supercomputing and Modeling for the Human Brain”, and HiRSE_PS, the Helmholtz Platform for Research Software Engineering - Preparatory Study, an innovation pool project of the Helmholtz Association. The use of the JURECA-DC supercomputer in Jülich was made possible through VSR computation time grant JINB33 (“Brain-Scale Simulations”)
+This work was supported by the German Research Foundation (DFG) Priority Program “Computational Connectomics” (SPP 2041; Project 347572269), the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreement No. 945539 (Human Brain Project SGA3), the European Union’s Horizon Europe Programme under the Specific Grant Agreement No. 101147319 (EBRAINS 2.0 Project), the Joint Lab “Supercomputing and Modeling for the Human Brain”, and HiRSE_PS, the Helmholtz Platform for Research Software Engineering - Preparatory Study, an innovation pool project of the Helmholtz Association. The use of the JURECA-DC supercomputer in Jülich was made possible through VSR computation time grant JINB33 (“Brain-Scale Simulations”). Open access publication funded by the German Research Foundation (DFG), project 491111487.
 
 ## How to cite
 If you use this code, please cite:
-- Pronold, J., Meegen, A. van, Vollenbröker, H., Shimoura, R. O., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. van. (2023). Multi-Scale Spiking Network Model of Human Cerebral Cortex. BioRxiv, 2023.03.23.533968. [https://doi.org/10.1101/2023.03.23.533968](https://doi.org/10.1101/2023.03.23.533968)
+- Pronold, J., Meegen, A. van, Shimoura, R. O., Vollenbröker, H., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. (2024). Multi-scale spiking network model of human cerebral cortex. Cerebral Cortex. [https://doi.org/10.1093/cercor/bhae409](https://doi.org/10.1093/cercor/bhae409).
