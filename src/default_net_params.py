@@ -187,6 +187,10 @@ params['scaling_factors_recurrent'] = {
 params['N_scaling'] = 1.0 # Scaling of population sizes
 params['K_scaling'] = 1.0 # Scaling of indegrees
 
+# Absolute path to the file holding fullscale rates for scaling
+# synaptic weights in the network
+params['fullscale_rates'] = None
+
 """
 Delays
 """
