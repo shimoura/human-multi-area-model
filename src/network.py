@@ -502,7 +502,6 @@ class Network():
         ).astype(int)
 
         # Add extra DC drive based on scaled network
-        # TODO: add contribution from other populations into the DC drive
         self.extraDCforScaledNetwork()
 
         # Scale synaptic weights and indegrees
@@ -516,6 +515,10 @@ class Network():
             self.net['synapses_external'] * scaling_factor
         ).astype(int)
         self.net['weights_ext'] /= np.sqrt(self.params['K_scaling'])
+
+        # Scale synaptic weights standard deviations
+        self.net['weights_sd'] /= np.sqrt(self.params['K_scaling'])
+        self.net['weights_ext_sd'] /= np.sqrt(self.params['K_scaling'])
 
     def extraDCforScaledNetwork(self):
         """
