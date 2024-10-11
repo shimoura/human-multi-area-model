@@ -14,7 +14,6 @@ first_snippet = 1
 experiments = [
         'lower_etoi',
         'lichtman_chii2_smaller_g',
-        'lichtman_chii2_different_time_consts',
         'lichtman_chii2_distributed_params',
         'lichtman_chii2_different_seed',
         'lichtman_chii2_random_seeds',
@@ -108,25 +107,6 @@ elif simulation == 'lichtman_chii2_smaller_g':
             'f6de3f7c02703fa1dde65ef14e61171b/'    
             ]
     base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_smaller_g/'
-    sim_path = '4772f0b020c9f3310f4096a6db758343/'
-    ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
-elif simulation == 'lichtman_chii2_different_time_consts':
-    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_time_consts as state
-    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_time_consts'
-    interesting_paths = [
-            '00d934bd2694ad6970f9c524616cdf30/',
-            '5ba365e8ec002d2786d214345aca891f/',
-            '7f378a020da9f7aba1d783b820e6acce/',
-            'd1826785ec16aaad0f0c83144c86fb70/',
-            '3d611f90e1fff6060ddbf9a058d1459b/',
-            '5e69f9756903bc364c83ffe5e3ad480a/',
-            '8cd1d42a86c90996650fa98a9982d221/',
-            'ebcc993ae9d4a5c2a11124f94128e1a4/',
-            '56452204319c31bd9e0debcbc03f8f2c/',
-            '75ec59f25c4826f9e2de3447a63fa61d/',
-            'c23ff0bd24504b81b276fc3bcb964431/'
-            ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_different_time_consts/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 elif simulation == 'lichtman_chii2_distributed_params':

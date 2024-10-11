@@ -17,11 +17,6 @@ state_scaling_lichtman_chii2_smaller_g = {
         'bestfit': 'f358fd7d2844f0a6e3e806352af2fe2f',  #chi=1.75, overall best agreement
         }
 
-state_scaling_lichtman_chii2_different_time_consts = {
-        'groundstate': 'd1826785ec16aaad0f0c83144c86fb70',
-        'bestfit': '75ec59f25c4826f9e2de3447a63fa61d',
-        }
-
 state_scaling_lichtman_chii2_distributed_params = {
         'groundstate': 'c207557ee4ca705ba40627631f44d6f7',
         'bestfit': '105ccb56b38cd990b839889f12953a38',
