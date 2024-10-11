@@ -17,7 +17,8 @@ experiments = [
         'lichtman_chii2_different_time_consts',
         'lichtman_chii2_distributed_params',
         'lichtman_chii2_different_seed',
-        'lichtman_chii2_random_seeds'
+        'lichtman_chii2_random_seeds',
+        'lichtman_chii2_different_seed_factor10per7'
         ]
 
 if len(sys.argv) > 1 and sys.argv[1] in experiments:
@@ -145,6 +146,52 @@ elif simulation == 'lichtman_chii2_distributed_params':
             'b2a35418096820454aed549ab4d7a215/'
             ]
     base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_distributed_params/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/'
+    ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
+elif simulation == 'lichtman_chii2_different_seed_factor10per7':
+    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed_factor10per7 as state
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_seed_factor10per7'
+    interesting_paths = [
+            '16de0d322e4b222e6f4713ba662c41da/',
+            '66335d4198126b33771291d5467fbf27/',
+            '95c2a43bd22a1f27ce65ff551564b557/',
+            'd4731e112855447f384827a1281528c5/',
+            '19abb84050e7cfadf9fcdf10d5bb0a34/',
+            'd9f98fdf4f25bd770b5a8b3afae31697/',
+            '69bb1d367ce878bd9bc7ae7cc46185b9/',
+            'a44832b116875b8cc03d1a77b7278d7e/',
+            '293fc6e4537603ce6e867f563c05049b/',
+            '6bc32c0f64d91ae502f07d91b92da12b/',
+            'aa3b81bb3f3795c81c9a5b3454e95494/',
+            'dff92fb0f6b0e3aa5718b6b43d340a49/',
+            '2f75bb3dd5920776a7a720916cd28f71/',
+            '6e68141c0b412bd68ecf23ae798d00fe/',
+            'ab01c8287e7f70ccc3d3a43801247165/',
+            'e3e1c4a3db89d42249965451312aeb75/',
+            '300340dca17d9378bf64236bb25f3ae3/',
+            '73717e152e908b8ac0831e06ce8c8ffb/',
+            'ac304a4d73d44a7e6cda7676c1ff374a/',
+            '3619e6131dbfdb258bba41b919f79541/',
+            '75065f05aea926f0e4153664f4f9212c/',
+            'bc84db13bd75614bd36a563498c142c9/',
+            'e891197ebe3eeebb4e555f72273ab92c/',
+            '4e3a98b5e43c004f49deba5fe35023f4/',
+            '89bd4af3f1044072c5d4b1e634e4d517/',
+            'c114dc8dd3981cebd93568871ec1a53a/',
+            '58320586de2820a50f47b93962e70f48/',
+            '8aca6e3e2da9e7f78559bd9323850983/',
+            'c56b28a915a568e44d505296b2f3f83d/',
+            'e958fa00425fa488a97292bf48d930af/',
+            'e977991b439cc72a0a77154cc97703cb/',
+            '5fd951e40a387f8bc20ac7fbcc4f2d5d/',
+            'cce7ba1da76cc43ec1d64c7034a78128/',
+            'f24a0ce0a69a0fe8ed15bcca21db420e/',
+            '642431ea0f4d4cd7885d71f1b2ca9fdf/',
+            '93b288add2929814291c19ee2b445e6f/',
+            'ce89dacc4fe37ff7873c0a1576ed79d9/',
+            'f8d202967ba7cab69ef473165aaa9f74/'
+            ]
+    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_different_seed_factor10per7/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 

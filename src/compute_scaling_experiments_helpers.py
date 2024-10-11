@@ -37,6 +37,11 @@ state_scaling_lichtman_chii2_random_seeds = {
         'bestfit': '8c49a09f51f44fbb036531ce0719b5ba',
         }
 
+state_scaling_lichtman_chii2_different_seed_factor10per7 = {
+        'groundstate': '4e3a98b5e43c004f49deba5fe35023f4',
+        'bestfit': 'bc84db13bd75614bd36a563498c142c9',
+        }
+
 left_ordering = {'isthmuscingulate': 'DMN',
   'medialorbitofrontal': 'DMN',
   'posteriorcingulate': 'DMN',

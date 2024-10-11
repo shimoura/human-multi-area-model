@@ -14,7 +14,8 @@ experiments = [
         'lichtman_chii2_smaller_g',
         'lichtman_chii2_different_time_consts',
         'lichtman_chii2_distributed_params',
-        'lichtman_chii2_different_seed'
+        'lichtman_chii2_different_seed',
+        'lichtman_chii2_different_seed_factor10per7'
         ]
 
 if len(sys.argv) > 1 and sys.argv[1] in experiments:
@@ -42,7 +43,11 @@ elif simulation == 'lichtman_chii2_distributed_params':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_distributed_params as state
     save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_distributed_params'
     name_extension = '_lichtman_chiI2_distributed_params'
-
+elif simulation == 'lichtman_chii2_different_seed_factor10per7':
+    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed_factor10per7 as state
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_seed_factor10per7'
+    name_extension = '_lichtman_chiI2_different_seed_factor10per7'
+    
 linewidth=2.
 
 colors_state = {
