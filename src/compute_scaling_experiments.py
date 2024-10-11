@@ -14,10 +14,10 @@ first_snippet = 1
 experiments = [
         'lower_etoi',
         'lichtman_chii2_smaller_g',
-        'lichtman_chii2_different_time_consts',
         'lichtman_chii2_distributed_params',
         'lichtman_chii2_different_seed',
-        'lichtman_chii2_random_seeds'
+        'lichtman_chii2_random_seeds',
+        'lichtman_chii2_different_seed_factor10per7'
         ]
 
 if len(sys.argv) > 1 and sys.argv[1] in experiments:
@@ -25,7 +25,7 @@ if len(sys.argv) > 1 and sys.argv[1] in experiments:
 else:
     simulation = 'lichtman_chii2_different_seed'
 
-# base_path = os.path.join(os.getcwd(), 'out/')
+base_path = os.path.join(os.getcwd(), 'out/')
 
 if simulation == 'lichtman_chii2_different_seed':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed as state
@@ -52,7 +52,6 @@ if simulation == 'lichtman_chii2_different_seed':
             '6cc8213fba1b6ff7935d0505491045ea/',
             'aa3e9b1f3ef704504bee98665a215178/',
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_random_seeds/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = 'fff793e841649603c59db1822e566c93/'
 elif simulation == 'lichtman_chii2_random_seeds':
@@ -71,7 +70,6 @@ elif simulation == 'lichtman_chii2_random_seeds':
             '6cc8213fba1b6ff7935d0505491045ea/',
             'aa3e9b1f3ef704504bee98665a215178/',
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_random_seeds/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/' # 2903
     ana_path = 'fff793e841649603c59db1822e566c93/'
 elif simulation == 'lower_etoi':
@@ -92,7 +90,6 @@ elif simulation == 'lower_etoi':
             '51753977f483813e58131899e2c2c472/',
             'be5b9b57a154b97777664d015cc16cfc/'
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lower_etoi/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '875fb14936529840c819d2bdc86ff14f/'
 elif simulation == 'lichtman_chii2_smaller_g':
@@ -106,26 +103,6 @@ elif simulation == 'lichtman_chii2_smaller_g':
             'e1f0481943c7dd4937436abc3b0ba8ec/',
             'f6de3f7c02703fa1dde65ef14e61171b/'    
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_smaller_g/'
-    sim_path = '4772f0b020c9f3310f4096a6db758343/'
-    ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
-elif simulation == 'lichtman_chii2_different_time_consts':
-    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_time_consts as state
-    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_time_consts'
-    interesting_paths = [
-            '00d934bd2694ad6970f9c524616cdf30/',
-            '5ba365e8ec002d2786d214345aca891f/',
-            '7f378a020da9f7aba1d783b820e6acce/',
-            'd1826785ec16aaad0f0c83144c86fb70/',
-            '3d611f90e1fff6060ddbf9a058d1459b/',
-            '5e69f9756903bc364c83ffe5e3ad480a/',
-            '8cd1d42a86c90996650fa98a9982d221/',
-            'ebcc993ae9d4a5c2a11124f94128e1a4/',
-            '56452204319c31bd9e0debcbc03f8f2c/',
-            '75ec59f25c4826f9e2de3447a63fa61d/',
-            'c23ff0bd24504b81b276fc3bcb964431/'
-            ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_different_time_consts/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 elif simulation == 'lichtman_chii2_distributed_params':
@@ -144,7 +121,51 @@ elif simulation == 'lichtman_chii2_distributed_params':
             '70029618054442dffacb000422702166/',
             'b2a35418096820454aed549ab4d7a215/'
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_distributed_params/'
+    sim_path = '4772f0b020c9f3310f4096a6db758343/'
+    ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
+elif simulation == 'lichtman_chii2_different_seed_factor10per7':
+    from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed_factor10per7 as state
+    save_data_dir = 'simulated_data/scaling_experiment_lichtman_chii2_different_seed_factor10per7'
+    interesting_paths = [
+            '16de0d322e4b222e6f4713ba662c41da/',
+            '66335d4198126b33771291d5467fbf27/',
+            '95c2a43bd22a1f27ce65ff551564b557/',
+            'd4731e112855447f384827a1281528c5/',
+            '19abb84050e7cfadf9fcdf10d5bb0a34/',
+            'd9f98fdf4f25bd770b5a8b3afae31697/',
+            '69bb1d367ce878bd9bc7ae7cc46185b9/',
+            'a44832b116875b8cc03d1a77b7278d7e/',
+            '293fc6e4537603ce6e867f563c05049b/',
+            '6bc32c0f64d91ae502f07d91b92da12b/',
+            'aa3b81bb3f3795c81c9a5b3454e95494/',
+            'dff92fb0f6b0e3aa5718b6b43d340a49/',
+            '2f75bb3dd5920776a7a720916cd28f71/',
+            '6e68141c0b412bd68ecf23ae798d00fe/',
+            'ab01c8287e7f70ccc3d3a43801247165/',
+            'e3e1c4a3db89d42249965451312aeb75/',
+            '300340dca17d9378bf64236bb25f3ae3/',
+            '73717e152e908b8ac0831e06ce8c8ffb/',
+            'ac304a4d73d44a7e6cda7676c1ff374a/',
+            '3619e6131dbfdb258bba41b919f79541/',
+            '75065f05aea926f0e4153664f4f9212c/',
+            'bc84db13bd75614bd36a563498c142c9/',
+            'e891197ebe3eeebb4e555f72273ab92c/',
+            '4e3a98b5e43c004f49deba5fe35023f4/',
+            '89bd4af3f1044072c5d4b1e634e4d517/',
+            'c114dc8dd3981cebd93568871ec1a53a/',
+            '58320586de2820a50f47b93962e70f48/',
+            '8aca6e3e2da9e7f78559bd9323850983/',
+            'c56b28a915a568e44d505296b2f3f83d/',
+            'e958fa00425fa488a97292bf48d930af/',
+            'e977991b439cc72a0a77154cc97703cb/',
+            '5fd951e40a387f8bc20ac7fbcc4f2d5d/',
+            'cce7ba1da76cc43ec1d64c7034a78128/',
+            'f24a0ce0a69a0fe8ed15bcca21db420e/',
+            '642431ea0f4d4cd7885d71f1b2ca9fdf/',
+            '93b288add2929814291c19ee2b445e6f/',
+            'ce89dacc4fe37ff7873c0a1576ed79d9/',
+            'f8d202967ba7cab69ef473165aaa9f74/'
+            ]
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 
