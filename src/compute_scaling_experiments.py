@@ -25,7 +25,7 @@ if len(sys.argv) > 1 and sys.argv[1] in experiments:
 else:
     simulation = 'lichtman_chii2_different_seed'
 
-# base_path = os.path.join(os.getcwd(), 'out/')
+base_path = os.path.join(os.getcwd(), 'out/')
 
 if simulation == 'lichtman_chii2_different_seed':
     from compute_scaling_experiments_helpers import state_scaling_lichtman_chii2_different_seed as state
@@ -52,7 +52,6 @@ if simulation == 'lichtman_chii2_different_seed':
             '6cc8213fba1b6ff7935d0505491045ea/',
             'aa3e9b1f3ef704504bee98665a215178/',
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_random_seeds/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = 'fff793e841649603c59db1822e566c93/'
 elif simulation == 'lichtman_chii2_random_seeds':
@@ -71,7 +70,6 @@ elif simulation == 'lichtman_chii2_random_seeds':
             '6cc8213fba1b6ff7935d0505491045ea/',
             'aa3e9b1f3ef704504bee98665a215178/',
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_random_seeds/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/' # 2903
     ana_path = 'fff793e841649603c59db1822e566c93/'
 elif simulation == 'lower_etoi':
@@ -92,7 +90,6 @@ elif simulation == 'lower_etoi':
             '51753977f483813e58131899e2c2c472/',
             'be5b9b57a154b97777664d015cc16cfc/'
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lower_etoi/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '875fb14936529840c819d2bdc86ff14f/'
 elif simulation == 'lichtman_chii2_smaller_g':
@@ -106,7 +103,6 @@ elif simulation == 'lichtman_chii2_smaller_g':
             'e1f0481943c7dd4937436abc3b0ba8ec/',
             'f6de3f7c02703fa1dde65ef14e61171b/'    
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_smaller_g/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 elif simulation == 'lichtman_chii2_distributed_params':
@@ -125,7 +121,6 @@ elif simulation == 'lichtman_chii2_distributed_params':
             '70029618054442dffacb000422702166/',
             'b2a35418096820454aed549ab4d7a215/'
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_distributed_params/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 elif simulation == 'lichtman_chii2_different_seed_factor10per7':
@@ -171,7 +166,6 @@ elif simulation == 'lichtman_chii2_different_seed_factor10per7':
             'ce89dacc4fe37ff7873c0a1576ed79d9/',
             'f8d202967ba7cab69ef473165aaa9f74/'
             ]
-    base_path = '/p/scratch/cjinb33/shimoura1/python3.9/humam_lichtman_chii2_different_seed_factor10per7/'
     sim_path = '4772f0b020c9f3310f4096a6db758343/'
     ana_path = '1931d354c159b2a01cba9c4bd0c9ed46/'
 
