@@ -501,9 +501,6 @@ class Network():
             self.net['neuron_numbers'] * self.params['N_scaling']
         ).astype(int)
 
-        # Add extra DC drive based on scaled network
-        self.extraDCforScaledNetwork()
-
         # Scale synaptic weights and indegrees
         scaling_factor = self.params['N_scaling'] * self.params['K_scaling']
         self.net['synapses_internal'] = np.round(
@@ -519,6 +516,9 @@ class Network():
         # Scale synaptic weights standard deviations
         self.net['weights_sd'] /= np.sqrt(self.params['K_scaling'])
         self.net['weights_ext_sd'] /= np.sqrt(self.params['K_scaling'])
+
+        # Add extra DC drive based on scaled network
+        self.extraDCforScaledNetwork()
 
     def extraDCforScaledNetwork(self):
         """
