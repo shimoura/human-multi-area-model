@@ -6,30 +6,30 @@ params = {}
 
 params['mplstyles'] = 'misc/mplstyles/report_plots_master.mplstyle'
 params['extension'] = 'png'
-params['seed'] = 2106
+params['seed'] = 2903
 params['python_sort'] = True
 
 params['rate_histogram'] = {
-    'binsize': 1.,  # in ms
+    'binsize': 1.,    # in ms
     't_start': 500.,  # in ms
-    't_stop': None  # in ms
+    't_stop': None    # in ms
 }
 
 params['meanFiringRate'] = {
     't_start': 500.,  # in ms
-    't_stop': None  # in ms
+    't_stop': None    # in ms
 }
 
 params['individualFiringRate'] = {
     't_start': 500.,  # in ms
-    't_stop': 2500.  # in ms
+    't_stop': None    # in ms
 }
 
 params['correlation_coefficient'] = {
     'subsample': 2000,
-    'tbin': 1.,  # in ms
+    'tbin': 1.,    # in ms
     'tmin': 500.,  # in ms
-    'tmax': None  # in ms
+    'tmax': None   # in ms
 }
 
 params['compute_louvain'] = {
@@ -38,13 +38,13 @@ params['compute_louvain'] = {
 
 params['cv'] = {
     't_start': 500.,  # in ms
-    't_stop': None,  # in ms
+    't_stop': None,   # in ms
     'min_spikes': 10
 }
 
 params['lvr'] = {
     't_start': 500.,  # in ms
-    't_stop': None,  # in ms
+    't_stop': None,   # in ms
     'min_spikes': 10
 }
 
@@ -69,7 +69,7 @@ params['plotConnectivities'] = {
 }
 
 params['plotBOLD'] = {
-    'tmin': 500.,  # in ms
+    'tmin': 500.,   # in ms
     'stepSize': 1.  # in ms
 }
 
