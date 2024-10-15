@@ -99,6 +99,7 @@ class Network():
                     "fullscale_rates must be provided for scaling the network"
                 )
             self.net['fullscale_rates'] = params['fullscale_rates']
+            self.net['scaling_type'] = params['scaling_type']
             self.scaleNetwork()
 
         # ===== Convenience attributes =====
@@ -501,21 +502,28 @@ class Network():
             self.net['neuron_numbers'] * self.params['N_scaling']
         ).astype(int)
 
+        # Determine the scaling factor type
+        if self.net['scaling_type'] == 'sqrt':
+            scaling_factor = np.sqrt(self.params['K_scaling'])
+        elif self.net['scaling_type'] == 'linear':
+            scaling_factor = self.params['K_scaling']
+        else:
+            raise ValueError("Unknown scaling type")
+
         # Scale synaptic weights and indegrees
-        scaling_factor = self.params['N_scaling'] * self.params['K_scaling']
         self.net['synapses_internal'] = np.round(
-            self.net['synapses_internal'] * scaling_factor
+            self.net['synapses_internal'] * self.params['N_scaling'] * self.params['K_scaling']
         ).astype(int)
-        self.net['weights'] /= np.sqrt(self.params['K_scaling'])
+        self.net['weights'] /= scaling_factor
 
         self.net['synapses_external'] = np.round(
-            self.net['synapses_external'] * scaling_factor
+            self.net['synapses_external'] * self.params['N_scaling'] * self.params['K_scaling']
         ).astype(int)
-        self.net['weights_ext'] /= np.sqrt(self.params['K_scaling'])
+        self.net['weights_ext'] /= scaling_factor
 
         # Scale synaptic weights standard deviations
-        self.net['weights_sd'] /= np.sqrt(self.params['K_scaling'])
-        self.net['weights_ext_sd'] /= np.sqrt(self.params['K_scaling'])
+        self.net['weights_sd'] /= scaling_factor
+        self.net['weights_ext_sd'] /= scaling_factor
 
         # Add extra DC drive based on scaled network
         self.extraDCforScaledNetwork()
@@ -644,11 +652,18 @@ class Network():
 
         # Add contribution from other populations into the DC drive
         full_mean_rates = pd.read_pickle(self.net['fullscale_rates'])
-        x1 = 1e-3 * tau_m * np.dot(J * K, full_mean_rates)
+        x1 = 1e-3 * tau_m * (J * K) @ full_mean_rates
+
+        # Determine the scaling factor type
+        if self.net['scaling_type'] == 'sqrt':
+            scaling_factor = np.sqrt(self.params['K_scaling'])
+        elif self.net['scaling_type'] == 'linear':
+            scaling_factor = self.params['K_scaling']
+        else:
+            raise ValueError("Unknown scaling type")
 
         # Calculate dc_drive
-        K_scaling = self.params['K_scaling']
-        self.net['dc_drive'] = C_m / tau_m * ((1. - np.sqrt(K_scaling)) * (x1_ext + x1))
+        self.net['dc_drive'] = C_m / tau_m * ((1. - scaling_factor) * (x1_ext + x1))
 
     def sortIndices(self):
         """

@@ -186,6 +186,7 @@ params['scaling_factors_recurrent'] = {
 # Scaling factors for the network numbers
 params['N_scaling'] = 1.0 # Scaling of population sizes
 params['K_scaling'] = 1.0 # Scaling of indegrees
+params['scaling_type'] = 'linear' # Type of scaling factor
 
 # Absolute path to the file holding fullscale rates for scaling
 # synaptic weights in the network
