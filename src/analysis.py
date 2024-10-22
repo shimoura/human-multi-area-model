@@ -277,7 +277,7 @@ class Analysis():
 
             rate_hist_areas = self.spikes.apply(list).groupby('area').agg(
                     sum
-                    ).apply(np.array).apply(
+                    ).apply(
                         calc_rates,
                         args=(self.sim_dict, self.ana_dict)
                     ).div(self.popGids.groupby('area').agg(sum)['pop_size'])
