@@ -67,16 +67,16 @@ class Analysis():
             os.mkdir(self.plot_folder)
         print('Plots will be written to %s' % self.plot_folder)
 
-    @timeit
-    def fullAnalysis(self):
-        """
-        Execute the full analysis.
-        """
         print('{} Reading popGids'.format(datetime.now().time()))
         self.popGids = self._readPopGids()
         print('{} Reading spikes'.format(datetime.now().time()))
         self.spikes = self._readSpikes()
 
+    @timeit
+    def fullAnalysis(self):
+        """
+        Execute the full analysis.
+        """
         print('{} Calculating rate'.format(datetime.now().time()))
         self.rate = self.meanFiringRate()
         print('{} Calculating population CV ISI'.format(datetime.now().time()))
