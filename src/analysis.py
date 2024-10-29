@@ -292,6 +292,90 @@ class Analysis():
         return rate_hist, rate_hist_areas
 
     @timeit
+    def plot_instantaneous_firing_rate(self, save_fig=False):
+        """
+        Plots the instantaneous firing rate over simulated areas using a heatmap.
+        
+        Parameters
+        ----------
+        save_fig : bool, optional
+            If True, the figure will be saved to the plot folder. Default is False.
+        """
+        if not hasattr(self, 'rate_hist_areas'):
+            self.rate_hist, self.rate_hist_areas = self.firingRateHistogram()
+        
+        # Convert rate_hist_areas to spikes/s
+        rate_hist_areas = self.rate_hist_areas * 1000
+        
+        # Convert rate_hist_areas to a DataFrame for easier plotting
+        rate_hist_areas_df = pd.DataFrame(rate_hist_areas.tolist(), index=rate_hist_areas.index)
+
+        # Plot the heatmap with an orange-yellow color palette
+        plt.figure(figsize=(12, 5))
+        sns.heatmap(rate_hist_areas_df, cmap='YlOrBr', cbar_kws={'label': 'Spikes/s'}, yticklabels=rate_hist_areas_df.index)
+        plt.xlabel('Time (ms)')
+        plt.ylabel('Area')
+        plt.title('Instantaneous firing rate over simulated areas')
+        plt.xticks(rotation=0)  # Rotate x-axis labels to make the times horizontal
+        plt.xlim(self.sim_dict['t_sim']-500, self.sim_dict['t_sim'])
+        plt.tight_layout()
+        
+        # Save the plot if save_fig is True
+        if save_fig:
+            extension = self.ana_dict['extension']
+            plt.savefig(os.path.join(self.plot_folder, f'instantaneous_firing_rate.{extension}'))
+        plt.show()
+
+    @timeit
+    def plot_average_rate_per_pop(self, save_fig=False):
+        """
+        Plots the time-averaged firing rate over simulated populations using a heatmap.
+        
+        Parameters
+        ----------
+        save_fig : bool, optional
+            If True, the figure will be saved to the plot folder. Default is False.
+        """
+
+        # Calculate the time-averaged firing rate if it has not been calculated yet
+        if not hasattr(self, 'self.rate'):
+            self.rate = self.meanFiringRate()
+        mean_rates_per_pop = self.rate
+
+        # Pivot the DataFrame to have areas on the x-axis and layer+pop on the y-axis
+        mean_rates_df = mean_rates_per_pop.reset_index().pivot(index=['layer', 'pop'], columns='area', values=0)
+
+        # Create a new index combining layer and pop
+        mean_rates_df.index = mean_rates_df.index.map(lambda x: f"{x[0]}_{x[1]}")
+
+        # Create a mask for NaN values
+        mask = mean_rates_df.isna()
+
+        # Plot the heatmap with external grid
+        plt.figure(figsize=(12, 4.5))
+        sns.heatmap(mean_rates_df, cmap='YlOrBr', fmt=".2f", mask=mask, cbar_kws={'label': 'Spikes/s'})
+        plt.title('Time-averaged firing rate over simulated populations')
+        plt.xlabel('Area')
+        plt.ylabel('Population')
+
+        # Rotate x-tick and y-tick labels
+        plt.yticks(rotation=0)
+
+        # Plot X marks for NaN values
+        for i in range(mean_rates_df.shape[0]):
+            for j in range(mean_rates_df.shape[1]):
+                if mask.iloc[i, j]:
+                    plt.text(j + 0.5, i + 0.5, 'X', ha='center', va='center', color='black', fontsize=12, weight='bold')
+
+        plt.tight_layout()
+        
+        # Save the plot if save_fig is True
+        if save_fig:
+            extension = self.ana_dict['extension']
+            plt.savefig(os.path.join(self.plot_folder, f'average_rate_per_area.{extension}'))
+        plt.show()
+
+    @timeit
     def synapticInputCurrent(self):
         """
         Calculates the area averaged synaptic input current.
