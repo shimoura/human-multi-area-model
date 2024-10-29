@@ -345,8 +345,14 @@ class Analysis():
         # Pivot the DataFrame to have areas on the x-axis and layer+pop on the y-axis
         mean_rates_df = mean_rates_per_pop.reset_index().pivot(index=['layer', 'pop'], columns='area', values=0)
 
-        # Create a new index combining layer and pop
-        mean_rates_df.index = mean_rates_df.index.map(lambda x: f"{x[0]}_{x[1]}")
+        # Create a new index combining layer and pop with layer names converted from Roman to Arabic numerals
+        roman_to_arabic = {
+            'II/III': '2/3',
+            'IV': '4',
+            'V': '5',
+            'VI': '6',
+        }
+        mean_rates_df.index = mean_rates_df.index.map(lambda x: f"{roman_to_arabic.get(x[0], x[0])} {x[1]}")
 
         # Create a mask for NaN values
         mask = mean_rates_df.isna()
@@ -1421,6 +1427,177 @@ class Analysis():
         ))
         plt.clf()
         plt.close(fig)
+
+    @timeit
+    def plot_raster_statistics(self, save_fig=False, raster_areas=None):
+        """
+        Plots raster statistics including raster plots for specified areas and 
+        boxplots for firing rates, CV ISI, and correlation coefficients.
+
+        Parameters
+        ----------
+        save_fig : bool, optional
+            If True, the figure will be saved to the plot folder. Default is False.
+        raster_areas : list of str, optional
+            List of areas to plot raster statistics for. Default is 
+            ['caudalanteriorcingulate', 'pericalcarine', 'fusiform'].
+        """
+        if raster_areas is None:
+            raster_areas = ['caudalanteriorcingulate', 'pericalcarine', 'fusiform']
+        
+        colors = {'E': '#4c72b0ff', 'I': '#c44e52ff'}
+        raster_fraction = self.ana_dict['plotRasterArea']['fraction']
+        raster_low = self.ana_dict['plotRasterArea']['low']
+        raster_high = self.ana_dict['plotRasterArea']['high']
+        roman_to_arabic_numerals = {
+            'II/III': '2/3',
+            'IV': '4',
+            'V': '5',
+            'VI': '6',
+        }
+        random.seed(1234)
+
+        # Check if necessary attributes are already loaded or need to be calculated
+        if not hasattr(self, 'popGids'):
+            self.popGids = self._readPopGids()
+        if not hasattr(self, 'spikes'):
+            self.spikes = self._readSpikes()
+        if not hasattr(self, 'rate'):
+            self.rate = self.meanFiringRate()
+        if not hasattr(self, 'pop_lv'):
+            self.pop_lv = self.popLv()
+        if not hasattr(self, 'pop_cv_isi'):
+            self.pop_cv_isi = self.popCvIsi()
+        if not hasattr(self, 'pop_cc'):
+            self.pop_cc = self.popCorrCoeff()
+
+        # Plotting
+        plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
+        fig = plt.figure(constrained_layout=True, figsize=(5.5, 3.5))
+        label_prms = dict(fontsize=8, fontweight='bold', va='top', ha='right')
+        gs = gridspec.GridSpec(3, 4, figure=fig)
+        ax_raster1 = fig.add_subplot(gs[:, 0])
+        ax_raster1.spines['top'].set_visible(False)
+        ax_raster1.spines['right'].set_visible(False)
+        ax_raster2 = fig.add_subplot(gs[:, 1])
+        ax_raster2.spines['top'].set_visible(False)
+        ax_raster2.spines['right'].set_visible(False)
+        ax_raster3 = fig.add_subplot(gs[:, 2])
+        ax_raster3.spines['top'].set_visible(False)
+        ax_raster3.spines['right'].set_visible(False)
+        ax_rates = fig.add_subplot(gs[0, 3])
+        ax_rates.spines['top'].set_visible(False)
+        ax_rates.spines['right'].set_visible(False)
+        ax_cv = fig.add_subplot(gs[1, 3])
+        ax_cv.spines['top'].set_visible(False)
+        ax_cv.spines['right'].set_visible(False)
+        ax_cc = fig.add_subplot(gs[2, 3])
+        ax_cc.spines['top'].set_visible(False)
+        ax_cc.spines['right'].set_visible(False)
+
+        # Raster plots
+        ms_to_s = 1e-3
+        axs_raster = [ax_raster1, ax_raster2, ax_raster3]
+        raster_labels = ['A', 'B', 'C']
+        for ax, area, label in zip(axs_raster, raster_areas, raster_labels):
+            ind = []
+            names = []
+            gid_norm = 0
+            for (layer, pop), sts in self.spikes.loc[area].iteritems():
+                layer_roman = roman_to_arabic_numerals[layer]
+                # Random shuffle spiketrains in place
+                random.shuffle(sts)
+
+                # Real population size, not all neurons spiked. Thus take the fraction from this value.
+                popGid_alp = self.popGids.loc[area, layer, pop]
+                pop_size = popGid_alp.maxGID - popGid_alp.minGID + 1
+                # Fraction of total number of neurons
+                no_sts = int(raster_fraction * pop_size)
+                # Fraction of neurons that actually spiked
+                frac_spiking = len(sts) / pop_size
+
+                # y label position and name
+                ind.append(- int(no_sts / 2) + gid_norm)
+                name = ' '.join([layer_roman, pop])
+                names.append(name)
+
+                j = 0
+                # Loop as many times as we have spike trains
+                for _ in range(no_sts):
+                    gid_norm = gid_norm - 1
+                    # Decide whether spiketrain contains spikes
+                    if random.random() < frac_spiking:
+                        st = sts[j]
+                        j += 1
+                        filtered_st = st[(st > raster_low) & (st < raster_high)]
+                        if len(filtered_st) > 0:
+                            ax.plot(
+                                filtered_st * ms_to_s,
+                                gid_norm * np.ones_like(filtered_st),
+                                colors[pop],
+                                marker='.',
+                                markersize=1.5,
+                                linestyle="None"
+                            )
+
+            ax.axis([raster_low * ms_to_s, raster_high * ms_to_s, gid_norm, 0])
+            ax.set_xlabel('Time (s)')
+            ax.set_yticks(ind)
+            ax.set_yticklabels(names)
+            ax.set_title(area)
+            ax.text(s=label, transform=ax.transAxes, x=-0.2, y=1.06, **label_prms)
+
+        # Boxplots
+        axs_boxplots = [ax_rates, ax_cv, ax_cc]
+        data_boxplots = [self.rate, self.pop_cv_isi, self.pop_cc]
+        boxplots_labels = ['D', 'E', 'F']
+        for ax, data, label in zip(axs_boxplots, data_boxplots, boxplots_labels):
+            # reorder Series into DataFrame
+            area = np.unique(data.index.get_level_values(0))
+            layer = np.unique(data.index.get_level_values(1))
+            pop_type = np.unique(data.index.get_level_values(2))
+            multi_index = pd.MultiIndex.from_product([layer, pop_type])
+            ind = [' '.join(i) for i in multi_index.tolist()]
+            names = [' '.join((roman_to_arabic_numerals[l_], p_)) for l_, p_ in (i.split(' ') for i in ind)]
+            data_lp = pd.DataFrame(data=np.nan, index=area, columns=ind)
+            for (a, l, p), r in data.iteritems():
+                data_lp.loc[a, l+' '+p] = r
+
+            boxplot = sns.boxplot(data=data_lp, orient='h', ax=ax, saturation=1,
+                                  width=0.5, fliersize=2.5, color='k')
+            col = [colors['E'], colors['I']]
+            for i in range(len(ind)):
+                mybox = boxplot.artists[i]
+                mybox.set_facecolor(col[i % 2])
+            ax.text(s=label, transform=ax.transAxes, x=-0.1, y=1.25, **label_prms)
+            # Print the extension of the whiskers
+            lower = []
+            upper = []
+            for name, x in data_lp.iteritems():
+                dat = x.dropna().values
+                if len(dat) > 0:
+                    median = np.median(dat)
+                    upper_quartile = np.percentile(dat, 75)
+                    lower_quartile = np.percentile(dat, 25)
+                    iqr = upper_quartile - lower_quartile
+                    upper_whisker = dat[dat <= upper_quartile + 1.5 * iqr].max()
+                    lower_whisker = dat[dat >= lower_quartile - 1.5 * iqr].min()
+                    lower.append(lower_whisker)
+                    upper.append(upper_whisker)
+            print('label:', label, 'lowest whisker:', round(min(lower), 1))
+            print('label:', label, 'highest whisker:', round(max(upper), 1))
+            ax.set_yticklabels(names)
+        ax_rates.set_xlim(0)
+        ax_rates.set_xlabel('Firing rate (spikes/s)')
+        ax_cv.set_xlim(0)
+        ax_cv.set_xlabel('CV interspike interval')
+        ax_cc.set_xlabel('Correlation coefficient')
+
+        # Save figure if save_fig is True
+        if save_fig:
+            extension = self.ana_dict['extension']
+            fig.savefig(os.path.join(self.plot_folder, f'figure_spike_statistics.{extension}'))
+        plt.show()
 
     def plot_all_binned_spike_rates_area(self):
         """
