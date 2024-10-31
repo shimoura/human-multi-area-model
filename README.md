@@ -34,6 +34,7 @@ This code implements the multi-scale, spiking network model of human cortex deve
 
 Do you want to start using or simply run the model? Click the button below.
 **Please note**: make sure you check and follow our User instructions, especially if you plan to make and save the changes, or if you need step-by-step instructions.
+
 <a href="https://lab.ebrains.eu/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2Fshimoura%2Fhuman-multi-area-model.git&urlpath=lab%2Ftree%2Fhuman-multi-area-model.git%2Fhumam_tutorial.ipynb&branch=add-downscaling-factor"> <img src="https://nest-simulator.org/TryItOnEBRAINS.png" alt="Try it on EBRAINS" width="260"/></a>
 
 --------------------------------------------------------------------------------
