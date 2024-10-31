@@ -858,82 +858,152 @@ class Analysis():
         plt.clf()
         plt.close(fig)
 
+    @timeit
     def plot_functional_connectivity(self):
         """
-        Plots structural and functional connectivities.
+        Plot the functional connectivity of the network based on synaptic input currents 
+        and compare it with experimental BOLD data if available.
         """
-        clustering = pd.Series(left_ordering)
-        ordering = clustering.keys()
-        tmp_lines = clustering.values
-        lines_left_border = np.where(tmp_lines[:-1] != tmp_lines[1:])[0]
-        lines = lines_left_border + 1
-        extended_lines = np.append(lines_left_border, np.array([len(left_ordering) - 1]))
 
-        tmp = np.append(np.array([0]), extended_lines)
-        points = (tmp[1:] + tmp[:-1]) * .5 + 1
-        texts = clustering[extended_lines].values
+        # Define directories and load data
+        data_dir = os.path.join(self.base_path, 'experimental_data/senden/rsData_7T_DKparcel/')
 
-        # Read values
-        if not hasattr(self, 'self.rate'):
-            self.curr_in = self.synapticInputCurrent()
-        curr_in = self.curr_in
-        extension = self.ana_dict['extension']
-        tmin = self.ana_dict['plotConnectivities']['tmin']
+        # Check if experimental data exists
+        exp_data_exists = (
+            os.path.exists(os.path.join(data_dir, 'ROIs.txt')) and 
+            os.path.exists(os.path.join(data_dir, 'rsDATA_7T_DKparcel.npy'))
+        )
+
+        if exp_data_exists:
+            # Read in regions of interest.
+            roi = pd.read_csv(
+                os.path.join(data_dir, 'ROIs.txt'),
+                header=None, names=['roi'], dtype=str, squeeze=True
+            )
+            # The rois are given in this manner: ctx-lh-bankssts
+            # The name of the area is the last word after -
+            roi = roi.apply(lambda x: x.split('-')[-1])
+            # The cortical areas are in the range from 14 to 82
+            roi = roi.drop(range(0, 14)).drop(range(82, 85))
+
+            # Read in the bold signal. BOLD.shape = (600, 85, 19)
+            # First dimension: timesteps
+            # Second dimension: Desikan Killiany areas, left (0:34) and right
+            # (34:68) hemisphere
+            # Third dimension: Participants
+            # orientation discrimination, numerosity
+            BOLD = np.load(os.path.join(data_dir, 'rsDATA_7T_DKparcel.npy'))
+            BOLD = BOLD[:, 14:82, :]
+
+            # There are 600 timesteps in 1.5 second steps in the data
+            resolution = 1.5
+            timesteps = np.arange(600) * resolution
+
+            # Extract the number of persons
+            no_of_persons = BOLD.shape[2]
+
+            # Extraction of Desikan Killiany area names from left hemisphere,
+            # i.e. 0:34, and stripping the first 3 characters indicating the
+            # hemisphere
+            areas = roi.values[:34]
+
+            # Load clustering information
+            clustering = pd.Series(left_ordering)
+            ordering = clustering.keys()
+            tmp_lines = clustering.values
+            lines_border = np.where(tmp_lines[:-1] != tmp_lines[1:])[0]
+            lines = lines_border + 1
+            extended_lines = np.append(lines_border, np.array([len(left_ordering) - 1]))
+            tmp = np.append(np.array([0]), extended_lines)
+            points = (tmp[1:] + tmp[:-1]) * .5 + 1
+            texts = clustering[extended_lines].values
+
+            # Extract BOLD series into a dictionary of DataFrames
+            exp_fc = {'lh': np.zeros((34, 34)), 'rh': np.zeros((34, 34))}
+
+            # Loop over all persons
+            for person in range(no_of_persons):
+                # Left hemisphere is 0:34, right hemisphere is 34:68
+                lh_person = BOLD[:, 0:34, person]
+                rh_person = BOLD[:, 34:68, person]
+
+                # BOLD signal into DataFrames
+                lh = pd.DataFrame(lh_person, index=timesteps, columns=areas)
+                rh = pd.DataFrame(rh_person, index=timesteps, columns=areas)
+
+                # Correlations of all columns, i.e. areas, with each other
+                lh_fc = lh.corr()
+                rh_fc = rh.corr()
+                
+                exp_fc['lh'] += lh_fc
+                exp_fc['rh'] += rh_fc
+
+            exp_fc['lh'] /= no_of_persons
+            exp_fc['rh'] /= no_of_persons
+        else:
+            print("No experimental data found. Only simulated data will be plotted.")
+
+        # Figure settings
+        label_prms = dict(fontsize=10, fontweight='bold', va='top', ha='right')
+        nrows, ncols = (1, 2) if exp_data_exists else (1, 1)
+        width, panel_wh_ratio = 5.63, 1.5
+        height = width / panel_wh_ratio * float(nrows) / ncols
+
+        fig, axes = plt.subplots(nrows, ncols, figsize=(width, height))
+        if nrows * ncols > 1:
+            axes = axes.flatten()
+        else:
+            axes = [axes]
+
+        if exp_data_exists:
+            # Plot experimental data
+            im = axes[0].pcolormesh(exp_fc['rh'].loc[ordering][ordering], vmin=-1, vmax=1, cmap='RdYlBu_r')
+            cbar = plt.colorbar(im, ax=axes[0], ticks=[-1, 0, 1])
+            cbar.set_label('Correlation', rotation=270, labelpad=15)
+
+            axes[0].set_title('Experimental FC')
+            axes[0].set_xticks(points)
+            axes[0].set_xticklabels(texts, rotation='vertical')
+            axes[0].set_yticks(points)
+            axes[0].set_yticklabels(texts)
+            axes[0].axis('square')
+            axes[0].invert_yaxis()
+            axes[0].hlines(lines, *axes[0].get_xlim(), color='k')
+            axes[0].vlines(lines, *axes[0].get_xlim(), color='k')
+
+        # Load and plot simulated functional connectivity
+        curr_in = self.synapticInputCurrent()
         synaptic_currents = curr_in.T
 
         # Calculate simulated functional connectivity based on synaptic
         # currents
-        df_sim_fc_syn = synaptic_currents[synaptic_currents.index >= tmin].corr()
-        np.fill_diagonal(df_sim_fc_syn.values, np.NaN)
+        initial_transient = 500.
+        tmax = self.sim_dict['t_sim']
+        df_sim_fc_syn = synaptic_currents[
+            (synaptic_currents.index >= initial_transient) & (synaptic_currents.index <= tmax)
+        ].corr()
+        simulated_fc = df_sim_fc_syn
 
-        plt.style.use([os.path.join(
-            self.base_path,
-            self.ana_dict['mplstyles']
-            )])
-        fig = plt.figure(constrained_layout=True)
-        gs = gridspec.GridSpec(1, 1, figure=fig)
-        ax = fig.add_subplot(gs[:, :])
+        im = axes[-1].pcolormesh(simulated_fc.loc[ordering][ordering], vmin=-1, vmax=1, cmap='RdYlBu_r')
 
-        im = ax.pcolormesh(
-            df_sim_fc_syn.loc[ordering][ordering],
-            vmin=-1,
-            vmax=1,
-            cmap='RdYlBu_r'
-        )
+        axes[-1].set_title('Simulated FC')
+        axes[-1].set_xticks(points)
+        axes[-1].set_xticklabels(texts, rotation='vertical')
+        axes[-1].set_yticks(points)
+        axes[-1].set_yticklabels(texts)
+        axes[-1].axis('square')
+        axes[-1].invert_yaxis()
+        axes[-1].hlines(lines, *axes[-1].get_xlim(), color='k')
+        axes[-1].vlines(lines, *axes[-1].get_xlim(), color='k')
 
-        cbar_ticks = [-1, 0, 1]
-        cbar = fig.colorbar(
-            im,
-            ax=ax,
-            ticks=cbar_ticks
-        )
-        cbar.set_label(
-            'Correlation',
-            rotation=270,
-            labelpad=15
-        )
-
-        plt.xticks(
-            points,
-            texts,
-            rotation='vertical'
-        )
-        plt.yticks(
-            points,
-            texts,
-            )
-        ax.invert_yaxis()
-
-        ax.hlines(lines, *ax.get_xlim())
-        ax.vlines(lines, *ax.get_xlim())
-
+        # Save the plot
+        extension = self.ana_dict['extension']
         fig.savefig(os.path.join(
             self.plot_folder,
             'simulated_synaptic_currents_correlation.{0}'.format(extension)
         ))
-        plt.close()
         plt.style.use('default')
-
+        
     @timeit
     def calculateBOLDConnectivity(self):
         """
