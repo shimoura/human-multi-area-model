@@ -18,3 +18,4 @@ dependencies:
   - ipykernel
 pip:
   - nnmt
+  - dicthash
