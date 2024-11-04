@@ -379,6 +379,10 @@ class Analysis():
         if save_fig:
             extension = self.ana_dict['extension']
             plt.savefig(os.path.join(self.plot_folder, f'average_rate_per_area.{extension}'))
+
+        # Calculate and print the total mean firing rate
+        total_mean_rate = mean_rates_per_pop.mean()
+        print(f'Total mean firing rate: {total_mean_rate:.2f} spikes/s')        
         plt.show()
 
     @timeit
