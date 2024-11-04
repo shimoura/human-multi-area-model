@@ -16,3 +16,5 @@ dependencies:
   - anaconda::networkx=2.4
   - anaconda::scipy=1.7.1
   - ipykernel
+pip:
+  - nnmt

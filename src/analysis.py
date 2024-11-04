@@ -67,16 +67,16 @@ class Analysis():
             os.mkdir(self.plot_folder)
         print('Plots will be written to %s' % self.plot_folder)
 
-    @timeit
-    def fullAnalysis(self):
-        """
-        Execute the full analysis.
-        """
         print('{} Reading popGids'.format(datetime.now().time()))
         self.popGids = self._readPopGids()
         print('{} Reading spikes'.format(datetime.now().time()))
         self.spikes = self._readSpikes()
 
+    @timeit
+    def fullAnalysis(self):
+        """
+        Execute the full analysis.
+        """
         print('{} Calculating rate'.format(datetime.now().time()))
         self.rate = self.meanFiringRate()
         print('{} Calculating population CV ISI'.format(datetime.now().time()))
@@ -277,7 +277,7 @@ class Analysis():
 
             rate_hist_areas = self.spikes.apply(list).groupby('area').agg(
                     sum
-                    ).apply(np.array).apply(
+                    ).apply(
                         calc_rates,
                         args=(self.sim_dict, self.ana_dict)
                     ).div(self.popGids.groupby('area').agg(sum)['pop_size'])
@@ -290,6 +290,100 @@ class Analysis():
                 self.ana_folder, 'rate_histogram_areas.pkl'
             ))
         return rate_hist, rate_hist_areas
+
+    @timeit
+    def plot_instantaneous_firing_rate(self, save_fig=False):
+        """
+        Plots the instantaneous firing rate over simulated areas using a heatmap.
+        
+        Parameters
+        ----------
+        save_fig : bool, optional
+            If True, the figure will be saved to the plot folder. Default is False.
+        """
+        if not hasattr(self, 'rate_hist_areas'):
+            self.rate_hist, self.rate_hist_areas = self.firingRateHistogram()
+        
+        # Convert rate_hist_areas to spikes/s
+        rate_hist_areas = self.rate_hist_areas * 1000
+        
+        # Convert rate_hist_areas to a DataFrame for easier plotting
+        rate_hist_areas_df = pd.DataFrame(rate_hist_areas.tolist(), index=rate_hist_areas.index)
+
+        # Plot the heatmap with an orange-yellow color palette
+        plt.figure(figsize=(12, 5))
+        sns.heatmap(rate_hist_areas_df, cmap='YlOrBr', cbar_kws={'label': 'Spikes/s'}, yticklabels=rate_hist_areas_df.index)
+        plt.xlabel('Time (ms)')
+        plt.ylabel('Area')
+        plt.title('Instantaneous firing rate over simulated areas')
+        plt.xticks(rotation=0)  # Rotate x-axis labels to make the times horizontal
+        plt.xlim(self.sim_dict['t_sim']-500, self.sim_dict['t_sim'])
+        plt.tight_layout()
+        
+        # Save the plot if save_fig is True
+        if save_fig:
+            extension = self.ana_dict['extension']
+            plt.savefig(os.path.join(self.plot_folder, f'instantaneous_firing_rate.{extension}'))
+        plt.show()
+
+    @timeit
+    def plot_average_rate_per_pop(self, save_fig=False):
+        """
+        Plots the time-averaged firing rate over simulated populations using a heatmap.
+        
+        Parameters
+        ----------
+        save_fig : bool, optional
+            If True, the figure will be saved to the plot folder. Default is False.
+        """
+
+        # Calculate the time-averaged firing rate if it has not been calculated yet
+        if not hasattr(self, 'self.rate'):
+            self.rate = self.meanFiringRate()
+        mean_rates_per_pop = self.rate
+
+        # Pivot the DataFrame to have areas on the x-axis and layer+pop on the y-axis
+        mean_rates_df = mean_rates_per_pop.reset_index().pivot(index=['layer', 'pop'], columns='area', values=0)
+
+        # Create a new index combining layer and pop with layer names converted from Roman to Arabic numerals
+        roman_to_arabic = {
+            'II/III': '2/3',
+            'IV': '4',
+            'V': '5',
+            'VI': '6',
+        }
+        mean_rates_df.index = mean_rates_df.index.map(lambda x: f"{roman_to_arabic.get(x[0], x[0])} {x[1]}")
+
+        # Create a mask for NaN values
+        mask = mean_rates_df.isna()
+
+        # Plot the heatmap with external grid
+        plt.figure(figsize=(12, 4.5))
+        sns.heatmap(mean_rates_df, cmap='YlOrBr', fmt=".2f", mask=mask, cbar_kws={'label': 'Spikes/s'})
+        plt.title('Time-averaged firing rate over simulated populations')
+        plt.xlabel('Area')
+        plt.ylabel('Population')
+
+        # Rotate x-tick and y-tick labels
+        plt.yticks(rotation=0)
+
+        # Plot X marks for NaN values
+        for i in range(mean_rates_df.shape[0]):
+            for j in range(mean_rates_df.shape[1]):
+                if mask.iloc[i, j]:
+                    plt.text(j + 0.5, i + 0.5, 'X', ha='center', va='center', color='black', fontsize=12, weight='bold')
+
+        plt.tight_layout()
+        
+        # Save the plot if save_fig is True
+        if save_fig:
+            extension = self.ana_dict['extension']
+            plt.savefig(os.path.join(self.plot_folder, f'average_rate_per_area.{extension}'))
+
+        # Calculate and print the total mean firing rate
+        total_mean_rate = mean_rates_per_pop.mean()
+        print(f'Total mean firing rate: {total_mean_rate:.2f} spikes/s')        
+        plt.show()
 
     @timeit
     def synapticInputCurrent(self):
@@ -768,82 +862,152 @@ class Analysis():
         plt.clf()
         plt.close(fig)
 
+    @timeit
     def plot_functional_connectivity(self):
         """
-        Plots structural and functional connectivities.
+        Plot the functional connectivity of the network based on synaptic input currents 
+        and compare it with experimental BOLD data if available.
         """
-        clustering = pd.Series(left_ordering)
-        ordering = clustering.keys()
-        tmp_lines = clustering.values
-        lines_left_border = np.where(tmp_lines[:-1] != tmp_lines[1:])[0]
-        lines = lines_left_border + 1
-        extended_lines = np.append(lines_left_border, np.array([len(left_ordering) - 1]))
 
-        tmp = np.append(np.array([0]), extended_lines)
-        points = (tmp[1:] + tmp[:-1]) * .5 + 1
-        texts = clustering[extended_lines].values
+        # Define directories and load data
+        data_dir = os.path.join(self.base_path, 'experimental_data/senden/rsData_7T_DKparcel/')
 
-        # Read values
-        if not hasattr(self, 'self.rate'):
-            self.curr_in = self.synapticInputCurrent()
-        curr_in = self.curr_in
-        extension = self.ana_dict['extension']
-        tmin = self.ana_dict['plotConnectivities']['tmin']
+        # Check if experimental data exists
+        exp_data_exists = (
+            os.path.exists(os.path.join(data_dir, 'ROIs.txt')) and 
+            os.path.exists(os.path.join(data_dir, 'rsDATA_7T_DKparcel.npy'))
+        )
+
+        if exp_data_exists:
+            # Read in regions of interest.
+            roi = pd.read_csv(
+                os.path.join(data_dir, 'ROIs.txt'),
+                header=None, names=['roi'], dtype=str, squeeze=True
+            )
+            # The rois are given in this manner: ctx-lh-bankssts
+            # The name of the area is the last word after -
+            roi = roi.apply(lambda x: x.split('-')[-1])
+            # The cortical areas are in the range from 14 to 82
+            roi = roi.drop(range(0, 14)).drop(range(82, 85))
+
+            # Read in the bold signal. BOLD.shape = (600, 85, 19)
+            # First dimension: timesteps
+            # Second dimension: Desikan Killiany areas, left (0:34) and right
+            # (34:68) hemisphere
+            # Third dimension: Participants
+            # orientation discrimination, numerosity
+            BOLD = np.load(os.path.join(data_dir, 'rsDATA_7T_DKparcel.npy'))
+            BOLD = BOLD[:, 14:82, :]
+
+            # There are 600 timesteps in 1.5 second steps in the data
+            resolution = 1.5
+            timesteps = np.arange(600) * resolution
+
+            # Extract the number of persons
+            no_of_persons = BOLD.shape[2]
+
+            # Extraction of Desikan Killiany area names from left hemisphere,
+            # i.e. 0:34, and stripping the first 3 characters indicating the
+            # hemisphere
+            areas = roi.values[:34]
+
+            # Load clustering information
+            clustering = pd.Series(left_ordering)
+            ordering = clustering.keys()
+            tmp_lines = clustering.values
+            lines_border = np.where(tmp_lines[:-1] != tmp_lines[1:])[0]
+            lines = lines_border + 1
+            extended_lines = np.append(lines_border, np.array([len(left_ordering) - 1]))
+            tmp = np.append(np.array([0]), extended_lines)
+            points = (tmp[1:] + tmp[:-1]) * .5 + 1
+            texts = clustering[extended_lines].values
+
+            # Extract BOLD series into a dictionary of DataFrames
+            exp_fc = {'lh': np.zeros((34, 34)), 'rh': np.zeros((34, 34))}
+
+            # Loop over all persons
+            for person in range(no_of_persons):
+                # Left hemisphere is 0:34, right hemisphere is 34:68
+                lh_person = BOLD[:, 0:34, person]
+                rh_person = BOLD[:, 34:68, person]
+
+                # BOLD signal into DataFrames
+                lh = pd.DataFrame(lh_person, index=timesteps, columns=areas)
+                rh = pd.DataFrame(rh_person, index=timesteps, columns=areas)
+
+                # Correlations of all columns, i.e. areas, with each other
+                lh_fc = lh.corr()
+                rh_fc = rh.corr()
+                
+                exp_fc['lh'] += lh_fc
+                exp_fc['rh'] += rh_fc
+
+            exp_fc['lh'] /= no_of_persons
+            exp_fc['rh'] /= no_of_persons
+        else:
+            print("No experimental data found. Only simulated data will be plotted.")
+
+        # Figure settings
+        label_prms = dict(fontsize=10, fontweight='bold', va='top', ha='right')
+        nrows, ncols = (1, 2) if exp_data_exists else (1, 1)
+        width, panel_wh_ratio = 5.63, 1.5
+        height = width / panel_wh_ratio * float(nrows) / ncols
+
+        fig, axes = plt.subplots(nrows, ncols, figsize=(width, height))
+        if nrows * ncols > 1:
+            axes = axes.flatten()
+        else:
+            axes = [axes]
+
+        if exp_data_exists:
+            # Plot experimental data
+            im = axes[0].pcolormesh(exp_fc['rh'].loc[ordering][ordering], vmin=-1, vmax=1, cmap='RdYlBu_r')
+            cbar = plt.colorbar(im, ax=axes[0], ticks=[-1, 0, 1])
+            cbar.set_label('Correlation', rotation=270, labelpad=15)
+
+            axes[0].set_title('Experimental FC')
+            axes[0].set_xticks(points)
+            axes[0].set_xticklabels(texts, rotation='vertical')
+            axes[0].set_yticks(points)
+            axes[0].set_yticklabels(texts)
+            axes[0].axis('square')
+            axes[0].invert_yaxis()
+            axes[0].hlines(lines, *axes[0].get_xlim(), color='k')
+            axes[0].vlines(lines, *axes[0].get_xlim(), color='k')
+
+        # Load and plot simulated functional connectivity
+        curr_in = self.synapticInputCurrent()
         synaptic_currents = curr_in.T
 
         # Calculate simulated functional connectivity based on synaptic
         # currents
-        df_sim_fc_syn = synaptic_currents[synaptic_currents.index >= tmin].corr()
-        np.fill_diagonal(df_sim_fc_syn.values, np.NaN)
+        initial_transient = 500.
+        tmax = self.sim_dict['t_sim']
+        df_sim_fc_syn = synaptic_currents[
+            (synaptic_currents.index >= initial_transient) & (synaptic_currents.index <= tmax)
+        ].corr()
+        simulated_fc = df_sim_fc_syn
 
-        plt.style.use([os.path.join(
-            self.base_path,
-            self.ana_dict['mplstyles']
-            )])
-        fig = plt.figure(constrained_layout=True)
-        gs = gridspec.GridSpec(1, 1, figure=fig)
-        ax = fig.add_subplot(gs[:, :])
+        im = axes[-1].pcolormesh(simulated_fc.loc[ordering][ordering], vmin=-1, vmax=1, cmap='RdYlBu_r')
 
-        im = ax.pcolormesh(
-            df_sim_fc_syn.loc[ordering][ordering],
-            vmin=-1,
-            vmax=1,
-            cmap='RdYlBu_r'
-        )
+        axes[-1].set_title('Simulated FC')
+        axes[-1].set_xticks(points)
+        axes[-1].set_xticklabels(texts, rotation='vertical')
+        axes[-1].set_yticks(points)
+        axes[-1].set_yticklabels(texts)
+        axes[-1].axis('square')
+        axes[-1].invert_yaxis()
+        axes[-1].hlines(lines, *axes[-1].get_xlim(), color='k')
+        axes[-1].vlines(lines, *axes[-1].get_xlim(), color='k')
 
-        cbar_ticks = [-1, 0, 1]
-        cbar = fig.colorbar(
-            im,
-            ax=ax,
-            ticks=cbar_ticks
-        )
-        cbar.set_label(
-            'Correlation',
-            rotation=270,
-            labelpad=15
-        )
-
-        plt.xticks(
-            points,
-            texts,
-            rotation='vertical'
-        )
-        plt.yticks(
-            points,
-            texts,
-            )
-        ax.invert_yaxis()
-
-        ax.hlines(lines, *ax.get_xlim())
-        ax.vlines(lines, *ax.get_xlim())
-
+        # Save the plot
+        extension = self.ana_dict['extension']
         fig.savefig(os.path.join(
             self.plot_folder,
             'simulated_synaptic_currents_correlation.{0}'.format(extension)
         ))
-        plt.close()
         plt.style.use('default')
-
+        
     @timeit
     def calculateBOLDConnectivity(self):
         """
@@ -1337,6 +1501,177 @@ class Analysis():
         ))
         plt.clf()
         plt.close(fig)
+
+    @timeit
+    def plot_raster_statistics(self, save_fig=False, raster_areas=None):
+        """
+        Plots raster statistics including raster plots for specified areas and 
+        boxplots for firing rates, CV ISI, and correlation coefficients.
+
+        Parameters
+        ----------
+        save_fig : bool, optional
+            If True, the figure will be saved to the plot folder. Default is False.
+        raster_areas : list of str, optional
+            List of areas to plot raster statistics for. Default is 
+            ['caudalanteriorcingulate', 'pericalcarine', 'fusiform'].
+        """
+        if raster_areas is None:
+            raster_areas = ['caudalanteriorcingulate', 'pericalcarine', 'fusiform']
+        
+        colors = {'E': '#4c72b0ff', 'I': '#c44e52ff'}
+        raster_fraction = self.ana_dict['plotRasterArea']['fraction']
+        raster_low = self.ana_dict['plotRasterArea']['low']
+        raster_high = self.ana_dict['plotRasterArea']['high']
+        roman_to_arabic_numerals = {
+            'II/III': '2/3',
+            'IV': '4',
+            'V': '5',
+            'VI': '6',
+        }
+        random.seed(1234)
+
+        # Check if necessary attributes are already loaded or need to be calculated
+        if not hasattr(self, 'popGids'):
+            self.popGids = self._readPopGids()
+        if not hasattr(self, 'spikes'):
+            self.spikes = self._readSpikes()
+        if not hasattr(self, 'rate'):
+            self.rate = self.meanFiringRate()
+        if not hasattr(self, 'pop_lv'):
+            self.pop_lv = self.popLv()
+        if not hasattr(self, 'pop_cv_isi'):
+            self.pop_cv_isi = self.popCvIsi()
+        if not hasattr(self, 'pop_cc'):
+            self.pop_cc = self.popCorrCoeff()
+
+        # Plotting
+        plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
+        fig = plt.figure(constrained_layout=True, figsize=(5.5, 3.5))
+        label_prms = dict(fontsize=8, fontweight='bold', va='top', ha='right')
+        gs = gridspec.GridSpec(3, 4, figure=fig)
+        ax_raster1 = fig.add_subplot(gs[:, 0])
+        ax_raster1.spines['top'].set_visible(False)
+        ax_raster1.spines['right'].set_visible(False)
+        ax_raster2 = fig.add_subplot(gs[:, 1])
+        ax_raster2.spines['top'].set_visible(False)
+        ax_raster2.spines['right'].set_visible(False)
+        ax_raster3 = fig.add_subplot(gs[:, 2])
+        ax_raster3.spines['top'].set_visible(False)
+        ax_raster3.spines['right'].set_visible(False)
+        ax_rates = fig.add_subplot(gs[0, 3])
+        ax_rates.spines['top'].set_visible(False)
+        ax_rates.spines['right'].set_visible(False)
+        ax_cv = fig.add_subplot(gs[1, 3])
+        ax_cv.spines['top'].set_visible(False)
+        ax_cv.spines['right'].set_visible(False)
+        ax_cc = fig.add_subplot(gs[2, 3])
+        ax_cc.spines['top'].set_visible(False)
+        ax_cc.spines['right'].set_visible(False)
+
+        # Raster plots
+        ms_to_s = 1e-3
+        axs_raster = [ax_raster1, ax_raster2, ax_raster3]
+        raster_labels = ['A', 'B', 'C']
+        for ax, area, label in zip(axs_raster, raster_areas, raster_labels):
+            ind = []
+            names = []
+            gid_norm = 0
+            for (layer, pop), sts in self.spikes.loc[area].iteritems():
+                layer_roman = roman_to_arabic_numerals[layer]
+                # Random shuffle spiketrains in place
+                random.shuffle(sts)
+
+                # Real population size, not all neurons spiked. Thus take the fraction from this value.
+                popGid_alp = self.popGids.loc[area, layer, pop]
+                pop_size = popGid_alp.maxGID - popGid_alp.minGID + 1
+                # Fraction of total number of neurons
+                no_sts = int(raster_fraction * pop_size)
+                # Fraction of neurons that actually spiked
+                frac_spiking = len(sts) / pop_size
+
+                # y label position and name
+                ind.append(- int(no_sts / 2) + gid_norm)
+                name = ' '.join([layer_roman, pop])
+                names.append(name)
+
+                j = 0
+                # Loop as many times as we have spike trains
+                for _ in range(no_sts):
+                    gid_norm = gid_norm - 1
+                    # Decide whether spiketrain contains spikes
+                    if random.random() < frac_spiking:
+                        st = sts[j]
+                        j += 1
+                        filtered_st = st[(st > raster_low) & (st < raster_high)]
+                        if len(filtered_st) > 0:
+                            ax.plot(
+                                filtered_st * ms_to_s,
+                                gid_norm * np.ones_like(filtered_st),
+                                colors[pop],
+                                marker='.',
+                                markersize=1.5,
+                                linestyle="None"
+                            )
+
+            ax.axis([raster_low * ms_to_s, raster_high * ms_to_s, gid_norm, 0])
+            ax.set_xlabel('Time (s)')
+            ax.set_yticks(ind)
+            ax.set_yticklabels(names)
+            ax.set_title(area)
+            ax.text(s=label, transform=ax.transAxes, x=-0.2, y=1.06, **label_prms)
+
+        # Boxplots
+        axs_boxplots = [ax_rates, ax_cv, ax_cc]
+        data_boxplots = [self.rate, self.pop_cv_isi, self.pop_cc]
+        boxplots_labels = ['D', 'E', 'F']
+        for ax, data, label in zip(axs_boxplots, data_boxplots, boxplots_labels):
+            # reorder Series into DataFrame
+            area = np.unique(data.index.get_level_values(0))
+            layer = np.unique(data.index.get_level_values(1))
+            pop_type = np.unique(data.index.get_level_values(2))
+            multi_index = pd.MultiIndex.from_product([layer, pop_type])
+            ind = [' '.join(i) for i in multi_index.tolist()]
+            names = [' '.join((roman_to_arabic_numerals[l_], p_)) for l_, p_ in (i.split(' ') for i in ind)]
+            data_lp = pd.DataFrame(data=np.nan, index=area, columns=ind)
+            for (a, l, p), r in data.iteritems():
+                data_lp.loc[a, l+' '+p] = r
+
+            boxplot = sns.boxplot(data=data_lp, orient='h', ax=ax, saturation=1,
+                                  width=0.5, fliersize=2.5, color='k')
+            col = [colors['E'], colors['I']]
+            for i in range(len(ind)):
+                mybox = boxplot.artists[i]
+                mybox.set_facecolor(col[i % 2])
+            ax.text(s=label, transform=ax.transAxes, x=-0.1, y=1.25, **label_prms)
+            # Print the extension of the whiskers
+            lower = []
+            upper = []
+            for name, x in data_lp.iteritems():
+                dat = x.dropna().values
+                if len(dat) > 0:
+                    median = np.median(dat)
+                    upper_quartile = np.percentile(dat, 75)
+                    lower_quartile = np.percentile(dat, 25)
+                    iqr = upper_quartile - lower_quartile
+                    upper_whisker = dat[dat <= upper_quartile + 1.5 * iqr].max()
+                    lower_whisker = dat[dat >= lower_quartile - 1.5 * iqr].min()
+                    lower.append(lower_whisker)
+                    upper.append(upper_whisker)
+            print('label:', label, 'lowest whisker:', round(min(lower), 1))
+            print('label:', label, 'highest whisker:', round(max(upper), 1))
+            ax.set_yticklabels(names)
+        ax_rates.set_xlim(0)
+        ax_rates.set_xlabel('Firing rate (spikes/s)')
+        ax_cv.set_xlim(0)
+        ax_cv.set_xlabel('CV interspike interval')
+        ax_cc.set_xlabel('Correlation coefficient')
+
+        # Save figure if save_fig is True
+        if save_fig:
+            extension = self.ana_dict['extension']
+            fig.savefig(os.path.join(self.plot_folder, f'figure_spike_statistics.{extension}'))
+        plt.show()
 
     def plot_all_binned_spike_rates_area(self):
         """
