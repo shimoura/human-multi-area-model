@@ -147,7 +147,7 @@ class NeuronNumbers():
         # remove_smaller_layerI is True; eliminate layers with fewer neurons
         # than min_neurons_per_layer
         neuron_sum = self.getNeuronNumbers().groupby(['area', 'layer']).sum()
-        for (area, layer), neuronnumber in neuron_sum.iteritems():
+        for (area, layer), neuronnumber in neuron_sum.items():
             nn_layerI = self.layerI_neurons.loc[area]
             if remove_smaller_layerI and 0 < neuronnumber < nn_layerI:
                 print(f'Dropping layer {layer} in {area} because it '

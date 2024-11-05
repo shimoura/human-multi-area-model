@@ -236,13 +236,13 @@ class Analysis():
                     )
 
             tmp = {}
-            for area, (hist, bin_edges) in spikes_per_neuron_population_resolved_tmp.iteritems():
+            for area, (hist, bin_edges) in spikes_per_neuron_population_resolved_tmp.items():
                 tmp[area + tuple(['hist'])] = hist
                 tmp[area + tuple(['bin_edges'])] = bin_edges
             spikes_per_neuron_population_resolved = pd.Series(tmp)
 
             tmp = {}
-            for area, (hist, bin_edges) in spikes_per_neuron_area_resolved_tmp.iteritems():
+            for area, (hist, bin_edges) in spikes_per_neuron_area_resolved_tmp.items():
                 tmp[(area, 'hist')] = hist
                 tmp[(area, 'bin_edges')] = bin_edges
             spikes_per_neuron_area_resolved = pd.Series(tmp)
@@ -432,7 +432,7 @@ class Analysis():
             # constants are used. The results are the postynaptic currents
             # originating in a particular population.
             tmp = {}
-            for (area, layer, population), dat in inst_rates.iteritems():
+            for (area, layer, population), dat in inst_rates.items():
                 if population == 'E':
                     tau_s = tau_syn_ex
                     kernel = kernel_syn_ex
@@ -635,7 +635,7 @@ class Analysis():
 
         rates = pd.DataFrame(data=0, index=area, columns=ind)
 
-        for (a, l, p), r in self.rate.iteritems():
+        for (a, l, p), r in self.rate.items():
             rates.loc[a, l+p] = r
         ax = sns.boxplot(
             data=rates,
@@ -705,7 +705,7 @@ class Analysis():
 
         pop_ccs = pd.DataFrame(data=0, index=area, columns=ind)
 
-        for (a, l, p), r in self.pop_cc.iteritems():
+        for (a, l, p), r in self.pop_cc.items():
             pop_ccs.loc[a, l+p] = r
         ax = sns.boxplot(
             data=pop_ccs,
@@ -776,7 +776,7 @@ class Analysis():
 
         pop_lvs = pd.DataFrame(data=0, index=area, columns=ind)
 
-        for (a, l, p), r in self.pop_lv.iteritems():
+        for (a, l, p), r in self.pop_lv.items():
             pop_lvs.loc[a, l+p] = r
         ax = sns.boxplot(
             data=pop_lvs,
@@ -842,7 +842,7 @@ class Analysis():
 
         pop_cv_isis = pd.DataFrame(data=0, index=area, columns=ind)
 
-        for (a, l, p), r in self.pop_cv_isi.iteritems():
+        for (a, l, p), r in self.pop_cv_isi.items():
             pop_cv_isis.loc[a, l+p] = r
         ax = sns.boxplot(
             data=pop_cv_isis,
@@ -1450,7 +1450,7 @@ class Analysis():
         gid_norm = 0
         ms_to_s = 0.001
         colors = {'E': '#1f77b4', 'I': '#ff7f0e'}
-        for (layer, pop), sts in self.spikes.loc[area].iteritems():
+        for (layer, pop), sts in self.spikes.loc[area].items():
             # y label axis namin
             name = ' '.join([layer, pop])
             names.append(name)
@@ -1577,7 +1577,7 @@ class Analysis():
             ind = []
             names = []
             gid_norm = 0
-            for (layer, pop), sts in self.spikes.loc[area].iteritems():
+            for (layer, pop), sts in self.spikes.loc[area].items():
                 layer_roman = roman_to_arabic_numerals[layer]
                 # Random shuffle spiketrains in place
                 random.shuffle(sts)
@@ -1634,7 +1634,7 @@ class Analysis():
             ind = [' '.join(i) for i in multi_index.tolist()]
             names = [' '.join((roman_to_arabic_numerals[l_], p_)) for l_, p_ in (i.split(' ') for i in ind)]
             data_lp = pd.DataFrame(data=np.nan, index=area, columns=ind)
-            for (a, l, p), r in data.iteritems():
+            for (a, l, p), r in data.items():
                 data_lp.loc[a, l+' '+p] = r
 
             boxplot = sns.boxplot(data=data_lp, orient='h', ax=ax, saturation=1,
@@ -1647,7 +1647,7 @@ class Analysis():
             # Print the extension of the whiskers
             lower = []
             upper = []
-            for name, x in data_lp.iteritems():
+            for name, x in data_lp.items():
                 dat = x.dropna().values
                 if len(dat) > 0:
                     median = np.median(dat)
@@ -1936,7 +1936,7 @@ class Analysis():
                     )
 
             # multiple line plot
-            for num, (area, data) in enumerate(rate_hist_areas.iteritems()):
+            for num, (area, data) in enumerate(rate_hist_areas.items()):
                 # Find the right spot on the plot
                 ax = axes[num // num_col][num % num_col]
 
@@ -1992,8 +1992,8 @@ class Analysis():
                 os.path.join(self.sim_folder, 'spikes.pkl')
             )
         except FileNotFoundError:
-            print('Loading SpikeTrains from gdf')
-            spikes = self._readSpikesFromGDF()
+            print('Loading SpikeTrains from dat')
+            spikes = self._readSpikesFromDAT()
             # Save spikes to pickle for faster read access
             spikes.to_pickle(os.path.join(self.sim_folder, 'spikes.pkl'))
         return spikes
@@ -2028,9 +2028,9 @@ class Analysis():
             )
         return popGids
 
-    def _readSpikesFromGDF(self):
+    def _readSpikesFromDAT(self):
         """
-        Reads spikes from gdf output files using pandas.
+        Reads spikes from dat output files using pandas.
         Stores all SpikeTrains for one population in a list wich in
         turn is contained in a Series.
 
@@ -2043,18 +2043,19 @@ class Analysis():
             # Read in population gids
             popGids = self.popGids
             # glob all spikes files
-            gdf_files = glob.glob(os.path.join(self.sim_folder, 'spikes', '*.gdf'))
-            # Read in all gdf files into a big dataframe with two columns, gid and
+            dat_files = glob.glob(os.path.join(self.sim_folder, 'spikes', '*.dat'))
+            # Read in all dat files into a big dataframe with two columns, gid and
             # t. Magically this seems to work in parallel
             spikes = pd.concat(
                     (
                         pd.read_csv(
                             f,
                             sep='\t',
+                            skiprows=3,
                             index_col=False,
                             header=None,
-                            names=['gid', 't', 2]
-                            ).drop(columns=2) for f in gdf_files
+                            names=['gid', 't']
+                            ) for f in dat_files
                     ),
                     ignore_index=True
                     )
@@ -2119,7 +2120,7 @@ class Analysis():
             # ==============================================================================
             #                                 Presorting data
             #
-            # Here I presort all gdf files. Presorted files can easily be merged without
+            # Here I presort all dat files. Presorted files can easily be merged without
             # memory constraints. Also mergesort is quite fast.
             # The reason I use GNU sort instead of sorting in python is that GNU sort also
             # works in parallel. GNU sort uses 8 cores per default, which seems be a good
@@ -2130,14 +2131,13 @@ class Analysis():
             # This step takes, for 100 seconds of bio time on 64 cores, 15 minutes
             # ==============================================================================
 
-            # TODO Change to dat once we use NEST 3
-            file_ending = '*.gdf'
+            file_ending = '*.dat'
             self.rec_folder = os.path.join(self.sim_folder, 'spikes')
-            gdf_files = glob.glob(os.path.join(self.rec_folder, file_ending))
+            dat_files = glob.glob(os.path.join(self.rec_folder, file_ending))
 
             ts = time.time()
             pool = Pool(math.ceil(available_cores / 8))  # Gnu sort sorts in parallel with 8 threads
-            _ = pool.map(shell_presort_all_dat, gdf_files)
+            _ = pool.map(shell_presort_all_dat, dat_files)
             te = time.time()
             passed_time = round(te - ts, 3)
             print(f'presorting data took {passed_time} s')
@@ -2376,8 +2376,8 @@ def cvIsi(sts, t_start=None, t_stop=None, CV_min_spikes=2, take_mean=True):
         sts = [st[st <= t_stop] for st in sts]
     sts = [st for st in sts if len(st) >= CV_min_spikes]
     if len(sts) > 0:
-        isi = np.array([np.diff(x, 1) for x in sts])
-        cv = np.array([np.std(x) / np.mean(x) for x in isi])
+        isi = [np.diff(x, 1) for x in sts]
+        cv = [np.std(x) / np.mean(x) for x in isi]
         if take_mean:
             return np.mean(cv)
         else:
@@ -2445,8 +2445,8 @@ def LV(sts, t_ref, t_start=None, t_stop=None, LV_min_spikes=3, take_mean=True):
         sts = [st[st <= t_stop] for st in sts]
     sts = [st for st in sts if len(st) >= LV_min_spikes]
     if len(sts) > 0:
-        isi = np.array([np.diff(x, 1) for x in sts])
-        lvr = np.array([calculate_lv(x, t_ref) for x in isi])
+        isi = [np.diff(x, 1) for x in sts]
+        lvr = [calculate_lv(x, t_ref) for x in isi]
         if take_mean:
             return np.mean(lvr)
         else:

@@ -38,7 +38,7 @@ class Simulation():
         data_path : string
         """
         self.data_path = data_path
-        if 'spike_detector' in self.sim_dict['rec_dev']:
+        if 'spike_recorder' in self.sim_dict['rec_dev']:
             self.spike_path = os.path.join(self.data_path, 'spikes')
         if 'voltmeter' in self.sim_dict['rec_dev']:
             self.volt_path = os.path.join(self.data_path, 'voltages')
@@ -51,7 +51,7 @@ class Simulation():
                 print('data directory created')
             print('Data will be written to %s' % self.data_path)
 
-            if 'spike_detector' in self.sim_dict['rec_dev']:
+            if 'spike_recorder' in self.sim_dict['rec_dev']:
                 if not os.path.isdir(self.spike_path):
                     os.mkdir(self.spike_path)
             if 'voltmeter' in self.sim_dict['rec_dev']:
@@ -81,26 +81,11 @@ class Simulation():
         N_tp = nest.GetKernelStatus(['total_num_virtual_procs'])[0]
         if nest.Rank() == 0:
             print('Number of total processes: %i' % N_tp)
-        rng_seeds = list(
-            range(
-                master_seed + 1 + N_tp,
-                master_seed + 1 + (2 * N_tp)
-                )
-            )
-        grng_seed = master_seed + N_tp
-        if nest.Rank() == 0:
-            print(
-                'Seeds for random number generators of virtual processes: %r'
-                % rng_seeds
-                )
-            print('Global random number generator seed: %i' % grng_seed)
-        self.pyrngs = [np.random.RandomState(s) for s in list(range(
-            master_seed, master_seed + N_tp))]
+
         self.sim_resolution = self.sim_dict['sim_resolution']
         kernel_dict = {
             'resolution': self.sim_resolution,
-            'grng_seed': grng_seed,
-            'rng_seeds': rng_seeds,
+            'rng_seed': master_seed,
             'overwrite_files': self.sim_dict['overwrite_files'],
             'print_time': self.sim_dict['print_time'],
             }
@@ -122,7 +107,7 @@ class Simulation():
         pop_file_name = os.path.join(self.data_path, 'population_GIDs.dat')
         local_num_threads = nest.GetKernelStatus('local_num_threads')
         with open(pop_file_name, 'w+') as pop_file:
-            for pop, nn in self.net_dict['neuron_numbers'].iteritems():
+            for pop, nn in self.net_dict['neuron_numbers'].items():
                 if nn > 0:
                     if pop[-1] == 'E':
                         neuron_model_pop = self.net_dict['neuron_model_E']
@@ -137,7 +122,7 @@ class Simulation():
                             "Populations have to be E or I"
                         )
                     population = nest.Create(neuron_model_pop, nn)
-                    nest.SetStatus(population, neuron_params_pop)
+                    population.set(neuron_params_pop)
 
                     # Assign DC input
                     nest.SetStatus(
@@ -146,57 +131,39 @@ class Simulation():
                         }
                     )
 
-                    # Distribute parameters and initial voltage
-                    for thread in np.arange(local_num_threads):
-                        # Using GetNodes is a work-around until NEST 3.0 is
-                        # released. It will issue a deprecation warning.
-                        local_nodes = nest.GetNodes(
-                            [0], {
-                                'model': neuron_model_pop,
-                                'thread': thread
-                            }, local_only=True
-                        )[0]
-                        # vp is the same for all local nodes on the same thread
-                        vp = nest.GetStatus(local_nodes)[0]['vp']
-                        # get the local nodes of the current population
-                        local_pop = np.intersect1d(local_nodes, population)
-                        local_pop = local_pop.tolist()
-                        # Initial voltage
-                        nest.SetStatus(
-                            local_pop, 'V_m', self.pyrngs[vp].normal(
-                                self.sim_dict['V0_mean'],
-                                self.sim_dict['V0_sd'],
-                                len(local_pop))
-                        )
-                        # Neuron parameters
-                        for prm, dist_dict in nrn_prm_dist_pop.items():
-                            if dist_dict['rel_sd'] > 0:
-                                param_dist = dist_dict['distribution']
-                                if param_dist == 'lognormal':
-                                    mean_prm = neuron_params_pop[prm]
-                                    offset_prm = 0.
-                                    if prm == 'V_th':
-                                        mean_prm -= neuron_params_pop['E_L']
-                                        offset_prm += neuron_params_pop['E_L']
-                                    assert mean_prm > 0
-                                    mu_param, sigma_param = mu_sigma_lognorm(
-                                        mean=mean_prm,
-                                        rel_sd=dist_dict['rel_sd']
-                                    )
-                                    nest.SetStatus(
-                                        local_pop, prm,
-                                        offset_prm + self.pyrngs[vp].lognormal(
-                                            mu_param, sigma_param,
-                                            len(local_pop)
-                                        )
-                                    )
-                                else:
-                                    err_msg = "Parameter distribution "
-                                    err_msg += f"{param_dist} not implemented."
-                                    raise NotImplementedError(err_msg)
+                    population.set(neuron_params_pop)
+                    population.V_m = nest.random.normal(
+                        mean=self.sim_dict['V0_mean'],
+                        std=self.sim_dict['V0_sd']
+                    )
+                    # Neuron parameters
+                    for prm, dist_dict in nrn_prm_dist_pop.items():
+                        if dist_dict['rel_sd'] > 0:
+                            param_dist = dist_dict['distribution']
+                            if param_dist == 'lognormal':
+                                mean_prm = neuron_params_pop[prm]
+                                offset_prm = 0.
+                                if prm == 'V_th':
+                                    mean_prm -= neuron_params_pop['E_L']
+                                    offset_prm += neuron_params_pop['E_L']
+                                assert mean_prm > 0
+                                mu_param, sigma_param = mu_sigma_lognorm(
+                                    mean=mean_prm,
+                                    rel_sd=dist_dict['rel_sd']
+                                )
+                                population.set({prm:
+                                    offset_prm + nest.random.lognormal(
+                                    mean=mu_param,
+                                    std=sigma_param
+                                )})
+                            else:
+                                err_msg = "Parameter distribution "
+                                err_msg += f"{param_dist} not implemented."
+                                raise NotImplementedError(err_msg)
+
                     self.pops[pop] = population
                     pop_file.write('{};{};{}\n'.format(
-                        pop, population[0], population[-1]
+                        pop, population[0].get()['global_id'], population[-1].get()['global_id']
                     ))
         print('Memory on rank {} after creating populations: {:.2f}MB'.format(
             nest.Rank(), self._getMemoryMB()
@@ -208,28 +175,21 @@ class Simulation():
 
         Only devices which are given in sim_dict['rec_dev'] are created.
         """
-        if 'spike_detector' in self.sim_dict['rec_dev']:
+        if 'spike_recorder' in self.sim_dict['rec_dev']:
             recdict = {
-                'withgid': True,
-                'withtime': True,
-                'to_memory': False,
-                'to_file': True,
-                'label': os.path.join(self.spike_path, 'spike_detector')
+                'record_to': 'ascii',
+                'label': os.path.join(self.spike_path, 'spike_recorder')
             }
-            self.spike_detector = nest.Create('spike_detector', params=recdict)
+            self.spike_recorder = nest.Create('spike_recorder', params=recdict)
         if 'voltmeter' in self.sim_dict['rec_dev']:
             recdictmem = {
-                'interval': self.sim_dict['rec_V_int'],
-                'withgid': True,
-                'withtime': True,
-                'to_memory': False,
-                'to_file': True,
+                'record_to': 'ascii',
                 'label': os.path.join(self.volt_path, 'voltmeter'),
                 'record_from': ['V_m'],
             }
-            self.voltmeter = nest.Create('voltmeter', params=recdictmem)
+            self.voltmeter = nest.Create('multimeter', params=recdictmem)
 
-        if 'spike_detector' in self.sim_dict['rec_dev']:
+        if 'spike_recorder' in self.sim_dict['rec_dev']:
             if nest.Rank() == 0:
                 print('Spike detectors created')
         if 'voltmeter' in self.sim_dict['rec_dev']:
@@ -246,13 +206,13 @@ class Simulation():
         if nest.Rank() == 0:
             print('Poisson background input created')
         self.poisson = {}
-        for pop, nn in self.net_dict['neuron_numbers'].iteritems():
+        for pop, nn in self.net_dict['neuron_numbers'].items():
             if nn > 0.:
                 sn_ext = self.net_dict['synapses_external'].loc[pop]
                 K_ext = sn_ext / nn
                 rate_ext = self.net_dict['rate_ext'].loc[pop] * K_ext
                 poiss = nest.Create('poisson_generator')
-                nest.SetStatus(poiss, {'rate': rate_ext})
+                poiss.set({'rate': rate_ext})
                 self.poisson[pop] = poiss
 
     def create_single_spike(self):
@@ -262,7 +222,7 @@ class Simulation():
         if nest.Rank() == 0:
             print('Single spike input created')
         self.single_spike = {}
-        for pop, spike_time in self.net_dict['spike_time'].iteritems():
+        for pop, spike_time in self.net_dict['spike_time'].items():
             if spike_time >= 0.:
                 spike = nest.Create(
                         'spike_generator',
@@ -338,15 +298,15 @@ class Simulation():
                         print(f'Unknown connection rule {conn_rule}.')
                         raise NotImplementedError()
                     if np.isclose(self.net_dict['p_transmit'], 1):
-                        syn_dict = {'model': 'static_synapse'}
+                        syn_dict = {'synapse_model': 'static_synapse'}
                     else:
-                        syn_dict = {'model': 'bernoulli_synapse',
+                        syn_dict = {'synapse_model': 'bernoulli_synapse',
                                     'p_transmit': self.net_dict['p_transmit']}
-                    syn_dict['weight'] = {'distribution': 'normal_clipped',
-                                          'mu': weight, 'sigma': w_sd}
-                    syn_dict['delay'] = {'distribution': delay_distr,
-                                         'mu': mu_delay, 'sigma': sigma_delay,
-                                         'low': min_delay}
+                        
+                    if delay_distr == 'normal_clipped':
+                        syn_dict['delay'] = nest.math.max(nest.random.normal(mean=mu_delay, std=sigma_delay), min_delay)
+                    elif delay_distr == 'lognormal_clipped':
+                        syn_dict['delay'] = nest.math.max(nest.random.lognormal(mean=mu_delay, std=sigma_delay), min_delay)
 
                     # Skipping connection with weight == 0.0
                     if weight == 0.0:
@@ -358,9 +318,9 @@ class Simulation():
                         continue
                     
                     if weight < 0:
-                        syn_dict['weight']['high'] = 0.0
+                        syn_dict['weight'] = nest.math.min(nest.random.normal(mean=weight, std=w_sd), 0.0)
                     else:
-                        syn_dict['weight']['low'] = 0.0
+                        syn_dict['weight'] = nest.math.max(nest.random.normal(mean=weight, std=w_sd), 0.0)
                     nest.Connect(
                         source_pop, target_pop,
                         conn_spec=conn_dict_rec,
@@ -392,13 +352,8 @@ class Simulation():
                 (area_i, layer_i, pop_i)
             ]
             syn_dict_poisson = {
-                'model': 'static_synapse',
-                'weight': {
-                    'distribution': 'normal_clipped',
-                    'mu': weight,
-                    'sigma': w_sd,
-                    'low': 0.
-                },
+                'synapse_model': 'static_synapse',
+                'weight': nest.math.max(nest.random.normal(mean=weight, std=w_sd), 0.0),
                 'delay': self.sim_dict['sim_resolution']
             }
             nest.Connect(
@@ -425,7 +380,7 @@ class Simulation():
             # Scale weight
             weight *= 1e3*K_ext
             syn_dict_single_spike = {
-                'model': 'static_synapse',
+                'synapse_model': 'static_synapse',
                 'weight': weight,
                 }
             nest.Connect(
@@ -437,13 +392,13 @@ class Simulation():
     def connect_devices(self):
         """ Connects the recording devices to the microcircuit."""
         if nest.Rank() == 0:
-            if ('spike_detector' in self.sim_dict['rec_dev'] and
+            if ('spike_recorder' in self.sim_dict['rec_dev'] and
                     'voltmeter' not in self.sim_dict['rec_dev']):
                 print('Spike detector connected')
-            elif ('spike_detector' not in self.sim_dict['rec_dev'] and
+            elif ('spike_recorder' not in self.sim_dict['rec_dev'] and
                     'voltmeter' in self.sim_dict['rec_dev']):
                 print('Voltmeter connected')
-            elif ('spike_detector' in self.sim_dict['rec_dev'] and
+            elif ('spike_recorder' in self.sim_dict['rec_dev'] and
                     'voltmeter' in self.sim_dict['rec_dev']):
                 print('Spike detector and voltmeter connected')
             else:
@@ -451,8 +406,8 @@ class Simulation():
         for (area_i, layer_i, pop_i), target_pop in self.pops.items():
             if 'voltmeter' in self.sim_dict['rec_dev']:
                 nest.Connect(self.voltmeter, target_pop)
-            if 'spike_detector' in self.sim_dict['rec_dev']:
-                nest.Connect(target_pop, self.spike_detector)
+            if 'spike_recorder' in self.sim_dict['rec_dev']:
+                nest.Connect(target_pop, self.spike_recorder)
 
     def setup(self, data_path, num_threads):
         """ Execute subfunctions of the network.
@@ -550,5 +505,5 @@ def simulationDictFromDump(dump_folder):
     # Read sim.yaml
     fn = os.path.join(dump_folder, 'sim.yaml')
     with open(fn, 'r') as sim_file:
-        sim_dict = yaml.load(sim_file)
+        sim_dict = yaml.load(sim_file, Loader=yaml.Loader)
     return sim_dict
