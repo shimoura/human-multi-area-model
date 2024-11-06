@@ -708,7 +708,7 @@ class Network():
         hash_ = self.getHash()
         out_folder = os.path.join(base_folder, hash_)
         try:
-            os.mkdir(out_folder)
+            os.makedirs(out_folder)
         except OSError:
             pass
 
