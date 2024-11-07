@@ -17,7 +17,7 @@ def calculate_indegrees(synapses, neurons):
     Group the subpopulations together by summing the indegrees for each area.
     """
     indegrees = synapses.div(neurons, axis=0)
-    grouped_indegrees = indegrees.groupby(level=0, axis=0).sum().groupby(level=0, axis=1).sum()
+    grouped_indegrees = indegrees.groupby(level=0).sum().T.groupby(level=0).sum().T
     return grouped_indegrees
 
 def plot_matrix(ax, matrix, title, areas_short_names):
@@ -34,18 +34,17 @@ def plot_matrix(ax, matrix, title, areas_short_names):
     ax.set_yticks(np.arange(0.5, len(areas_short_names), 1))
     ax.set_yticklabels(areas_short_names)
 
-def plot_connectivity_matrices(net_params_downscaled, SN=None, NN=None, save_path=None):
+def plot_connectivity_matrices(net_params_downscaled, net_params_fullscale=None, save_path=None):
     """
     Plots the connectivity matrices for both downscaled and full-scale networks.
     Parameters:
     net_params_downscaled (dict): Dictionary containing the downscaled network parameters, including synapses and neuron numbers.
-    SN (object or None): An object that provides the method getSynapseNumbers() to retrieve the synapse numbers for the full-scale network.
-    NN (object or None): An object that provides the method getNeuronNumbers() to retrieve the neuron numbers for the full-scale network.
+    net_params_fullscale (dict or None): Dictionary containing the full-scale network parameters, including synapses and neuron numbers.
     save_path (str or None): File path to save the figure. If None, the figure will not be saved.
     Returns:
     None: This function does not return any value. It displays the connectivity matrices using matplotlib.
     """
-    if SN is None or NN is None:
+    if net_params_fullscale is None:
         # Only plot the downscaled connectivity matrix
         fig, ax = plt.subplots(figsize=(6, 5))
         
@@ -78,8 +77,8 @@ def plot_connectivity_matrices(net_params_downscaled, SN=None, NN=None, save_pat
         plot_matrix(axs[0], grouped_indegrees_downscaled, 'Downscaled Connectivity Matrix', areas_short_names)
         
         # Get the number of synapses and neurons for the full-scale network
-        full_scale_synapses = SN.getSynapseNumbers()
-        full_scale_neurons = NN.getNeuronNumbers()
+        full_scale_synapses = net_params_fullscale['SN']
+        full_scale_neurons = net_params_fullscale['NN']
         
         # Calculate the indegrees for the full-scale version
         grouped_indegrees_full_scale = calculate_indegrees(full_scale_synapses, full_scale_neurons)

@@ -12,10 +12,11 @@ dependencies:
   - seaborn
   - python
   - pandas
-  - bioconda::snakemake
-  - anaconda::networkx
-  - anaconda::scipy
+  - scipy
   - ipykernel
+  - pip
   - pip:
     - nnmt
     - dicthash
+    - networkx
+    - snakemake

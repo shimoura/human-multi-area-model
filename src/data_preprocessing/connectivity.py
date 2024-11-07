@@ -218,7 +218,7 @@ class SynapseNumbers():
                 return 'lat'
             else:
                 return 'FF'
-        d = self.SLN.applymap(lambda x: tmp(x, SLN_FF, SLN_FB))
+        d = self.SLN.map(lambda x: tmp(x, SLN_FF, SLN_FB))
         return d
 
     def populationSpecificSynapseNumbers(self, SLN_FF, SLN_FB, Z_i, lmbda):
@@ -253,11 +253,11 @@ class SynapseNumbers():
             index=multiindex
         )
         X = pd.Series(
-            data=0,
+            data=0.,
             index=multiindex_noarea
         )
         Y = pd.Series(
-            data=0,
+            data=0.,
             index=self.layer_list_plus1
         )
 
@@ -382,7 +382,7 @@ class SynapseNumbers():
                         )
 
                     # Create Y vector from eq. (3) Schmidt et al. SuppMat
-                    Y *= 0
+                    Y *= 0.
                     relThickTargetPattern = (
                         thickTarget.loc[P_t] / thickTarget.loc[P_t].sum()
                     )
