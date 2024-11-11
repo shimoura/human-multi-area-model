@@ -28,6 +28,8 @@ This code implements the multi-scale, spiking network model of human cortex deve
     - [Ploting figures](#ploting-figures)
   - [Collaborators](#collaborators)
   - [Acknowledgments](#acknowledgments)
+  - [How to ask questions](#how-to-ask-questions)
+  - [How to contribute](#how-to-contribute)
   - [How to cite](#how-to-cite)
 
 ## Try it on EBRAINS
@@ -197,6 +199,34 @@ The scientific content contributions were made by the authors of the publication
 We thank Sebastian Bludau and Timo Dickscheid for helpful discussions about cytoarchitecture and parcellations. Furthermore, we gratefully acknowledge all the shared experimental data that underlies our work, and the effort spent to collect it.
 
 This work was supported by the German Research Foundation (DFG) Priority Program “Computational Connectomics” (SPP 2041; Project 347572269), the European Union’s Horizon 2020 Framework Programme for Research and Innovation under Specific Grant Agreement No. 945539 (Human Brain Project SGA3), the European Union’s Horizon Europe Programme under the Specific Grant Agreement No. 101147319 (EBRAINS 2.0 Project), the Joint Lab “Supercomputing and Modeling for the Human Brain”, and HiRSE_PS, the Helmholtz Platform for Research Software Engineering - Preparatory Study, an innovation pool project of the Helmholtz Association. The use of the JURECA-DC supercomputer in Jülich was made possible through VSR computation time grant JINB33 (“Brain-Scale Simulations”). Open access publication funded by the German Research Foundation (DFG), project 491111487.
+
+## How to contribute
+
+We welcome contributions to the human-multi-area-model project! Here are the steps to get started:
+
+1. **Fork the repository**: Click the "Fork" button at the top right of this page and create a copy of the repository in your own GitHub account.
+2. **Clone your fork**: Clone the forked repository to your local machine using `git clone <URL-of-your-fork>`.
+3. **Create a branch**: Create a new branch for your feature or bug fix using `git checkout -b <branch-name>`.
+4. **Make changes**: Make your changes to the code or documentation.
+5. **Commit changes**: Commit your changes with a clear and concise commit message using `git commit -m "Description of changes"`.
+6. **Push changes**: Push your changes to your fork on GitHub using `git push origin <branch-name>`.
+7. **Submit a pull request**: Go to the original repository and open a pull request. Provide a clear description of the changes and link to any relevant issues.
+
+Please ensure your code adheres to our coding standards and passes all tests. If you have any questions, feel free to open an issue or contact us directly.
+
+Thank you for your contribution!
+
+## How to ask questions
+
+If you have any questions or need help, you can open an issue in the repository:
+
+1. **Navigate to the Issues tab**: Click on the "Issues" tab at the top of the repository page.
+2. **Click on New Issue**: Click the "New issue" button.
+3. **Select a template**: Choose the appropriate issue template if available, or select "Open a blank issue".
+4. **Fill in the details**: Provide a clear title and detailed description of your question or issue. Include any relevant information, such as steps to reproduce the problem, screenshots, or code snippets.
+5. **Submit the issue**: Click the "Submit new issue" button to create the issue.
+
+Our team will review your issue and respond as soon as possible. Thank you for reaching out!
 
 ## How to cite
 If you use this code, please cite:
