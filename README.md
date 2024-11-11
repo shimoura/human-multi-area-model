@@ -19,7 +19,9 @@ This code implements the multi-scale, spiking network model of human cortex deve
     - [Data](#data)
     - [Requirements](#requirements)
   - [Installation](#installation)
-    - [Python modules using Anaconda](#python-modules-using-anaconda)
+    - [Python modules using Mamba](#python-modules-using-mamba)
+      - [On a local machine](#on-a-local-machine)
+      - [On a cluster](#on-a-cluster)
     - [NEST installation](#nest-installation)
   - [Code repository](#code-repository)
   - [How to run](#how-to-run)
@@ -42,7 +44,7 @@ Do you want to start using or simply run the model? Click the button below.
 --------------------------------------------------------------------------------
 
 ### User instructions
-The Jupyter Notebook `humam_tutorial.ipynb` illustrates the simulation workflow with a down-scaled version of the multi-area model. This notebook can be explored and executed online in the Jupyter Lab provided by EBRAINS without the need to install any software yourself.<br>
+The Jupyter Notebook `humam_tutorial.ipynb` illustrates the simulation workflow with a down-scaled version of the human multi-area model. This notebook can be explored and executed online in the Jupyter Lab provided by EBRAINS without the need to install any software yourself.<br>
 * Prerequisites: an [EBRAINS](https://www.ebrains.eu/) account. If you don’t have it yet, register at [register page](https://iam.ebrains.eu/auth/realms/hbp/protocol/openid-connect/registrations?response_type=code&client_id=xwiki&redirect_uri=https://wiki.ebrains.eu). Please note: registering an EBRAINS account requires an institutional email.<br>
 * If you plan to only run the model, instead of making and saving changes you made, go to [Try it on EBRAINS](#try-it-on-ebrains-1); Should you want to adjust the parameters, save the changes you made, go to [Fork the repository and save your changes](#fork-the-repository-and-save-your-changes).
 
@@ -85,17 +87,30 @@ All network simulations were performed using the `NEST simulator` version `2.20.
 
 ## Installation
 
-### Python modules using Anaconda
-The Python modules can be installed with the [Anaconda](https://www.anaconda.com/download) data science platform or via its free minimal installer called [Miniconda](https://docs.conda.io/projects/miniconda/en/latest/index.html) (recommended). 
+### Python modules using Mamba
+The Python modules can be installed with the [Mamba](https://mamba.readthedocs.io/en/latest/installation/mamba-installation.html) data science platform (similar to `conda` but faster) or via its free minimal installer called [Micromamba](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html). 
 
-Most dependencies are handled using ```conda```. On a cluster, ```snakemake``` automatically creates the conda environment for you. On a local computer, simply run:
+#### On a local machine
+All dependencies are handled using ```mamba```. 
+
+On a local computer, simply run:
 ```
-conda env create -f humam.yml
+mamba env create -f humam.yml
 ```  
-This command will create a ```conda``` environment and automatically install all Python packages defined in the ```humam.yml``` file. 
-**Note**: currently the model is not adapted to run on a local computer because of the memory requirements. A downscaling factor option will be implemented in the future. 
+This command will create an environment and automatically install all Python packages defined in the ```humam.yml``` file. 
 
-The ```NEST simulator``` is not included in this file, although it can be installed via ```conda``` too. We opt to keep an independent installation of NEST so we can better control the version being used.
+Once installed, you can activate your environment with:
+```
+mamba activate humam
+```
+
+From this step, you are already ready to test the model by running the downscaled example in `humam_tutorial.ipynb`.
+
+#### On a cluster
+
+On a cluster, ```snakemake``` can automatically create the mamba/conda environment for you if you add the `--use-conda` option to `snakemake_slurm.sh`. For this, first, remove the `- nest-simulator` dependency from ```humam.yml```. Once ```NEST simulator``` is not included in this file, you can install NEST via the instructions below.
+
+Depending on your cluster configuration, it can be better to use the modules already installed in the system rather than installing the packages via mamba/conda. More details in ["How to run"](#how-to-run) section.  
 
 ### NEST installation
 
@@ -110,7 +125,7 @@ Folder structure:
 | directory | description |
 | --- | --- |
 | [./experimental_data/](./experimental_data/) | contains experimental datasets used for building the network and for comparing results |
-| [./experiments/](./experiments/) | contains python scripts which set the model parameters for different simulation experiments |
+| [./experiments/](./experiments/) | contains Python scripts that set the model parameters for different simulation experiments |
 | [./figures/](./figures/) | output directory for figures |
 | [./misc/](./misc/) | includes supplementary files such as code documentation ([/docs](./misc/docs/)), matplotlib style files ([/mplstyles](./misc/mplstyles/)), and other experiment files ([/experiments](./misc/experiments/))
 | [./out/](./out/) | directory where the simulation output is stored |
@@ -122,12 +137,12 @@ Brief description of the main files in [./src/](./src/) directory:
 | script | description |
 | --- | --- |
 | `./network.py` | python class that gathers and prepares all data for setting up the NEST simulation |
-| `./simulation.py` | python class that setups and builds the network for running the simulations |
-| `./analysis.py` | python class that provides functions to analyse simulation results |
-| `./default_` | scripts that define the default network, simulation and analysis parameter dictionaries |
-| `./snakemake_` | helper scripts which use an `experiment.py` file to create, simulate, and analyse the network |
+| `./simulation.py` | python class that sets and builds the network for running the simulations |
+| `./analysis.py` | python class that provides functions to analyze simulation results |
+| `./default_` | scripts that define the default network, simulation, and analysis parameter dictionaries |
+| `./snakemake_` | helper scripts which use an `experiment.py` file to create, simulate, and analyze the network |
 | `./figure_` | scripts that plot specific figures showed in our publication [1] |
-| `./compute_` | scripts to compute the scalling experiment |
+| `./compute_` | scripts to compute the scaling experiment |
   
 Additionally, in [./src/](./src/) directory you can also find the following subfolders:
 | directory | description |
@@ -140,31 +155,27 @@ Additionally, in [./src/](./src/) directory you can also find the following subf
 ## How to run
 
 The example below shows how to prepare the configuration files and how to run the code. 
+**Note**: For a simplified version of the workflow and to test the code on a local machine, you can follow the instructions in the [Installation](#installation) section and skip the next instructions.
+
 All the workflow is managed using the [Snakemake](https://snakemake.readthedocs.io/en/stable/#) tool. To run different network setups or experiments, the user has only to set the parameters in a Python script (two examples are shown in [./experiments/](./experiments/)) and simulate following the instructions below.
 
 ### Configuration
 
 Create a `config.yaml` file inside the repository's main directory. An example is shown in `config_jureca.yaml`. Please note that the NEST path should be given as: `<path_to_NEST_installation>/install/`. 
-If running in a cluster, you also have to define the cluster configurations on `cluster.json` file. An example is given as well, but you should modify it accordingly with your cluster configuration.
+If running in a cluster, you must also define the cluster configurations on the `cluster.json` file. An example is also given, but you should modify it accordingly with your cluster configuration.
 
 **NOTE**: the current version of the code has no downscaling factor to run a smaller version of the network, which limits its usage on a local computer. 
 This will be implemented in a future version.
 
 ### Run on a cluster
 
-To run the model on a cluster, ensure you have a working `conda` and `snakemake` installation. 
+To run the model on a cluster, ensure you have a working `snakemake` installation and type: 
 
-
-Start with
-```
-conda activate humam
-```
-to add `conda` to the `PATH`. Lastly start `snakemake` with the cluster specification:
 ```
 bash snakemake_slurm.sh
 ```
 
-**NOTE**: to run the current version on JURECA cluster (Jülich Supercomputing Centre at Forschungszentrum Jülich), it is recommended to use the modules defined in `config_jureca.yaml` file instead of the conda environment. If so, remove the `--use-conda` flag in the `snakemake_slurm.sh` script before running the code line above.
+**NOTE**: to run the current version on JURECA cluster (Jülich Supercomputing Centre at Forschungszentrum Jülich), it is recommended to use the modules defined in `config_jureca.yaml` file instead of the mamba/conda environment. If so, make sure the `--use-conda` flag is not in the `snakemake_slurm.sh` script before running the code line above.
 
 This script will run the workflow defined in `Snakefile`, which follows the sequence:
 1. read all `*.py` experiment files contained in the `./experiments/` directory. **NOTE**: If you want to run fewer/more experiments, remove/add these files from the `./experiments/` directory.
