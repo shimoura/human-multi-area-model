@@ -28,8 +28,8 @@ This code implements the multi-scale, spiking network model of human cortex deve
     - [Ploting figures](#ploting-figures)
   - [Collaborators](#collaborators)
   - [Acknowledgments](#acknowledgments)
-  - [How to ask questions](#how-to-ask-questions)
   - [How to contribute](#how-to-contribute)
+  - [How to ask questions](#how-to-ask-questions)
   - [How to cite](#how-to-cite)
 
 ## Try it on EBRAINS
