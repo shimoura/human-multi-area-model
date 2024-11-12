@@ -6,7 +6,7 @@ This code implements the multi-scale, spiking network model of human cortex deve
 
 ![model_overview](./figures/model_overview.png)
 
-**Model overview**: The model comprises all 34 areas of the Desikan-Killiany parcellation in one hemisphere of human cerebral cortex. Each area is modeled by a column with $\mathrm{1\mathrm{mm^{2}}}$ cortical surface. Within each column, the full number of neurons and synapses based on anatomical data is included. In total, this leads to 3.47 million neurons and 42.8 billion synapses. Both the intrinsic and the cortico-cortical connectivity are layer- and population-specific.
+**Model overview**: The model comprises all 34 areas of the Desikan-Killiany parcellation in one hemisphere of human cerebral cortex. Each area is modeled by a column with 1 $mm^{2}$ cortical surface. Within each column, the full number of neurons and synapses based on anatomical data is included. In total, this leads to 3.47 million neurons and 42.8 billion synapses. Both the intrinsic and the cortico-cortical connectivity are layer- and population-specific.
 
 ## Table of contents
 - [Multi-Scale Spiking Network Model of Human Cerebral Cortex](#multi-scale-spiking-network-model-of-human-cerebral-cortex)
@@ -37,14 +37,16 @@ This code implements the multi-scale, spiking network model of human cortex deve
 ## Try it on EBRAINS
 
 Do you want to start using or simply run the model? Click the button below.
-**Please note**: make sure you check and follow our User instructions, especially if you plan to make and save the changes, or if you need step-by-step instructions.
 
 <a href="https://lab.ebrains.eu/hub/user-redirect/git-pull?repo=https%3A%2F%2Fgithub.com%2FINM-6%2Fhuman-multi-area-model.git&urlpath=lab%2Ftree%2Fhuman-multi-area-model.git%2Fhumam_tutorial.ipynb&branch=master"> <img src="https://nest-simulator.org/TryItOnEBRAINS.png" alt="Try it on EBRAINS" width="260"/></a>
+
+**Please note**: make sure you check and follow our User instructions, especially if you plan to make and save the changes, or if you need step-by-step instructions.
 
 --------------------------------------------------------------------------------
 
 ### User instructions
-The Jupyter Notebook `humam_tutorial.ipynb` illustrates the simulation workflow with a down-scaled version of the human multi-area model. This notebook can be explored and executed online in the Jupyter Lab provided by EBRAINS without the need to install any software yourself.<br>
+The Jupyter Notebook `humam_tutorial.ipynb` illustrates the simulation workflow with a down-scaled version of the human multi-area model. This notebook can be explored and executed online in the Jupyter Lab provided by EBRAINS without the need to install any software yourself. However, if you prefer to try on your local computer, then skip to [Installation](#installation) section. 
+
 * Prerequisites: an [EBRAINS](https://www.ebrains.eu/) account. If you don’t have it yet, register at [register page](https://iam.ebrains.eu/auth/realms/hbp/protocol/openid-connect/registrations?response_type=code&client_id=xwiki&redirect_uri=https://wiki.ebrains.eu). Please note: registering an EBRAINS account requires an institutional email.<br>
 * If you plan to only run the model, instead of making and saving changes you made, go to [Try it on EBRAINS](#try-it-on-ebrains-1); Should you want to adjust the parameters, save the changes you made, go to [Fork the repository and save your changes](#fork-the-repository-and-save-your-changes).
 
@@ -53,7 +55,7 @@ The Jupyter Notebook `humam_tutorial.ipynb` illustrates the simulation workflow 
 2. On the `Lab Execution Site` page, select a computing center from the given list.
 3. If you’re using EBRAINS for the first time, click `Sign in with GenericOAuth2` to sign in on EBRAINS. To do this, you need an EBRAINS account.
 4. Once signed in, on the `Server Options` page, choose `Official EBRAINS Docker image 23.06 for Collaboratory.Lab (recommended)`, and click `start`.
-5. Once succeeded, you’re now at a Jupyter Notebook named `humam_tutorial.ipynb`. Click the field that displays `Python 3 (ipykernel)` in the upper right corner and switch the `kernel` to `EBRAINS-23.09`.
+5. Once succeeded, you’re now at a Jupyter Notebook named `humam_tutorial.ipynb`. Click the field that displays `Python 3 (ipykernel)` in the upper right corner and switch the `kernel` to `EBRAINS-23.09` (!TO BE updated!).
 6. Congratulations! Now you can run the model. Enjoy!<br> To run the model, click the `Run` on the title bar and choose `Run All Cells`. It takes several minutes until you get all results.<br>
 **Please note**: every time you click the `Try it on EBRAINS` button, the repository is loaded into your home directory on EBRAINS Lab and it overrides your old repository with the same name. Therefore, make sure you follow the [Fork the repository and save your changes](#fork-the-repository-and-save-your-changes) if you make changes and want to save them.
  
@@ -63,12 +65,11 @@ With limited resources, EBRAINS Lab regularly deletes and cleans data loaded on 
 2. Go to [EBRAINS Lab](https://lab.de.ebrains.eu), log in, and select a computing center from the given list.
 3. In the Jupyter Lab, click on the `Git` icon on the left toolbar, click `Clone a Repository` and paste the address of your fork.
 4. Now your forked repository of human multi-area model is loaded on the server. Enter the folder `human-multi-area-model` and open the notebook `humam_tutorial.ipynb.ipynb`.
-5. Click the field that displays `Python 3 (ipykernel)` in the upper right corner and switch the `kernel` to `EBRAINS-23.09`.
+5. Click the field that displays `Python 3 (ipykernel)` in the upper right corner and switch the `kernel` to `EBRAINS-23.09` (!TO BE updated!).
 6. Run the notebook! To run the model, click the `Run` on the title bar and choose `Run All Cells`. It takes several minutes until you get all results. 
 7. You can modify the exposed parameters before running the model. If you want to save the changes you made, press `Control+S` on the keyboard, click the `Git` icon on the most left toolbar, do git commits and push.<br> 
 To commit, on `Changed` bar, click the `+` icon, fill in a comment in the `Summary (Control+Enter to commit)` at lower left corner and click `COMMIT`.<br> 
 To push, click the `Push committed changes` icon at upper left which looks like cloud, you may be asked to enter your username and password (user name is your GitHUb username, password should be [Personal access tokens](https://github.com/settings/tokens) you generated on your GitHub account, make sure you select the `repo` option when you generate the token), enter them and click `Ok`.
-1. If you would like to contribute to our model or bring your ideas to us, you’re most welcome to contact us. It’s currently not possible to directly make changes to the original repository, since it is connected to our publications.
 
 --------------------------------------------------------------------------------
 
@@ -223,7 +224,7 @@ We welcome contributions to the human-multi-area-model project! Here are the ste
 6. **Push changes**: Push your changes to your fork on GitHub using `git push origin <branch-name>`.
 7. **Submit a pull request**: Go to the original repository and open a pull request. Provide a clear description of the changes and link to any relevant issues.
 
-Please ensure your code adheres to our coding standards and passes all tests. If you have any questions, feel free to open an issue or contact us directly.
+Please ensure your code adheres to our coding standards. If you have any questions, feel free to open an issue or contact us directly.
 
 Thank you for your contribution!
 
