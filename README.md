@@ -1,6 +1,6 @@
 # Multi-Scale Spiking Network Model of Human Cerebral Cortex
 
-This code implements the multi-scale, spiking network model of human cortex developed at the Institute of Advanced Simulation (IAS-6), Research Center Jülich. The model has been documented in the following publication:
+This code implements the multi-scale spiking network model known as the Human Multi-Area Model (**HuMAM**) developed at the Institute for Advanced Simulation (IAS-6), Forschungszentrum Jülich. The model has been documented in the following publication:
 
 - [1] Pronold, J., Meegen, A. van, Shimoura, R. O., Vollenbröker, H., Senden, M., Hilgetag, C. C., Bakker, R., & Albada, S. J. (2024). Multi-scale spiking network model of human cerebral cortex. Cerebral Cortex. [https://doi.org/10.1093/cercor/bhae409](https://doi.org/10.1093/cercor/bhae409).
 
@@ -82,9 +82,9 @@ Please note that some data has to be manually downloaded. Specifically, the data
 
 ### Requirements
 
-The entire workflow of the model, from data preprocessing through the simulation to the final analysis, relies on the `Python` programming language. The complete list of Python packages with the specific version we used to run our simulations can be found in ```humam.yml``` file. Other package versions may not work properly, specifically, using `Pandas >= 1.0` will raise an error when creating the network.
+The entire workflow of the model, from data preprocessing through the simulation to the final analysis, relies on the `Python` programming language. The complete list of Python packages with the specific version we used to run our simulations can be found in ```humam.yml``` file. Other package versions may not work properly.
 
-All network simulations were performed using the `NEST simulator` version `2.20.2` (https://www.nest-simulator.org/).
+Note: All network simulations in [Pronold et al. (2024)](#1) were performed using the `NEST simulator` version `2.20.2` (https://www.nest-simulator.org/). To run this version, please check the code released for HuMAM versions below 2.0.0.
 
 ## Installation
 
@@ -116,7 +116,8 @@ Depending on your cluster configuration, it can be better to use the modules alr
 ### NEST installation
 
 All different methods to install NEST can be found in their extensive documentation: https://nest-simulator.readthedocs.io/en/stable/installation/index.html. 
-In our published results, we used the "Install NEST from source" option with NEST ```2.20.2``` version. Note: after the step to clone nest-simulator from Github, change the branch with: ```git checkout v2.20.2```.
+**If using HuMAM below v2.0.0**: In our published results, we used the "Install NEST from source" option with NEST ```2.20.2``` version. Note: after the step to clone nest-simulator from GitHub, change the branch with: ```git checkout v2.20.2```.
+**Current version**: The latest version of our code (Release version of HuMAM from 2.0.0 onwards) was tested using NEST ```3.8```.
 
 The NEST installation path will have to be specified in `config.yaml` described in the ["How to run"](#how-to-run) section.
 
