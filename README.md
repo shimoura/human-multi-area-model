@@ -116,7 +116,8 @@ Depending on your cluster configuration, it can be better to use the modules alr
 ### NEST installation
 
 All different methods to install NEST can be found in their extensive documentation: https://nest-simulator.readthedocs.io/en/stable/installation/index.html. 
-**If using HuMAM below v2.0.0**: In our published results, we used the "Install NEST from source" option with NEST ```2.20.2``` version. Note: after the step to clone nest-simulator from GitHub, change the branch with: ```git checkout v2.20.2```.
+
+**If using HuMAM below v2.0.0**: In our published results, we used the "Install NEST from source" option with NEST ```2.20.2``` version. Note: after the step to clone nest-simulator from GitHub, change the branch with: ```git checkout v2.20.2```. <br>
 **Current version**: The latest version of our code (Release version of HuMAM from 2.0.0 onwards) was tested using NEST ```3.8```.
 
 The NEST installation path will have to be specified in `config.yaml` described in the ["How to run"](#how-to-run) section.
