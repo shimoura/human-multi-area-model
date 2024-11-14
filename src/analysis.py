@@ -147,6 +147,9 @@ class Analysis():
             self.plotRasterArea(area)
         print('{} Plotting BOLD connectivities'.format(datetime.now().time()))
         self.plotBOLDConnectivity()
+        print('{} Plotting {}'.format(datetime.now().time(), 'Raster statistics'))
+        self.plot_raster_statistics(save_fig=True)
+        plt.close('all')
 
     @timeit
     def meanFiringRate(self):
@@ -311,6 +314,7 @@ class Analysis():
         rate_hist_areas_df = pd.DataFrame(rate_hist_areas.tolist(), index=rate_hist_areas.index)
 
         # Plot the heatmap with an orange-yellow color palette
+        plt.style.use('default')
         plt.figure(figsize=(12, 5))
         sns.heatmap(rate_hist_areas_df, cmap='YlOrBr', cbar_kws={'label': 'Spikes/s'}, yticklabels=rate_hist_areas_df.index)
         plt.xlabel('Time (ms)')
@@ -318,7 +322,6 @@ class Analysis():
         plt.title('Instantaneous firing rate over simulated areas')
         plt.xticks(rotation=0)  # Rotate x-axis labels to make the times horizontal
         plt.xlim(self.sim_dict['t_sim']-500, self.sim_dict['t_sim'])
-        plt.tight_layout()
         
         # Save the plot if save_fig is True
         if save_fig:
@@ -358,6 +361,7 @@ class Analysis():
         mask = mean_rates_df.isna()
 
         # Plot the heatmap with external grid
+        plt.style.use('default')
         plt.figure(figsize=(12, 4.5))
         sns.heatmap(mean_rates_df, cmap='YlOrBr', fmt=".2f", mask=mask, cbar_kws={'label': 'Spikes/s'})
         plt.title('Time-averaged firing rate over simulated populations')
@@ -1099,13 +1103,13 @@ class Analysis():
         # (df_sim_fc_syn)
         df_sim_fc_syn = synaptic_currents[synaptic_currents.index >= tmin].corr()
         if exclude_diagonal:
-            np.fill_diagonal(df_sim_fc_syn.values, np.NaN)
+            np.fill_diagonal(df_sim_fc_syn.values, np.nan)
 
         # Read in simulated functional connectivity based on calculated BOLD
         # signal
         df_sim_fc_bold = self.BOLD_correlation
         if exclude_diagonal:
-            np.fill_diagonal(df_sim_fc_bold.values, np.NaN)
+            np.fill_diagonal(df_sim_fc_bold.values, np.nan)
 
         # Sort
         df_sim_fc_syn = df_sim_fc_syn.sort_index(axis=0).sort_index(axis=1)
@@ -1199,8 +1203,8 @@ class Analysis():
                 # Correlation with itself is trivially 1, set those values to
                 # nan
                 if exclude_diagonal:
-                    np.fill_diagonal(lh_fc.values, np.NaN)
-                    np.fill_diagonal(rh_fc.values, np.NaN)
+                    np.fill_diagonal(lh_fc.values, np.nan)
+                    np.fill_diagonal(rh_fc.values, np.nan)
 
                 # Sort and put into dictionary
                 lh_fc = lh_fc.sort_index(axis=0).sort_index(axis=1)
@@ -1667,7 +1671,6 @@ class Analysis():
                     upper.append(upper_whisker)
             print('label:', label, 'lowest whisker:', round(min(lower), 1))
             print('label:', label, 'highest whisker:', round(max(upper), 1))
-            ax.set_yticks(ind)
             ax.set_yticklabels(names)
         ax_rates.set_xlim(0)
         ax_rates.set_xlabel('Firing rate (spikes/s)')
@@ -1679,7 +1682,7 @@ class Analysis():
         if save_fig:
             extension = self.ana_dict['extension']
             fig.savefig(os.path.join(self.plot_folder, f'figure_spike_statistics.{extension}'))
-        plt.show()
+            plt.close(fig)
 
     def plot_all_binned_spike_rates_area(self):
         """

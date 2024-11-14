@@ -218,7 +218,7 @@ class SynapseNumbers():
                 return 'lat'
             else:
                 return 'FF'
-        d = self.SLN.map(lambda x: tmp(x, SLN_FF, SLN_FB))
+        d = self.SLN.applymap(lambda x: tmp(x, SLN_FF, SLN_FB))
         return d
 
     def populationSpecificSynapseNumbers(self, SLN_FF, SLN_FB, Z_i, lmbda):
