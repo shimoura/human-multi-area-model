@@ -708,7 +708,7 @@ class Network():
         hash_ = self.getHash()
         out_folder = os.path.join(base_folder, hash_)
         try:
-            os.mkdir(out_folder)
+            os.makedirs(out_folder)
         except OSError:
             pass
 
@@ -889,22 +889,22 @@ def networkDictFromDump(dump_folder):
     # Read net.yaml
     fn = os.path.join(dump_folder, 'net.yaml')
     with open(fn, 'r') as net_file:
-        net_dict = yaml.load(net_file)
+        net_dict = yaml.load(net_file, Loader=yaml.Loader)
 
     # Read output parameters
     fn = os.path.join(dump_folder, 'network_params.yaml')
     with open(fn, 'r') as par_file:
-        net_dict['network_params'] = yaml.load(par_file)
+        net_dict['network_params'] = yaml.load(par_file, Loader=yaml.Loader)
 
     # Read NeuronNumbers parameters
     fn = os.path.join(dump_folder, 'neuronnumbers_params.yaml')
     with open(fn, 'r') as par_file:
-        net_dict['neuronnumbers_params'] = yaml.load(par_file)
+        net_dict['neuronnumbers_params'] = yaml.load(par_file, Loader=yaml.Loader)
 
     # Read SynapseNumbers parameters
     fn = os.path.join(dump_folder, 'synapsenumbers_params.yaml')
     with open(fn, 'r') as par_file:
-        net_dict['synapsenumbers_params'] = yaml.load(par_file)
+        net_dict['synapsenumbers_params'] = yaml.load(par_file, Loader=yaml.Loader)
 
     # Read pandas files
     for file in os.listdir(dump_folder):

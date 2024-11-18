@@ -129,7 +129,7 @@ class Analysis():
         print('{} Plotting functional connectivity based on synaptic input currents'.format(
             datetime.now().time())
         )
-        self.plot_functional_connectivity()
+        self.plot_functional_connectivity(save_fig=True)
         print('{} Plotting {}'.format(
             datetime.now().time(), 'area averaged spike rates')
             )
@@ -147,6 +147,9 @@ class Analysis():
             self.plotRasterArea(area)
         print('{} Plotting BOLD connectivities'.format(datetime.now().time()))
         self.plotBOLDConnectivity()
+        print('{} Plotting {}'.format(datetime.now().time(), 'Raster statistics'))
+        self.plot_raster_statistics(save_fig=True)
+        plt.close('all')
 
     @timeit
     def meanFiringRate(self):
@@ -236,13 +239,13 @@ class Analysis():
                     )
 
             tmp = {}
-            for area, (hist, bin_edges) in spikes_per_neuron_population_resolved_tmp.iteritems():
+            for area, (hist, bin_edges) in spikes_per_neuron_population_resolved_tmp.items():
                 tmp[area + tuple(['hist'])] = hist
                 tmp[area + tuple(['bin_edges'])] = bin_edges
             spikes_per_neuron_population_resolved = pd.Series(tmp)
 
             tmp = {}
-            for area, (hist, bin_edges) in spikes_per_neuron_area_resolved_tmp.iteritems():
+            for area, (hist, bin_edges) in spikes_per_neuron_area_resolved_tmp.items():
                 tmp[(area, 'hist')] = hist
                 tmp[(area, 'bin_edges')] = bin_edges
             spikes_per_neuron_area_resolved = pd.Series(tmp)
@@ -311,6 +314,7 @@ class Analysis():
         rate_hist_areas_df = pd.DataFrame(rate_hist_areas.tolist(), index=rate_hist_areas.index)
 
         # Plot the heatmap with an orange-yellow color palette
+        plt.style.use('default')
         plt.figure(figsize=(12, 5))
         sns.heatmap(rate_hist_areas_df, cmap='YlOrBr', cbar_kws={'label': 'Spikes/s'}, yticklabels=rate_hist_areas_df.index)
         plt.xlabel('Time (ms)')
@@ -318,7 +322,6 @@ class Analysis():
         plt.title('Instantaneous firing rate over simulated areas')
         plt.xticks(rotation=0)  # Rotate x-axis labels to make the times horizontal
         plt.xlim(self.sim_dict['t_sim']-500, self.sim_dict['t_sim'])
-        plt.tight_layout()
         
         # Save the plot if save_fig is True
         if save_fig:
@@ -358,6 +361,7 @@ class Analysis():
         mask = mean_rates_df.isna()
 
         # Plot the heatmap with external grid
+        plt.style.use('default')
         plt.figure(figsize=(12, 4.5))
         sns.heatmap(mean_rates_df, cmap='YlOrBr', fmt=".2f", mask=mask, cbar_kws={'label': 'Spikes/s'})
         plt.title('Time-averaged firing rate over simulated populations')
@@ -401,6 +405,8 @@ class Analysis():
             ))
         except FileNotFoundError:
             # Get parameters
+            if not hasattr(self, 'rate_hist'):
+                self.rate_hist, self.rate_hist_areas = self.firingRateHistogram()
             inst_rates = self.rate_hist
             index = inst_rates.index
             NN = self.net_dict['neuron_numbers'].loc[index]
@@ -432,7 +438,7 @@ class Analysis():
             # constants are used. The results are the postynaptic currents
             # originating in a particular population.
             tmp = {}
-            for (area, layer, population), dat in inst_rates.iteritems():
+            for (area, layer, population), dat in inst_rates.items():
                 if population == 'E':
                     tau_s = tau_syn_ex
                     kernel = kernel_syn_ex
@@ -633,9 +639,9 @@ class Analysis():
         multi_index = pd.MultiIndex.from_product([layer, pop_type])
         ind = [''.join(i) for i in multi_index.tolist()]
 
-        rates = pd.DataFrame(data=0, index=area, columns=ind)
+        rates = pd.DataFrame(data=0.0, index=area, columns=ind)
 
-        for (a, l, p), r in self.rate.iteritems():
+        for (a, l, p), r in self.rate.items():
             rates.loc[a, l+p] = r
         ax = sns.boxplot(
             data=rates,
@@ -644,7 +650,7 @@ class Analysis():
         )
         col = ['blue', 'red']
         for i in range(len(ind)):
-            mybox = ax.artists[i]
+            mybox = ax.patches[i]
             mybox.set_facecolor(col[i % 2])
         plt.xlabel('Rate (spikes/s)')
         plt.ylabel('Population')
@@ -703,9 +709,9 @@ class Analysis():
         multi_index = pd.MultiIndex.from_product([layer, pop_type])
         ind = [''.join(i) for i in multi_index.tolist()]
 
-        pop_ccs = pd.DataFrame(data=0, index=area, columns=ind)
+        pop_ccs = pd.DataFrame(data=0.0, index=area, columns=ind)
 
-        for (a, l, p), r in self.pop_cc.iteritems():
+        for (a, l, p), r in self.pop_cc.items():
             pop_ccs.loc[a, l+p] = r
         ax = sns.boxplot(
             data=pop_ccs,
@@ -714,7 +720,7 @@ class Analysis():
         )
         col = ['blue', 'red']
         for i in range(len(ind)):
-            mybox = ax.artists[i]
+            mybox = ax.patches[i]
             mybox.set_facecolor(col[i % 2])
         plt.xlabel('Correlation coefficient')
         plt.ylabel('Population')
@@ -774,9 +780,9 @@ class Analysis():
         multi_index = pd.MultiIndex.from_product([layer, pop_type])
         ind = [''.join(i) for i in multi_index.tolist()]
 
-        pop_lvs = pd.DataFrame(data=0, index=area, columns=ind)
+        pop_lvs = pd.DataFrame(data=0.0, index=area, columns=ind)
 
-        for (a, l, p), r in self.pop_lv.iteritems():
+        for (a, l, p), r in self.pop_lv.items():
             pop_lvs.loc[a, l+p] = r
         ax = sns.boxplot(
             data=pop_lvs,
@@ -785,7 +791,7 @@ class Analysis():
         )
         col = ['blue', 'red']
         for i in range(len(ind)):
-            mybox = ax.artists[i]
+            mybox = ax.patches[i]
             mybox.set_facecolor(col[i % 2])
         plt.xlabel('Lv (spikes/s)')
         plt.ylabel('Population')
@@ -840,9 +846,9 @@ class Analysis():
         multi_index = pd.MultiIndex.from_product([layer, pop_type])
         ind = [''.join(i) for i in multi_index.tolist()]
 
-        pop_cv_isis = pd.DataFrame(data=0, index=area, columns=ind)
+        pop_cv_isis = pd.DataFrame(data=0.0, index=area, columns=ind)
 
-        for (a, l, p), r in self.pop_cv_isi.iteritems():
+        for (a, l, p), r in self.pop_cv_isi.items():
             pop_cv_isis.loc[a, l+p] = r
         ax = sns.boxplot(
             data=pop_cv_isis,
@@ -851,7 +857,7 @@ class Analysis():
         )
         col = ['blue', 'red']
         for i in range(len(ind)):
-            mybox = ax.artists[i]
+            mybox = ax.patches[i]
             mybox.set_facecolor(col[i % 2])
         plt.xlabel('Cv Isi (spikes/s)')
         plt.ylabel('Population')
@@ -863,10 +869,15 @@ class Analysis():
         plt.close(fig)
 
     @timeit
-    def plot_functional_connectivity(self):
+    def plot_functional_connectivity(self, save_fig=False):
         """
         Plot the functional connectivity of the network based on synaptic input currents 
         and compare it with experimental BOLD data if available.
+
+        Parameters
+        ----------
+        save_fig : bool, optional
+            If True, the figure will be saved to the plot folder. Default is False.
         """
 
         # Define directories and load data
@@ -882,8 +893,8 @@ class Analysis():
             # Read in regions of interest.
             roi = pd.read_csv(
                 os.path.join(data_dir, 'ROIs.txt'),
-                header=None, names=['roi'], dtype=str, squeeze=True
-            )
+                header=None, names=['roi'], dtype=str
+            ).squeeze()
             # The rois are given in this manner: ctx-lh-bankssts
             # The name of the area is the last word after -
             roi = roi.apply(lambda x: x.split('-')[-1])
@@ -920,7 +931,7 @@ class Analysis():
             extended_lines = np.append(lines_border, np.array([len(left_ordering) - 1]))
             tmp = np.append(np.array([0]), extended_lines)
             points = (tmp[1:] + tmp[:-1]) * .5 + 1
-            texts = clustering[extended_lines].values
+            texts = clustering.iloc[extended_lines].values
 
             # Extract BOLD series into a dictionary of DataFrames
             exp_fc = {'lh': np.zeros((34, 34)), 'rh': np.zeros((34, 34))}
@@ -948,7 +959,7 @@ class Analysis():
             print("No experimental data found. Only simulated data will be plotted.")
 
         # Figure settings
-        label_prms = dict(fontsize=10, fontweight='bold', va='top', ha='right')
+        plt.style.use('./misc/mplstyles/report_plots_master.mplstyle')
         nrows, ncols = (1, 2) if exp_data_exists else (1, 1)
         width, panel_wh_ratio = 5.63, 1.5
         height = width / panel_wh_ratio * float(nrows) / ncols
@@ -1001,12 +1012,13 @@ class Analysis():
         axes[-1].vlines(lines, *axes[-1].get_xlim(), color='k')
 
         # Save the plot
-        extension = self.ana_dict['extension']
-        fig.savefig(os.path.join(
-            self.plot_folder,
-            'simulated_synaptic_currents_correlation.{0}'.format(extension)
-        ))
-        plt.style.use('default')
+        if save_fig:
+            extension = self.ana_dict['extension']
+            fig.savefig(os.path.join(
+                self.plot_folder,
+                'simulated_synaptic_currents_correlation.{0}'.format(extension)
+            ))
+            plt.close(fig)
         
     @timeit
     def calculateBOLDConnectivity(self):
@@ -1091,13 +1103,13 @@ class Analysis():
         # (df_sim_fc_syn)
         df_sim_fc_syn = synaptic_currents[synaptic_currents.index >= tmin].corr()
         if exclude_diagonal:
-            np.fill_diagonal(df_sim_fc_syn.values, np.NaN)
+            np.fill_diagonal(df_sim_fc_syn.values, np.nan)
 
         # Read in simulated functional connectivity based on calculated BOLD
         # signal
         df_sim_fc_bold = self.BOLD_correlation
         if exclude_diagonal:
-            np.fill_diagonal(df_sim_fc_bold.values, np.NaN)
+            np.fill_diagonal(df_sim_fc_bold.values, np.nan)
 
         # Sort
         df_sim_fc_syn = df_sim_fc_syn.sort_index(axis=0).sort_index(axis=1)
@@ -1139,9 +1151,9 @@ class Analysis():
 
             # Read in regions of interest.
             roi = pd.read_csv(
-                    os.path.join(data_dir, 'ROIs.txt'),
-                    header=None, names=['roi'], dtype=str, squeeze=True
-                    )
+                os.path.join(data_dir, 'ROIs.txt'),
+                header=None, names=['roi'], dtype=str
+            ).squeeze()
             # The rois are given in this manner: ctx-lh-bankssts
             # The name of the area is the last word after -
             roi = roi.apply(lambda x: x.split('-')[-1])
@@ -1191,8 +1203,8 @@ class Analysis():
                 # Correlation with itself is trivially 1, set those values to
                 # nan
                 if exclude_diagonal:
-                    np.fill_diagonal(lh_fc.values, np.NaN)
-                    np.fill_diagonal(rh_fc.values, np.NaN)
+                    np.fill_diagonal(lh_fc.values, np.nan)
+                    np.fill_diagonal(rh_fc.values, np.nan)
 
                 # Sort and put into dictionary
                 lh_fc = lh_fc.sort_index(axis=0).sort_index(axis=1)
@@ -1450,7 +1462,7 @@ class Analysis():
         gid_norm = 0
         ms_to_s = 0.001
         colors = {'E': '#1f77b4', 'I': '#ff7f0e'}
-        for (layer, pop), sts in self.spikes.loc[area].iteritems():
+        for (layer, pop), sts in self.spikes.loc[area].items():
             # y label axis namin
             name = ' '.join([layer, pop])
             names.append(name)
@@ -1474,7 +1486,7 @@ class Analysis():
             for _ in range(no_sts):
                 gid_norm = gid_norm - 1
                 # Decide whether spiketrain contains spikes
-                if random.random() < frac_spiking:
+                if random.random() < frac_spiking and j < len(sts):
                     st = sts[j]
                     j += 1
                     filtered_st = st[st > low]
@@ -1577,7 +1589,7 @@ class Analysis():
             ind = []
             names = []
             gid_norm = 0
-            for (layer, pop), sts in self.spikes.loc[area].iteritems():
+            for (layer, pop), sts in self.spikes.loc[area].items():
                 layer_roman = roman_to_arabic_numerals[layer]
                 # Random shuffle spiketrains in place
                 random.shuffle(sts)
@@ -1600,7 +1612,7 @@ class Analysis():
                 for _ in range(no_sts):
                     gid_norm = gid_norm - 1
                     # Decide whether spiketrain contains spikes
-                    if random.random() < frac_spiking:
+                    if random.random() < frac_spiking and j < len(sts):
                         st = sts[j]
                         j += 1
                         filtered_st = st[(st > raster_low) & (st < raster_high)]
@@ -1634,23 +1646,22 @@ class Analysis():
             ind = [' '.join(i) for i in multi_index.tolist()]
             names = [' '.join((roman_to_arabic_numerals[l_], p_)) for l_, p_ in (i.split(' ') for i in ind)]
             data_lp = pd.DataFrame(data=np.nan, index=area, columns=ind)
-            for (a, l, p), r in data.iteritems():
+            for (a, l, p), r in data.items():
                 data_lp.loc[a, l+' '+p] = r
 
             boxplot = sns.boxplot(data=data_lp, orient='h', ax=ax, saturation=1,
                                   width=0.5, fliersize=2.5, color='k')
             col = [colors['E'], colors['I']]
             for i in range(len(ind)):
-                mybox = boxplot.artists[i]
+                mybox = boxplot.patches[i]
                 mybox.set_facecolor(col[i % 2])
             ax.text(s=label, transform=ax.transAxes, x=-0.1, y=1.25, **label_prms)
             # Print the extension of the whiskers
             lower = []
             upper = []
-            for name, x in data_lp.iteritems():
+            for name, x in data_lp.items():
                 dat = x.dropna().values
                 if len(dat) > 0:
-                    median = np.median(dat)
                     upper_quartile = np.percentile(dat, 75)
                     lower_quartile = np.percentile(dat, 25)
                     iqr = upper_quartile - lower_quartile
@@ -1671,7 +1682,7 @@ class Analysis():
         if save_fig:
             extension = self.ana_dict['extension']
             fig.savefig(os.path.join(self.plot_folder, f'figure_spike_statistics.{extension}'))
-        plt.show()
+            plt.close(fig)
 
     def plot_all_binned_spike_rates_area(self):
         """
@@ -1694,7 +1705,7 @@ class Analysis():
         num_row = math.ceil(len(signal[:, 'bin_edges']) / num_col)
 
         # Initialize the figure
-        plt.style.use('seaborn-darkgrid')
+        plt.style.use('seaborn-v0_8-darkgrid')
         fig, axes = plt.subplots(
                 num_row,
                 num_col,
@@ -1761,7 +1772,7 @@ class Analysis():
 
         for same_axis in [True, False]:
             # Initialize the figure
-            plt.style.use('seaborn-darkgrid')
+            plt.style.use('seaborn-v0_8-darkgrid')
             fig, axes = plt.subplots(
                     num_row,
                     num_col,
@@ -1836,7 +1847,7 @@ class Analysis():
         num_row = math.ceil(len(self.BOLD[:, 'bold']) / num_col)
 
         # Initialize the figure
-        plt.style.use('seaborn-darkgrid')
+        plt.style.use('seaborn-v0_8-darkgrid')
         fig, axes = plt.subplots(
                 num_row,
                 num_col,
@@ -1926,7 +1937,7 @@ class Analysis():
         num_row = math.ceil(len(rate_hist_areas) / num_col)
 
         # Initialize the figure
-        plt.style.use('seaborn-darkgrid')
+        plt.style.use('seaborn-v0_8-darkgrid')
 
         for same_y_axis in [False, True]:
             fig, axes = plt.subplots(
@@ -1936,7 +1947,7 @@ class Analysis():
                     )
 
             # multiple line plot
-            for num, (area, data) in enumerate(rate_hist_areas.iteritems()):
+            for num, (area, data) in enumerate(rate_hist_areas.items()):
                 # Find the right spot on the plot
                 ax = axes[num // num_col][num % num_col]
 
@@ -1992,8 +2003,8 @@ class Analysis():
                 os.path.join(self.sim_folder, 'spikes.pkl')
             )
         except FileNotFoundError:
-            print('Loading SpikeTrains from gdf')
-            spikes = self._readSpikesFromGDF()
+            print('Loading SpikeTrains from dat')
+            spikes = self._readSpikesFromDAT()
             # Save spikes to pickle for faster read access
             spikes.to_pickle(os.path.join(self.sim_folder, 'spikes.pkl'))
         return spikes
@@ -2028,9 +2039,9 @@ class Analysis():
             )
         return popGids
 
-    def _readSpikesFromGDF(self):
+    def _readSpikesFromDAT(self):
         """
-        Reads spikes from gdf output files using pandas.
+        Reads spikes from dat output files using pandas.
         Stores all SpikeTrains for one population in a list wich in
         turn is contained in a Series.
 
@@ -2043,18 +2054,19 @@ class Analysis():
             # Read in population gids
             popGids = self.popGids
             # glob all spikes files
-            gdf_files = glob.glob(os.path.join(self.sim_folder, 'spikes', '*.gdf'))
-            # Read in all gdf files into a big dataframe with two columns, gid and
+            dat_files = glob.glob(os.path.join(self.sim_folder, 'spikes', '*.dat'))
+            # Read in all dat files into a big dataframe with two columns, gid and
             # t. Magically this seems to work in parallel
             spikes = pd.concat(
                     (
                         pd.read_csv(
                             f,
                             sep='\t',
+                            skiprows=3,
                             index_col=False,
                             header=None,
-                            names=['gid', 't', 2]
-                            ).drop(columns=2) for f in gdf_files
+                            names=['gid', 't']
+                            ) for f in dat_files
                     ),
                     ignore_index=True
                     )
@@ -2119,7 +2131,7 @@ class Analysis():
             # ==============================================================================
             #                                 Presorting data
             #
-            # Here I presort all gdf files. Presorted files can easily be merged without
+            # Here I presort all dat files. Presorted files can easily be merged without
             # memory constraints. Also mergesort is quite fast.
             # The reason I use GNU sort instead of sorting in python is that GNU sort also
             # works in parallel. GNU sort uses 8 cores per default, which seems be a good
@@ -2130,14 +2142,13 @@ class Analysis():
             # This step takes, for 100 seconds of bio time on 64 cores, 15 minutes
             # ==============================================================================
 
-            # TODO Change to dat once we use NEST 3
-            file_ending = '*.gdf'
+            file_ending = '*.dat'
             self.rec_folder = os.path.join(self.sim_folder, 'spikes')
-            gdf_files = glob.glob(os.path.join(self.rec_folder, file_ending))
+            dat_files = glob.glob(os.path.join(self.rec_folder, file_ending))
 
             ts = time.time()
             pool = Pool(math.ceil(available_cores / 8))  # Gnu sort sorts in parallel with 8 threads
-            _ = pool.map(shell_presort_all_dat, gdf_files)
+            _ = pool.map(shell_presort_all_dat, dat_files)
             te = time.time()
             passed_time = round(te - ts, 3)
             print(f'presorting data took {passed_time} s')
@@ -2376,8 +2387,8 @@ def cvIsi(sts, t_start=None, t_stop=None, CV_min_spikes=2, take_mean=True):
         sts = [st[st <= t_stop] for st in sts]
     sts = [st for st in sts if len(st) >= CV_min_spikes]
     if len(sts) > 0:
-        isi = np.array([np.diff(x, 1) for x in sts])
-        cv = np.array([np.std(x) / np.mean(x) for x in isi])
+        isi = [np.diff(x, 1) for x in sts]
+        cv = [np.std(x) / np.mean(x) for x in isi]
         if take_mean:
             return np.mean(cv)
         else:
@@ -2445,8 +2456,8 @@ def LV(sts, t_ref, t_start=None, t_stop=None, LV_min_spikes=3, take_mean=True):
         sts = [st[st <= t_stop] for st in sts]
     sts = [st for st in sts if len(st) >= LV_min_spikes]
     if len(sts) > 0:
-        isi = np.array([np.diff(x, 1) for x in sts])
-        lvr = np.array([calculate_lv(x, t_ref) for x in isi])
+        isi = [np.diff(x, 1) for x in sts]
+        lvr = [calculate_lv(x, t_ref) for x in isi]
         if take_mean:
             return np.mean(lvr)
         else:

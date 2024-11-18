@@ -29,5 +29,5 @@ params = {
     # minimal cortico-cortical delay in ms (0 corresponds to sim_resolution)
     'delay_cc_min': 0.,
     # Recording devices.
-    'rec_dev': ['spike_detector']
+    'rec_dev': ['spike_recorder']
 }

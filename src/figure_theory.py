@@ -63,7 +63,7 @@ def plot_results(rates, t_arr, rates_sim=None, rates_theo=None):
     fig.savefig('figures/figure_mean_field.pdf')
     plt.show()
 
-def meanfield_rate(net_hash, sim_hash=None):
+def meanfield_rate(outpath, net_hash, sim_hash=None):
     t_arr = 0.1 * np.arange(100)
     min_rate_0, max_rate_0 = 0., 10.
 
@@ -71,7 +71,7 @@ def meanfield_rate(net_hash, sim_hash=None):
     if sim_hash:
         net_dict, rates_sim = load_network_and_simulation(net_hash, sim_hash)
     else:
-        net_dict = networkDictFromDump(path_join('out', net_hash))
+        net_dict = networkDictFromDump(path_join(outpath, net_hash))
 
     rates, rates_theo = solve_theory(net_dict, t_arr, min_rate_0, max_rate_0)
     if sim_hash:
@@ -84,4 +84,4 @@ def meanfield_rate(net_hash, sim_hash=None):
 if __name__ == "__main__":
     net_hash = '8757444d0e17c59775b273562693e60b'
     sim_hash = 'b866fc17e887c17e2af2d8b06be6c9b5'  # Set to None if you don't want to use simulated values
-    meanfield_rate(net_hash, sim_hash)
+    meanfield_rate(outpath, net_hash, sim_hash)
