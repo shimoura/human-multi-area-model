@@ -125,6 +125,31 @@ The NEST installation path will have to be specified in `config.yaml` described 
 ## Code repository
 
 Folder structure:
+
+```mermaid
+---
+config:
+  look: modern
+  theme: neutral
+---
+graph TB
+    A[human-multi-area-model]
+    A --> B[experimental_data]
+    B --> B1[...]
+    A --> C[experiments]
+    A --> D[src]
+    D --> D1[data_loader]
+    D --> D2[data_preprocessing]
+    D --> D3[helpers]
+    D --> D4[theory]
+    A --> E[figures]
+    A --> F[misc]
+    F --> F1[...]
+    A --> G[out]
+    A --> H[simulated_data]
+    H --> H1[...]
+```
+
 | directory | description |
 | --- | --- |
 | [./experimental_data/](./experimental_data/) | contains experimental datasets used for building the network and for comparing results |
@@ -166,9 +191,6 @@ All the workflow is managed using the [Snakemake](https://snakemake.readthedocs.
 
 Create a `config.yaml` file inside the repository's main directory. An example is shown in `config_jureca.yaml`. Please note that the NEST path should be given as: `<path_to_NEST_installation>/install/`. 
 If running in a cluster, you must also define the cluster configurations on the `cluster.json` file. An example is also given, but you should modify it accordingly with your cluster configuration.
-
-**NOTE**: the current version of the code has no downscaling factor to run a smaller version of the network, which limits its usage on a local computer. 
-This will be implemented in a future version.
 
 ### Run on a cluster
 
