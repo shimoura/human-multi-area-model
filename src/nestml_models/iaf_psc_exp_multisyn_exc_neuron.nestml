@@ -1,0 +1,66 @@
+"""
+iaf_psc_exp_multisyn_exc - Leaky integrate-and-fire neuron model with multiple ports
+####################################################################################
+
+Description
++++++++++++
+
+Used in NESTML unit testing.
+
+For more information about the model, see iaf_psc_exp in the ``models`` directory.
+
+For more information about "multisynapse" models, please refer to the NESTML documentation.
+"""
+
+model iaf_psc_exp_multisyn_exc_neuron:
+	state:
+		refr_t ms = 0 ms    # Refractory period timer
+		V_m mV = E_L    # membrane potential
+		
+	equations:
+		kernel I_kernel_exc_AMPA = exp(-t/tau_syn_exc_AMPA)
+		kernel I_kernel_exc_NMDA = exp(-t/tau_syn_exc_NMDA)
+		kernel I_kernel_inh = exp(-t/tau_syn_inh)
+		
+		inline I_syn_AMPA pA = convolve(I_kernel_exc_AMPA, spikes_exc) * pA
+		inline I_syn_NMDA pA = convolve(I_kernel_exc_NMDA, spikes_exc) * (r_NMDA*tau_syn_exc_AMPA/tau_syn_exc_NMDA) * pA
+		inline I_syn_inh pA = convolve(I_kernel_inh, spikes_inh) * pA
+		
+		V_m' = -(V_m - E_L) / tau_m + (I_syn_AMPA + I_syn_NMDA + I_syn_inh + I_e + I_stim) / C_m
+		refr_t' = -1e3 * ms/s    # refractoriness is implemented as an ODE, representing a timer counting back down to zero.
+	
+	parameters:
+		C_m      pF = 250 pF         # Capacity of the membrane
+		tau_m    ms = 10 ms          # Membrane time constant.
+		tau_syn_exc_AMPA ms = 2 ms   # Time constant of synaptic current.
+		tau_syn_exc_NMDA ms = 100 ms # Time constant of synaptic current.
+		tau_syn_inh ms = 2 ms        # Time constant of synaptic current.
+		t_ref    ms = 2 ms           # Refractory period.
+		E_L      mV = -70 mV         # Resting potential.
+		V_reset  mV = -70 mV         # Reset value of the membrane potential.
+		V_th     mV = -55 mV         # Threshold.
+		I_e      pA = 0 pA           # External current.
+		r_NMDA   real = 0.5          # NMDA/AMPA postsynaptic current (PSC) ratio.
+		
+	input:
+		spikes_exc <- spike
+		spikes_inh <- spike
+		I_stim pA <- continuous
+
+	output: 
+		spike
+
+	update:
+		if refr_t > 0 ms:
+			# neuron is absolute refractory, do not evolve V_m
+			integrate_odes(refr_t)
+		else:
+			# neuron is not refractory, evolve V_m
+			integrate_odes(V_m)
+
+	onCondition(refr_t <= 0 ms and V_m >= V_th):
+		refr_t = t_ref	# start of the refractory period
+		
+		# threshold crossing
+		V_m = V_reset
+		emit_spike()
