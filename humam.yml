@@ -1,4 +1,4 @@
-name: humam
+name: humam-extension
 dependencies:
   - nest-simulator=3.8
   - joblib=1.4.2
