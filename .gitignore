@@ -12,5 +12,5 @@ figures/*.pdf
 figures/*.png
 figures/tmp/*
 
-notes/renan/izhikevich_tutorial/target/
-notes/renan/target/
+src/nestml_models/generated_nestml_models/
+src/nestml_models/report/

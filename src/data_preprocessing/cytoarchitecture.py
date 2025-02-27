@@ -33,7 +33,8 @@ class NeuronNumbers():
     """
 
     def __init__(self, surface_area, source, src_path, ei_ratio_path,
-                 min_neurons_per_layer, remove_smaller_layerI, target=None):
+                 min_neurons_per_layer, remove_smaller_layerI, target=None,
+                 receptor_densities=None):
         # Collect all parameters, e.g. for later export
         self.params = {
             'surface_area': surface_area,
@@ -43,6 +44,7 @@ class NeuronNumbers():
             'min_neurons_per_layer': min_neurons_per_layer,
             'remove_smaller_layerI': remove_smaller_layerI,
             'target': target,
+            'receptor_densities': receptor_densities
         }
 
         self.surface_area = surface_area
@@ -50,6 +52,7 @@ class NeuronNumbers():
         self.layer_list_plus1 = ['I'] + self.layer_list
         fraction_E_neurons = ratio_exc_to_inh(ei_ratio_path)
         self.setPopulationDefault(fraction_E_neurons=fraction_E_neurons)
+        self.receptor_densities = receptor_densities
 
         if source == 'VonEconomoKoskinas':
             # Load VEK data
@@ -135,6 +138,21 @@ class NeuronNumbers():
             # Map vEK areas to `target` if specified
             if target:
                 self.map_atlas(source, target)
+
+            if receptor_densities == 'random':
+                # Initialize Series for NMDA/AMPA distribution
+                len_array = len(self.area_list)*len(self.layer_list)*len(self.population_list)
+                self.nmda_to_ampa_ratio = pd.Series(
+                    data=np.random.uniform(1.0,4.5,len_array), #TODO: set these numbers accordingly with Palomero's data
+                    index=pd.MultiIndex.from_product(
+                        [self.area_list, self.layer_list, self.population_list],
+                        names=['area', 'layer', 'population']
+                    ),
+                    dtype=np.float64
+                )
+            elif receptor_densities == None:
+                self.nmda_to_ampa_ratio = None
+                print('No receptor densities specified.')
         else:
             raise NotImplementedError('Source {} unknown.'.format(source))
 

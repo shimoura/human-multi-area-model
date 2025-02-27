@@ -35,7 +35,9 @@ params['cytoarchitecture_params'] = {
     # Remove layers with fewer neurons than in layer I
     'remove_smaller_layerI': False,
     # Minimal number of neurons per layer
-    'min_neurons_per_layer': 5000
+    'min_neurons_per_layer': 5000,
+    # NMDA/AMPA ratios (applicable only for multisynaptic model)
+    'receptor_densities': None # accepts: "NMDA_to_AMPA" (TODO), "random"
 }
 
 """
@@ -135,6 +137,27 @@ params['neuron_params_I'] = {
     # Refractory period of the neurons after a spike (in ms).
     't_ref': 2.0
 }
+
+# Set the NMDA parameters for the multisynaptic model
+if params['neuron_model_E'] == 'iaf_psc_exp_multisyn_exc_neuron':
+    params['neuron_params_E'].pop('tau_syn_ex', None)
+    params['neuron_params_E']['tau_syn_exc_AMPA'] = 2.0
+    params['neuron_params_E']['tau_syn_exc_NMDA'] = 80.0
+
+    params['neuron_params_E'].pop('tau_syn_in', None)
+    params['neuron_params_E']['tau_syn_inh'] = 2.0
+
+    params['neuron_params_E']['r_NMDA'] = 2.0
+if params['neuron_model_I'] == 'iaf_psc_exp_multisyn_exc_neuron':
+    params['neuron_params_I'].pop('tau_syn_ex', None)
+    params['neuron_params_I']['tau_syn_exc_AMPA'] = 2.0
+    params['neuron_params_I']['tau_syn_exc_NMDA'] = 80.0
+
+    params['neuron_params_I'].pop('tau_syn_in', None)
+    params['neuron_params_I']['tau_syn_inh'] = 2.0
+
+    params['neuron_params_I']['r_NMDA'] = 2.0
+
 # Distribution of neuron parameters.
 # Default relative sd set as 0, meaning no distribution.
 # Relative sd set to match the fitted sigma showed in comments below. See Allen Cells GLIF Parameters.ipynb

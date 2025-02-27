@@ -41,6 +41,9 @@ class Network():
         self.net['neuron_param_dist_I'] = params['neuron_param_dist_I']
         self.net['neuron_numbers'] = NN.getNeuronNumbers()
 
+        # ===== Neurons transmitters =====
+        self.net['nmda_to_ampa_ratio'] = NN.nmda_to_ampa_ratio
+
         # ===== Connections =====
         self.net['SLN'] = SN.getSLN()
         self.net['synapses_internal'] = SN.getSynapseNumbers()
@@ -178,20 +181,45 @@ class Network():
             Matrix of PSC's in pA
         """
         # Conversion factor PSP -> PSC
+
+        
+        # Extract neuron parameters for excitatory neurons
         C_m_E = neuron_params_E['C_m']
         tau_m_E = neuron_params_E['tau_m']
-        tau_syn_ex_E = neuron_params_E['tau_syn_ex']
-        tau_syn_in_E = neuron_params_E['tau_syn_in']
+
+        if neuron_model_E in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_ex_E = neuron_params_E['tau_syn_ex']
+            tau_syn_in_E = neuron_params_E['tau_syn_in']
+        elif neuron_model_E == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_ex_E = neuron_params_E['tau_syn_exc_AMPA']
+            tau_syn_in_E = neuron_params_E['tau_syn_inh']
+        else:
+            raise NotImplementedError(
+                "Neuron model {} unknown.".format(neuron_model_I)
+            )
+
         PSC_ee_over_PSP_ee = self._getPscOverPsp(
             C_m_E, tau_m_E, tau_syn_ex_E, neuron_model_E
         )
         PSC_ei_over_PSP_ei = self._getPscOverPsp(
             C_m_E, tau_m_E, tau_syn_in_E, neuron_model_E
         )
+
+        # Extract neuron parameters for inhibitory neurons
         C_m_I = neuron_params_I['C_m']
         tau_m_I = neuron_params_I['tau_m']
-        tau_syn_ex_I = neuron_params_I['tau_syn_ex']
-        tau_syn_in_I = neuron_params_I['tau_syn_in']
+
+        if neuron_model_I in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_ex_I = neuron_params_I['tau_syn_ex']
+            tau_syn_in_I = neuron_params_I['tau_syn_in']
+        elif neuron_model_I == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_ex_I = neuron_params_I['tau_syn_exc_AMPA']
+            tau_syn_in_I = neuron_params_I['tau_syn_inh']
+        else:
+            raise NotImplementedError(
+                "Neuron model {} unknown.".format(neuron_model_I)
+            )
+
         PSC_ii_over_PSP_ii = self._getPscOverPsp(
             C_m_I, tau_m_I, tau_syn_in_I, neuron_model_I
         )
@@ -333,13 +361,22 @@ class Network():
         # Conversion factor PSP -> PSC
         C_m_E = neuron_params_E['C_m']
         tau_m_E = neuron_params_E['tau_m']
-        tau_syn_ex_E = neuron_params_E['tau_syn_ex']
+
+        if neuron_model_E in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_ex_E = neuron_params_E['tau_syn_ex']
+        elif neuron_model_E == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_ex_E = neuron_params_E['tau_syn_exc_AMPA']
+
         PSC_ee_over_PSP_ee = self._getPscOverPsp(
             C_m_E, tau_m_E, tau_syn_ex_E, neuron_model_E
         )
         C_m_I = neuron_params_I['C_m']
         tau_m_I = neuron_params_I['tau_m']
-        tau_syn_ex_I = neuron_params_I['tau_syn_ex']
+
+        if neuron_model_I in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_ex_I = neuron_params_I['tau_syn_ex']
+        elif neuron_model_I == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_ex_I = neuron_params_I['tau_syn_exc_AMPA']
         PSC_ie_over_PSP_ie = self._getPscOverPsp(
             C_m_I, tau_m_I, tau_syn_ex_I, neuron_model_I
         )
@@ -414,9 +451,14 @@ class Network():
         """
         # neuron parameters
         tau_m_E = self.net['neuron_params_E']['tau_m']
-        tau_syn_E = self.net['neuron_params_E']['tau_syn_ex']
+        
+        if self.net['neuron_model_E'] in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_E = self.net['neuron_params_E']['tau_syn_ex']
+        elif self.net['neuron_model_E'] == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_E = self.net['neuron_params_E']['tau_syn_exc_AMPA']
+
         C_m_E = self.net['neuron_params_E']['C_m']
-        if self.net['neuron_model_E'] == 'iaf_psc_exp':
+        if self.net['neuron_model_E'] in ['iaf_psc_exp', 'iaf_psc_exp_multisyn_exc_neuron']:
             V_th_E = self.net['neuron_params_E']['V_th']
         elif self.net['neuron_model_E'] == 'mat2_psc_exp':
             V_th_E = self.net['neuron_params_E']['omega']
@@ -426,9 +468,14 @@ class Network():
             )
         E_L_E = self.net['neuron_params_E']['E_L']
         tau_m_I = self.net['neuron_params_I']['tau_m']
-        tau_syn_I = self.net['neuron_params_I']['tau_syn_ex']
+
+        if self.net['neuron_model_I'] in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_I = self.net['neuron_params_I']['tau_syn_ex']
+        elif self.net['neuron_model_I'] == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_I = self.net['neuron_params_I']['tau_syn_exc_AMPA']
+
         C_m_I = self.net['neuron_params_I']['C_m']
-        if self.net['neuron_model_I'] == 'iaf_psc_exp':
+        if self.net['neuron_model_I'] in ['iaf_psc_exp', 'iaf_psc_exp_multisyn_exc_neuron']:
             V_th_I = self.net['neuron_params_I']['V_th']
         elif self.net['neuron_model_I'] == 'mat2_psc_exp':
             V_th_I = self.net['neuron_params_I']['omega']
@@ -580,7 +627,12 @@ class Network():
         # Conversion factor PSP -> PSC
         tau_m_E = self.net['neuron_params_E']['tau_m']
         C_m_E = self.net['neuron_params_E']['C_m']
-        tau_syn_ex_E = self.net['neuron_params_E']['tau_syn_ex']
+
+        if self.net['neuron_model_E'] in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_ex_E = self.net['neuron_params_E']['tau_syn_ex']
+        elif self.net['neuron_model_E'] == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_ex_E = self.net['neuron_params_E']['tau_syn_exc_AMPA']
+
         neuron_model_E = self.net['neuron_model_E']
         PSP_ee_over_PSC_ee = self._getPspOverPsc(
             C_m_E, tau_m_E, tau_syn_ex_E, neuron_model_E
@@ -591,7 +643,12 @@ class Network():
 
         tau_m_I = self.net['neuron_params_I']['tau_m']
         C_m_I = self.net['neuron_params_I']['C_m']
-        tau_syn_ex_I = self.net['neuron_params_I']['tau_syn_ex']
+
+        if self.net['neuron_model_I'] in ['iaf_psc_exp', 'mat2_psc_exp']:
+            tau_syn_ex_I = self.net['neuron_params_I']['tau_syn_ex']
+        elif self.net['neuron_model_I'] == 'iaf_psc_exp_multisyn_exc_neuron':
+            tau_syn_ex_I = self.net['neuron_params_I']['tau_syn_exc_AMPA']
+
         neuron_model_I = self.net['neuron_model_I']
         PSP_ie_over_PSC_ie = self._getPspOverPsc(
             C_m_I, tau_m_I, tau_syn_ex_I, neuron_model_I
@@ -835,7 +892,7 @@ class Network():
         -------
         PSC_over_PSP : float
         """
-        if neuron_model in ['iaf_psc_exp', 'mat2_psc_exp']:
+        if neuron_model in ['iaf_psc_exp', 'mat2_psc_exp', 'iaf_psc_exp_multisyn_exc_neuron']:
             eps = tau_syn / tau_m
             PSC_over_PSP = C_m * eps**(-1/(1-eps)) / tau_m
         else:
@@ -863,7 +920,7 @@ class Network():
         -------
         PSP_over_PSC : float
         """
-        if neuron_model in ['iaf_psc_exp', 'mat2_psc_exp']:
+        if neuron_model in ['iaf_psc_exp', 'mat2_psc_exp', 'iaf_psc_exp_multisyn_exc_neuron']:
             eps = tau_syn / tau_m
             PSP_over_PSC = tau_m / (C_m * eps**(-1/(1-eps))) 
         else:

@@ -7,6 +7,7 @@ import yaml
 from dicthash import dicthash
 
 from helpers.lognormal import mu_sigma_lognorm
+from nestml_models.load_nestml_models import generate_nestml_model
 
 
 class Simulation():
@@ -99,6 +100,14 @@ class Simulation():
         to them. The initial membrane potential of the neurons is drawn from a
         normal distribution.
         """
+
+        # # Check the neuron model
+        neuron_model_E = self.net_dict['neuron_model_E']
+        neuron_model_I = self.net_dict['neuron_model_I']
+        if "iaf_psc_exp_multisyn_exc_neuron" in [neuron_model_E, neuron_model_I]:
+            nestml_module_name = generate_nestml_model("iaf_psc_exp_multisyn_exc_neuron")
+            nest.Install(nestml_module_name)
+
         # Create cortical populations.
         print('Memory on rank {} before creating populations: {:.2f}MB'.format(
             nest.Rank(), self._getMemoryMB()
@@ -136,6 +145,12 @@ class Simulation():
                         mean=self.sim_dict['V0_mean'],
                         std=self.sim_dict['V0_sd']
                     )
+
+                    # Neuron transmitter distribution (if model = iaf_psc_exp_multisyn_exc_neuron)
+                    if neuron_model_pop == "iaf_psc_exp_multisyn_exc_neuron":
+                        if self.net_dict['nmda_to_ampa_ratio'] is not None:
+                            neuron_params_pop['r_NMDA_to_AMPA'] = self.net_dict['nmda_to_ampa_ratio'][pop]
+
                     # Neuron parameters
                     for prm, dist_dict in nrn_prm_dist_pop.items():
                         if dist_dict['rel_sd'] > 0:

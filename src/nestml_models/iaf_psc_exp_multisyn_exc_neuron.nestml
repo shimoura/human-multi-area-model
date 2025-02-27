@@ -23,24 +23,24 @@ model iaf_psc_exp_multisyn_exc_neuron:
 		kernel I_kernel_inh = exp(-t/tau_syn_inh)
 		
 		inline I_syn_AMPA pA = convolve(I_kernel_exc_AMPA, spikes_exc) * pA
-		inline I_syn_NMDA pA = convolve(I_kernel_exc_NMDA, spikes_exc) * (r_NMDA*tau_syn_exc_AMPA/tau_syn_exc_NMDA) * pA
-		inline I_syn_inh pA = convolve(I_kernel_inh, spikes_inh) * pA
+		inline I_syn_NMDA pA = convolve(I_kernel_exc_NMDA, spikes_exc) * (r_NMDA_to_AMPA*tau_syn_exc_AMPA/tau_syn_exc_NMDA) * pA
+		inline I_syn_inh pA = - convolve(I_kernel_inh, spikes_inh) * pA
 		
 		V_m' = -(V_m - E_L) / tau_m + (I_syn_AMPA + I_syn_NMDA + I_syn_inh + I_e + I_stim) / C_m
 		refr_t' = -1e3 * ms/s    # refractoriness is implemented as an ODE, representing a timer counting back down to zero.
 	
 	parameters:
-		C_m      pF = 250 pF         # Capacity of the membrane
-		tau_m    ms = 10 ms          # Membrane time constant.
+		C_m      		 pF = 250 pF         # Capacity of the membrane
+		tau_m    		 ms = 10 ms          # Membrane time constant.
 		tau_syn_exc_AMPA ms = 2 ms   # Time constant of synaptic current.
 		tau_syn_exc_NMDA ms = 100 ms # Time constant of synaptic current.
-		tau_syn_inh ms = 2 ms        # Time constant of synaptic current.
-		t_ref    ms = 2 ms           # Refractory period.
-		E_L      mV = -70 mV         # Resting potential.
-		V_reset  mV = -70 mV         # Reset value of the membrane potential.
-		V_th     mV = -55 mV         # Threshold.
-		I_e      pA = 0 pA           # External current.
-		r_NMDA   real = 0.5          # NMDA/AMPA postsynaptic current (PSC) ratio.
+		tau_syn_inh 	 ms = 2 ms        # Time constant of synaptic current.
+		t_ref    		 ms = 2 ms           # Refractory period.
+		E_L      		 mV = -70 mV         # Resting potential.
+		V_reset  		 mV = -70 mV         # Reset value of the membrane potential.
+		V_th     		 mV = -55 mV         # Threshold.
+		I_e      		 pA = 0 pA           # External current.
+		r_NMDA_to_AMPA   real = 0.5          # NMDA/AMPA postsynaptic current (PSC) ratio.
 		
 	input:
 		spikes_exc <- excitatory spike
