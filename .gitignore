@@ -11,3 +11,6 @@ docs/_build/*
 figures/*.pdf
 figures/*.png
 figures/tmp/*
+
+notes/renan/izhikevich_tutorial/target/
+notes/renan/target/

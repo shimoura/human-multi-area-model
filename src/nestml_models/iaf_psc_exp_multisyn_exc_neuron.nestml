@@ -43,8 +43,8 @@ model iaf_psc_exp_multisyn_exc_neuron:
 		r_NMDA   real = 0.5          # NMDA/AMPA postsynaptic current (PSC) ratio.
 		
 	input:
-		spikes_exc <- spike
-		spikes_inh <- spike
+		spikes_exc <- excitatory spike
+		spikes_inh <- inhibitory spike
 		I_stim pA <- continuous
 
 	output: 
