@@ -147,7 +147,7 @@ if params['neuron_model_E'] == 'iaf_psc_exp_multisyn_exc_neuron':
     params['neuron_params_E'].pop('tau_syn_in', None)
     params['neuron_params_E']['tau_syn_inh'] = 2.0
 
-    params['neuron_params_E']['r_NMDA'] = 2.0
+    params['neuron_params_E']['r_NMDA_to_AMPA'] = 2.0
 if params['neuron_model_I'] == 'iaf_psc_exp_multisyn_exc_neuron':
     params['neuron_params_I'].pop('tau_syn_ex', None)
     params['neuron_params_I']['tau_syn_exc_AMPA'] = 2.0
@@ -156,7 +156,7 @@ if params['neuron_model_I'] == 'iaf_psc_exp_multisyn_exc_neuron':
     params['neuron_params_I'].pop('tau_syn_in', None)
     params['neuron_params_I']['tau_syn_inh'] = 2.0
 
-    params['neuron_params_I']['r_NMDA'] = 2.0
+    params['neuron_params_I']['r_NMDA_to_AMPA'] = 2.0
 
 # Distribution of neuron parameters.
 # Default relative sd set as 0, meaning no distribution.
