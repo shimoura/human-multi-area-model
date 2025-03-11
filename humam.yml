@@ -12,6 +12,7 @@ dependencies:
   - scipy=1.14.1
   - ipykernel=6.29.5
   - pip=24.3.1
+  - openpyxl=3.1.5
   - pip:
     - nnmt==1.3.0
     - dicthash==0.0.2
