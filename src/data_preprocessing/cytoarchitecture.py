@@ -4,6 +4,7 @@ import pandas as pd
 from data_loader import mapping_DK_vEK
 from data_loader.voneconomokoskinas import VonEconomoKoskinas
 from data_loader.ratio_exc_to_inh import ratio_exc_to_inh
+from data_loader.receptor_densities import load_receptor_densities, load_receptor_densities_std
 
 # TODO __repr__(self)
 
@@ -150,9 +151,15 @@ class NeuronNumbers():
                     ),
                     dtype=np.float64
                 )
+                self.nmda_to_ampa_ratio_std = None
             elif receptor_densities == None:
                 self.nmda_to_ampa_ratio = None
+                self.nmda_to_ampa_ratio_std = None
                 print('No receptor densities specified.')
+            else:
+                # Load NMDA/AMPA data
+                self.nmda_to_ampa_ratio = load_receptor_densities(receptor_densities)
+                self.nmda_to_ampa_ratio_std = load_receptor_densities_std(receptor_densities)
         else:
             raise NotImplementedError('Source {} unknown.'.format(source))
 

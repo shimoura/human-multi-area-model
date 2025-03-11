@@ -37,7 +37,13 @@ params['cytoarchitecture_params'] = {
     # Minimal number of neurons per layer
     'min_neurons_per_layer': 5000,
     # NMDA/AMPA ratios (applicable only for multisynaptic model)
-    'receptor_densities': None # accepts: "NMDA_to_AMPA" (TODO), "random"
+    'receptor_densities': None # accepts: "random", None, or:
+    # 'receptor_densities': os.path.join(
+    #     os.getcwd(),
+    #     'experimental_data',
+    #     'receptor_densities',
+    #     'nmda_to_ampa_ratio.csv'
+    # )
 }
 
 """

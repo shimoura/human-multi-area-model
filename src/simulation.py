@@ -140,16 +140,23 @@ class Simulation():
                         }
                     )
 
+                    # Neuron transmitter distribution (if model = iaf_psc_exp_multisyn_exc_neuron)
+                    if neuron_model_pop == "iaf_psc_exp_multisyn_exc_neuron":
+                        if self.net_dict['nmda_to_ampa_ratio_std'] is not None:
+                            neuron_params_pop['r_NMDA_to_AMPA'] = nest.random.normal(
+                                mean=self.net_dict['nmda_to_ampa_ratio'][pop],
+                                std=self.net_dict['nmda_to_ampa_ratio_std'][pop]
+                            )
+                        elif self.net_dict['nmda_to_ampa_ratio'] is None:
+                            pass
+                        else:
+                            neuron_params_pop['r_NMDA_to_AMPA'] = self.net_dict['nmda_to_ampa_ratio'][pop]
+
                     population.set(neuron_params_pop)
                     population.V_m = nest.random.normal(
                         mean=self.sim_dict['V0_mean'],
                         std=self.sim_dict['V0_sd']
                     )
-
-                    # Neuron transmitter distribution (if model = iaf_psc_exp_multisyn_exc_neuron)
-                    if neuron_model_pop == "iaf_psc_exp_multisyn_exc_neuron":
-                        if self.net_dict['nmda_to_ampa_ratio'] is not None:
-                            neuron_params_pop['r_NMDA_to_AMPA'] = self.net_dict['nmda_to_ampa_ratio'][pop]
 
                     # Neuron parameters
                     for prm, dist_dict in nrn_prm_dist_pop.items():

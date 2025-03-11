@@ -43,6 +43,7 @@ class Network():
 
         # ===== Neurons transmitters =====
         self.net['nmda_to_ampa_ratio'] = NN.nmda_to_ampa_ratio
+        self.net['nmda_to_ampa_ratio_std'] = NN.nmda_to_ampa_ratio_std
 
         # ===== Connections =====
         self.net['SLN'] = SN.getSLN()
