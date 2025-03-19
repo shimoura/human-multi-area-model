@@ -144,14 +144,16 @@ class NeuronNumbers():
                 # Initialize Series for NMDA/AMPA distribution
                 len_array = len(self.area_list)*len(self.layer_list)*len(self.population_list)
                 self.nmda_to_ampa_ratio = pd.Series(
-                    data=np.random.uniform(1.0,4.5,len_array), #TODO: set these numbers accordingly with Palomero's data
+                    data=np.random.uniform(1.0,4.5,len_array),
                     index=pd.MultiIndex.from_product(
                         [self.area_list, self.layer_list, self.population_list],
                         names=['area', 'layer', 'population']
                     ),
                     dtype=np.float64
                 )
-                self.nmda_to_ampa_ratio_std = None
+                # Set standard deviation of NMDA/AMPA distribution as 10% of the mean
+                self.nmda_to_ampa_ratio_std = self.nmda_to_ampa_ratio * 0.1
+                print('NMDA/AMPA ratios randomly initialized, with std = 10% of the mean.')
             elif receptor_densities == None:
                 self.nmda_to_ampa_ratio = None
                 self.nmda_to_ampa_ratio_std = None
@@ -160,6 +162,7 @@ class NeuronNumbers():
                 # Load NMDA/AMPA data
                 self.nmda_to_ampa_ratio = load_receptor_densities(receptor_densities)
                 self.nmda_to_ampa_ratio_std = load_receptor_densities_std(receptor_densities)
+                print('NMDA/AMPA ratios loaded from file.')
         else:
             raise NotImplementedError('Source {} unknown.'.format(source))
 
