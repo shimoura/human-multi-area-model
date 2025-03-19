@@ -77,6 +77,11 @@ class Analysis():
         """
         Execute the full analysis.
         """
+        for area in self.popGids.index.levels[0]:
+            print('{} Plotting {}'.format(datetime.now().time(), area))
+            self.plotRasterArea(area)
+        print('{} Plotting {}'.format(datetime.now().time(), 'Raster statistics'))
+        self.plot_raster_statistics(save_fig=True)
         print('{} Calculating rate'.format(datetime.now().time()))
         self.rate = self.meanFiringRate()
         print('{} Calculating population CV ISI'.format(datetime.now().time()))
@@ -142,13 +147,8 @@ class Analysis():
             datetime.now().time(), 'BOLD signal')
             )
         self.plotAllBOLDSignalSummary()
-        for area in self.popGids.index.levels[0]:
-            print('{} Plotting {}'.format(datetime.now().time(), area))
-            self.plotRasterArea(area)
         print('{} Plotting BOLD connectivities'.format(datetime.now().time()))
         self.plotBOLDConnectivity()
-        print('{} Plotting {}'.format(datetime.now().time(), 'Raster statistics'))
-        self.plot_raster_statistics(save_fig=True)
         plt.close('all')
 
     @timeit
